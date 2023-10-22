@@ -10,8 +10,7 @@ namespace Domain
         public decimal Price { get; set; }
         public int TaxRate { get; set; } // -1/0/5/8/23 (-1 means tax free)
         public int CategoryId { get; set; }
-        public string ImageLarge { get; set; } // url to cloudinary
-        public string ImageSmall { get; set; } // url to cloudinary
+        public Photo Image { get; set; } 
         public DateTime CreatedAt { get; set; }
         public DateTime ModificationDate { get; set; }
         public ProductStatus Status { get; set; }

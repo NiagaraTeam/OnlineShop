@@ -4,7 +4,7 @@ namespace Domain
     {
         public int Id { get; set; }
         public int ProductId { get; set; }
-        public int CurrentStock { get; set; }
-        public int TotalSold { get; set; }
+        public decimal CurrentStock { get; set; }
+        public decimal TotalSold { get; set; }
     }
 }

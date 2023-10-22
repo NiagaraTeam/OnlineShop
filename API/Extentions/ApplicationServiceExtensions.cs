@@ -1,5 +1,6 @@
 using Application.Core;
 using Application.Interfaces;
+using Application.Services;
 using Infrastructure.Security;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -35,6 +36,11 @@ namespace API.Extentions
             services.AddHttpContextAccessor();
 
             services.AddScoped<IUserAccessor, UserAccessor>();
+            services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IShippingPaymentService, ShippingPaymentService>();
+            services.AddScoped<IUserService, UserService>();
 
             services.AddAutoMapper(typeof(MappingProfiles).Assembly);
 

@@ -7,7 +7,7 @@ namespace Domain
     {
         public Address Address { get; set; }
         public AccountStatus Status { get; set; }
-        public int DiscountValue { get; set; } // default 0
+        public decimal DiscountValue { get; set; } // default 0
         public bool Newsletter { get; set; } // default false
 
         public ICollection<Product> FavouriteProducts { get; set; }
