@@ -19,7 +19,7 @@ function App() {
         Click on the Vite and React logos to learn more
       </p>
       <p>
-        albert przemek justyna
+        albert przemek justyna dorota
       </p>
     </>
   )
