@@ -9,7 +9,8 @@ namespace Domain
         public AccountStatus Status { get; set; }
         public decimal DiscountValue { get; set; } // default 0
         public bool Newsletter { get; set; } // default false
-
+        public bool IsAdmin { get; set; }
+        
         public ICollection<Product> FavouriteProducts { get; set; }
     }
 }
