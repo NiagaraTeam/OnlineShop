@@ -1,5 +1,6 @@
 using System.Net.Sockets;
 using Domain;
+using Domain.Enums;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,6 +29,8 @@ namespace Persistence
 		{
             base.OnModelCreating(modelBuilder);
 
+            // relations
+           
             modelBuilder.Entity<AppUser>()
                 .HasOne(u => u.CustomerDetails)
                 .WithOne(cd => cd.User)
@@ -119,6 +122,20 @@ namespace Persistence
                 .WithOne(pi => pi.Product)
                 .HasForeignKey<ProductInfo>(p => p.ProductId)
                 .IsRequired();
+
+            // default property values
+
+            modelBuilder.Entity<CustomerDetails>()
+                .Property(cd => cd.DiscountValue)
+                .HasDefaultValue(0);
+
+            modelBuilder.Entity<CustomerDetails>()
+                .Property(cd => cd.Newsletter)
+                .HasDefaultValue(false);
+
+            modelBuilder.Entity<Order>()
+                .Property(o => o.Status)
+                .HasDefaultValue(OrderStatus.New);
         }
     }
 }
