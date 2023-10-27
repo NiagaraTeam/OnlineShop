@@ -10,5 +10,7 @@ namespace Domain
         public CategoryStatus Status { get; set; }
 
         public Category ParentCategory { get; set; }
+        public ICollection<Category> ChildCategories { get; set; }
+        public ICollection<Product> Products { get; set; }
     }
 }

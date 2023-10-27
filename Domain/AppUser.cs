@@ -1,16 +1,10 @@
-using Domain.Enums;
 using Microsoft.AspNetCore.Identity;
 
 namespace Domain
 {
     public class AppUser : IdentityUser
     {
-        public Address Address { get; set; }
-        public AccountStatus Status { get; set; }
-        public decimal DiscountValue { get; set; } // default 0
-        public bool Newsletter { get; set; } // default false
-        public bool IsAdmin { get; set; }
-        
-        public ICollection<Product> FavouriteProducts { get; set; }
+        //fileds are defined in IdentityUser class
+        public CustomerDetails CustomerDetails { get; set; }
     }
 }
