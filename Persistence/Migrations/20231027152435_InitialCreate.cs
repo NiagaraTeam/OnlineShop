@@ -75,7 +75,7 @@ namespace Persistence.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: true),
-                    ParentCategoryId = table.Column<int>(type: "integer", nullable: false),
+                    ParentCategoryId = table.Column<int>(type: "integer", nullable: true),
                     Status = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
@@ -85,8 +85,7 @@ namespace Persistence.Migrations
                         name: "FK_Categories_Categories_ParentCategoryId",
                         column: x => x.ParentCategoryId,
                         principalTable: "Categories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -260,8 +259,8 @@ namespace Persistence.Migrations
                     UserId = table.Column<string>(type: "text", nullable: false),
                     AddressId = table.Column<int>(type: "integer", nullable: false),
                     Status = table.Column<int>(type: "integer", nullable: false),
-                    DiscountValue = table.Column<decimal>(type: "numeric", nullable: false),
-                    Newsletter = table.Column<bool>(type: "boolean", nullable: false)
+                    DiscountValue = table.Column<decimal>(type: "numeric", nullable: false, defaultValue: 0m),
+                    Newsletter = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
@@ -326,7 +325,7 @@ namespace Persistence.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     CustomerDetailsId = table.Column<int>(type: "integer", nullable: false),
                     OrderDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Status = table.Column<int>(type: "integer", nullable: false),
+                    Status = table.Column<int>(type: "integer", nullable: false, defaultValue: 1),
                     PaymentMethodId = table.Column<int>(type: "integer", nullable: false),
                     ShippingMethodId = table.Column<int>(type: "integer", nullable: false)
                 },

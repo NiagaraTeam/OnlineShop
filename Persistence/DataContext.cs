@@ -1,4 +1,3 @@
-using System.Net.Sockets;
 using Domain;
 using Domain.Enums;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -41,13 +40,13 @@ namespace Persistence
                 .HasOne(ud => ud.Address)
                 .WithOne(a => a.CustomerDetails)
                 .HasForeignKey<CustomerDetails>(a => a.AddressId)
-                .IsRequired(false); // when creating account address will be empty
+                .IsRequired(false); // when creating account address can be empty
 
             modelBuilder.Entity<Category>()
                 .HasOne(c => c.ParentCategory)
                 .WithMany(c => c.ChildCategories)
                 .HasForeignKey(c => c.ParentCategoryId)
-                .IsRequired();
+                .IsRequired(false);
 
             modelBuilder.Entity<CustomerDetails>()
                 .HasMany(cd => cd.Orders)
