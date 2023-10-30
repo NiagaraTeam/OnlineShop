@@ -5,5 +5,7 @@ namespace Domain
         public string Id { get; set; }
         public string UrlSmall { get; set; } // url to small image in cloudinary
         public string UrlLarge { get; set; } // url to large image in cloudinary
+
+        public Product Product { get; set; }
     }
 }
