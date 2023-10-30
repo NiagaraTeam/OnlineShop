@@ -15,6 +15,7 @@ namespace Domain
         public DateTime ModificationDate { get; set; }
         public ProductStatus Status { get; set; }
         public int ProductExpertId { get; set; }
+        public int ProductInfoId { get; set; }
 
         public ProductInfo ProductInfo { get; set; }
         public Photo Photo { get; set; } 

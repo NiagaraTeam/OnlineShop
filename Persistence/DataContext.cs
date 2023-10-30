@@ -119,11 +119,11 @@ namespace Persistence
             modelBuilder.Entity<Product>()
                 .HasOne(p => p.ProductInfo)
                 .WithOne(pi => pi.Product)
-                .HasForeignKey<ProductInfo>(p => p.ProductId)
+                .HasForeignKey<Product>(p => p.ProductInfoId)
                 .IsRequired();
 
             // default property values
-
+            
             modelBuilder.Entity<CustomerDetails>()
                 .Property(cd => cd.DiscountValue)
                 .HasDefaultValue(0);
