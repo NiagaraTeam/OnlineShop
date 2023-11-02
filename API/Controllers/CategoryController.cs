@@ -25,7 +25,7 @@ namespace API.Controllers
             return HandleResult(await _categoryService.Update(categoryId, category));
         }
 
-        [HttpPatch("categories/{categoryId}/status")] //api/categories/categoryId/status
+        [HttpPatch("categories/{categoryId}/{newStatus}")] //api/categories/categoryId/newStatus
         public async Task<IActionResult> ChangeCategoryStatus(int categoryId, CategoryStatus newStatus)
         {
             return HandleResult(await _categoryService.ChangeCategoryStatus(categoryId, newStatus));

@@ -44,7 +44,7 @@ namespace API.Controllers
             return HandleResult(await _productService.GetDeletedProducts());
         }
 
-        [HttpPatch("products/{productId}/status")] //api/products/productId/status
+        [HttpPatch("products/{productId}/{newStatus}")] //api/products/productId/newStatus
         public async Task<IActionResult> ChangeProductStatus(int productId, ProductStatus newStatus)
         {
             return HandleResult(await _productService.ChangeProductStatus(productId, newStatus));
