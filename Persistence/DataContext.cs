@@ -10,7 +10,6 @@ namespace Persistence
         public DataContext(DbContextOptions options) 
             :base(options){}
 
-        // entity framework config
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Order> Orders { get; set; }
@@ -23,6 +22,7 @@ namespace Persistence
         public DbSet<ProductExpert> ProductExperts { get; set; }
         public DbSet<ProductInfo> ProductInfos { get; set; }
         public DbSet<CustomerDetails> CustomerDetails { get; set; }
+        public DbSet<CustomerDetailsProduct> CustomerDetailsProducts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
