@@ -6,11 +6,31 @@ namespace Persistence
 {
     public class Seed
     {
-        public static async Task SeedData(DataContext context, UserManager<AppUser> userManager)
+        public static async Task SeedData(DataContext context, UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager)
         {
+            // seed database
+
+            //Roles
+            bool isCustomerRoleExists = await roleManager.RoleExistsAsync(StaticUserRoles.CUSTOMER);
+            bool isAdminRoleExists = await roleManager.RoleExistsAsync(StaticUserRoles.ADMIN);
+
+            if (!isCustomerRoleExists)
+                await roleManager.CreateAsync(new IdentityRole(StaticUserRoles.CUSTOMER));
+
+            if (!isAdminRoleExists) 
+                await roleManager.CreateAsync(new IdentityRole(StaticUserRoles.ADMIN));
+
             if (userManager.Users.Any()) return;
 
-            // seed database
+            //Admin
+            var admin = new AppUser
+            {
+                UserName = "admin",
+                Email = "admin@test.com"
+            };
+
+            await userManager.CreateAsync(admin, "Pa$$w0rd");
+            await userManager.AddToRoleAsync(admin, StaticUserRoles.ADMIN);
 
             //Customers
             var users = new List<AppUser>
@@ -74,6 +94,7 @@ namespace Persistence
             foreach (var user in users)
             {
                 await userManager.CreateAsync(user, "Pa$$w0rd");
+                await userManager.AddToRoleAsync(user, StaticUserRoles.CUSTOMER);
             }
 
             // ShippingMethods

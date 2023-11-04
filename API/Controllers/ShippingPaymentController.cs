@@ -1,6 +1,8 @@
 using Application.Dto.ShippingPayment;
 using Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Persistence;
 
 namespace API.Controllers
 {
@@ -26,36 +28,42 @@ namespace API.Controllers
         }
 
         [HttpPost("shipping-methods")] //api/shipping-methods
+        [Authorize(Roles = StaticUserRoles.ADMIN)]
         public async Task<IActionResult> AddShippingMethod(ShippingMethodCreateUpdateDto method)
         {
             return HandleResult(await _shippingPaymentService.AddShippingMethod(method));
         }
 
         [HttpPost("payment-methods")] //api/payment-methods
+        [Authorize(Roles = StaticUserRoles.ADMIN)]
         public async Task<IActionResult> AddPaymentMethod(PaymentMethodCreateUpdateDto method)
         {
             return HandleResult(await _shippingPaymentService.AddPaymentMethod(method));
         }
 
         [HttpPut("shipping-methods/{methodId}")] //api/shipping-methods/methodId
+        [Authorize(Roles = StaticUserRoles.ADMIN)]
         public async Task<IActionResult> UpdateShippingMethod(int methodId, ShippingMethodCreateUpdateDto method)
         {
             return HandleResult(await _shippingPaymentService.UpdateShippingMethod(methodId, method));
         }
 
         [HttpPut("payment-methods/{methodId}")] //api/payment-methods/methodId
+        [Authorize(Roles = StaticUserRoles.ADMIN)]
         public async Task<IActionResult> UpdatePaymentMethod(int methodId, PaymentMethodCreateUpdateDto method)
         {
             return HandleResult(await _shippingPaymentService.UpdatePaymentMethod(methodId, method));
         }
 
         [HttpDelete("shipping-methods/{methodId}")] //api/shipping-methods/methodId
+        [Authorize(Roles = StaticUserRoles.ADMIN)]
         public async Task<IActionResult> DeleteShippingMethod(int methodId)
         {
             return HandleResult(await _shippingPaymentService.DeleteShippingMethod(methodId));
         }
 
         [HttpDelete("payment-methods/{methodId}")]  //api/payment-methods/methodId
+        [Authorize(Roles = StaticUserRoles.ADMIN)]
         public async Task<IActionResult> DeletePaymentMethod(int methodId)
         {
             return HandleResult(await _shippingPaymentService.DeletePaymentMethod(methodId));

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Persistence;
 
 namespace API.Controllers
 {
@@ -31,17 +32,39 @@ namespace API.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("account/login")] //api/account/login
-        public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
+        [HttpPost("account/login-customer")] //api/account/login-customer
+        public async Task<ActionResult<UserDto>> LoginCustomer(LoginDto loginDto)
         {
             var user = await _userManager.FindByEmailAsync(loginDto.Email);
 
             if (user == null) return Unauthorized();
 
+            if (!await HasRole(user, StaticUserRoles.CUSTOMER))
+                return Unauthorized();
+
             var result = await _userManager.CheckPasswordAsync(user, loginDto.Password);
 
             if (result)
-                return CreateUserObject(user);
+                return await CreateUserObject(user);
+
+            return Unauthorized();
+        }
+
+        [AllowAnonymous]
+        [HttpPost("account/login-admin")] //api/account/login-admin
+        public async Task<ActionResult<UserDto>> LoginAdmin(LoginDto loginDto)
+        {
+            var user = await _userManager.FindByEmailAsync(loginDto.Email);
+
+            if (user == null) return Unauthorized();
+
+            if (!await HasRole(user, StaticUserRoles.ADMIN))
+                return Unauthorized();
+
+            var result = await _userManager.CheckPasswordAsync(user, loginDto.Password);
+
+            if (result)
+                return await CreateUserObject(user);
 
             return Unauthorized();
         }
@@ -72,7 +95,8 @@ namespace API.Controllers
 
             if (result.Succeeded)
             {
-                return CreateUserObject(user);
+                await _userManager.AddToRoleAsync(user, StaticUserRoles.CUSTOMER);
+                return await CreateUserObject(user);
             }
 
             return BadRequest(result.Errors);
@@ -89,7 +113,7 @@ namespace API.Controllers
 
             if (result.Succeeded)
             {
-                return CreateUserObject(user);
+                return await CreateUserObject(user);
             }
             
             ModelState.AddModelError("currentpassword", "Invalid password");
@@ -102,28 +126,32 @@ namespace API.Controllers
         {
             var user = await _userManager.FindByEmailAsync(User.FindFirstValue(ClaimTypes.Email));
 
-            return CreateUserObject(user);
+            return await CreateUserObject(user);
         }
 
         [HttpDelete("accounts/{userId}")] //api/accounts/userId
+        [Authorize(Roles = StaticUserRoles.ADMIN)]
         public async Task<IActionResult> DeleteAccount(int userId)
         {
             return HandleResult(await _userService.DeleteAccount(userId));
         }
 
         [HttpPatch("accounts/{userId}/address")] //api/accounts/userId/address
+        [Authorize(Roles = StaticUserRoles.CUSTOMER)]
         public async Task<IActionResult> UpdateUserAddress(int userId, AddressDto address)
         {
             return HandleResult(await _userService.UpdateUserAddress(userId, address));
         }
 
         [HttpPost("accounts/{userId}/favourites/{productId}")] //api/accounts/userId/favourites/productId
+        [Authorize(Roles = StaticUserRoles.CUSTOMER)]
         public async Task<IActionResult> AddFavouriteProduct(int userId, int productId)
         {
             return HandleResult(await _userService.AddFavouriteProduct(userId, productId));
         }
 
         [HttpDelete("accounts/{userId}/favourites/{productId}")] //api/accounts/userId/favourites/productId
+        [Authorize(Roles = StaticUserRoles.CUSTOMER)]
         public async Task<IActionResult> RemoveFavouriteProduct(int userId, int productId)
         {
             return HandleResult(await _userService.RemoveFavouriteProduct(userId, productId));
@@ -142,19 +170,38 @@ namespace API.Controllers
         }
 
         [HttpPut("accounts/{userId}/discount")] //api/accounts/userId/discount
+        [Authorize(Roles = StaticUserRoles.ADMIN)]
         public async Task<IActionResult> SetUserDiscount(int userId, decimal discountValue)
         {
             return HandleResult(await _userService.SetUserDiscount(userId, discountValue));
         }
 
-        private UserDto CreateUserObject(AppUser user)
+        private async Task<UserDto> CreateUserObject(AppUser user)
         {
             return new UserDto
             {
                 UserName = user.UserName,
                 Email = user.Email,
-                Token = _tokenService.CreateToken(user),  
+                Token = await _tokenService.CreateToken(user),  
             };
+        }
+
+        private async Task<bool> HasRole(AppUser user, string role)
+        {
+            var userRoles = await _userManager.GetRolesAsync(user);
+
+            bool hasRole = false;
+
+            foreach (var userRole in userRoles)
+            {
+                if (userRole == role)
+                {
+                    hasRole = true;
+                    break;
+                }
+            }
+
+            return hasRole;
         }
     }
 }
