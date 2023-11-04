@@ -41,20 +41,6 @@ namespace API.Controllers
             return HandleResult(await _shippingPaymentService.AddPaymentMethod(method));
         }
 
-        [HttpPut("shipping-methods/{methodId}")] //api/shipping-methods/methodId
-        [Authorize(Roles = StaticUserRoles.ADMIN)]
-        public async Task<IActionResult> UpdateShippingMethod(int methodId, ShippingMethodCreateUpdateDto method)
-        {
-            return HandleResult(await _shippingPaymentService.UpdateShippingMethod(methodId, method));
-        }
-
-        [HttpPut("payment-methods/{methodId}")] //api/payment-methods/methodId
-        [Authorize(Roles = StaticUserRoles.ADMIN)]
-        public async Task<IActionResult> UpdatePaymentMethod(int methodId, PaymentMethodCreateUpdateDto method)
-        {
-            return HandleResult(await _shippingPaymentService.UpdatePaymentMethod(methodId, method));
-        }
-
         [HttpDelete("shipping-methods/{methodId}")] //api/shipping-methods/methodId
         [Authorize(Roles = StaticUserRoles.ADMIN)]
         public async Task<IActionResult> DeleteShippingMethod(int methodId)

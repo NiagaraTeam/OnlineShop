@@ -10,10 +10,7 @@ namespace Application.Interfaces
 
         Task<Result<int>> AddShippingMethod(ShippingMethodCreateUpdateDto method);
         Task<Result<int>> AddPaymentMethod(PaymentMethodCreateUpdateDto method);
-
-        Task<Result<object>> UpdateShippingMethod(int methodId, ShippingMethodCreateUpdateDto method);
-        Task<Result<object>> UpdatePaymentMethod(int methodId, PaymentMethodCreateUpdateDto method);
-
+        
         Task<Result<object>> DeleteShippingMethod(int methodId);
         Task<Result<object>> DeletePaymentMethod(int methodId);
     }
