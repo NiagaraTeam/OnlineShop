@@ -1,4 +1,4 @@
-import { CategoryStatus } from "./enums/CategoryStatus";
+import { CategoryStatus } from "../enums/CategoryStatus";
 
 export interface Category {
     id: number;

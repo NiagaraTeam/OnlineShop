@@ -2,6 +2,7 @@ export interface User {
     userName: string;
     email: string;
     token: string;
+    isAdmin: boolean;
 }
 
 export interface UserFormValues {
