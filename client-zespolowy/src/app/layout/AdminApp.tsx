@@ -19,10 +19,12 @@ export const AdminApp = observer(() => {
 
   return (
     <>  
+      <div className='container'>
         <ScrollRestoration/>
         <Header/>
         <Outlet/>
         <Footer/>
+      </div>
     </>
   )
 })

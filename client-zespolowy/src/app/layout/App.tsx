@@ -19,6 +19,7 @@ export const App = observer(() => {
 
   return (
     <>
+      <div className='container'>
         <ScrollRestoration/>
         <Header/>
           {location.pathname === '/' 
@@ -28,6 +29,7 @@ export const App = observer(() => {
             <Outlet/>
           }
         <Footer/>
+        </div>
     </>
   )
 })

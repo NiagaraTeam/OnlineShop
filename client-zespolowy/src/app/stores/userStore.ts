@@ -2,6 +2,7 @@ import { makeAutoObservable, runInAction } from "mobx";
 import { ChangePasswordFormValues, User, UserFormValues } from "../models/common/User";
 import agent from "../api/agent";
 import { store } from "./store";
+import { router } from "../router/Routes";
 
 export default class UserStore {
     user: User | null = null;
@@ -29,7 +30,7 @@ export default class UserStore {
             runInAction(() => {
                 this.user = user;
             });
-            //router.navigate('/....');
+            router.navigate('/products');
         } catch (error) {
             console.log(error);
             throw error;
@@ -45,7 +46,7 @@ export default class UserStore {
             runInAction(() => {
                 this.user = user;
             });
-            //router.navigate('/....');
+            router.navigate('/account');
         } catch (error) {
             console.log(error);
             throw error;
@@ -61,7 +62,7 @@ export default class UserStore {
             runInAction(() => {
                 this.user = user;
             });
-            //router.navigate('/....');
+            router.navigate('/admin/products/manage');
         } catch (error) {
             console.log(error);
             throw error;
@@ -71,8 +72,13 @@ export default class UserStore {
     logout = () => {
         store.commonStore.setToken(null);
         
+        const isAdmin = this.user?.isAdmin;
         this.user = null;
-        //router.navigate('/....');
+
+        if (isAdmin)
+            router.navigate('/admin/login');
+        else
+            router.navigate('/login');
     }
 
     changePassword = async (values: ChangePasswordFormValues) => {
@@ -88,7 +94,9 @@ export default class UserStore {
     getUser = async () => {
         try {
             const user = await agent.Account.current();
-            runInAction(() => this.user = user);
+            runInAction(() => {
+                this.user = user;
+            });
         } catch (error) {
             console.log(error);
         }
