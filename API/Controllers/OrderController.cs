@@ -58,7 +58,7 @@ namespace API.Controllers
             return HandleResult(await _orderService.ChangeOrderItemQuantity(orderId, item));
         }
 
-        [HttpPatch("orders/{orderId}/status")] //api/orders/orderId/status
+        [HttpPatch("orders/{orderId}/{status}")] //api/orders/orderId/status
         [Authorize(Roles = StaticUserRoles.ADMIN)]
         public async Task<IActionResult> ChangeOrderStatus(int orderId, OrderStatus status)
         {
