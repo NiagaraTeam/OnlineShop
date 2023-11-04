@@ -1,7 +1,9 @@
 using Application.Dto.Category;
 using Application.Interfaces;
 using Domain.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Persistence;
 
 namespace API.Controllers
 {
@@ -14,18 +16,21 @@ namespace API.Controllers
         }
 
         [HttpPost("categories")] //api/categories
+        [Authorize(Roles = StaticUserRoles.ADMIN)]
         public async Task<IActionResult> CreateCategory(CategoryCreateUpdateDto category)
         {
             return HandleResult(await _categoryService.Create(category));
         }
 
         [HttpPut("categories/{categoryId}")] //api/categories/categoryId
+        [Authorize(Roles = StaticUserRoles.ADMIN)]
         public async Task<IActionResult> UpdateCategory(int categoryId, CategoryCreateUpdateDto category)
         {
             return HandleResult(await _categoryService.Update(categoryId, category));
         }
 
         [HttpPatch("categories/{categoryId}/status")] //api/categories/categoryId/status
+        [Authorize(Roles = StaticUserRoles.ADMIN)]
         public async Task<IActionResult> ChangeCategoryStatus(int categoryId, CategoryStatus newStatus)
         {
             return HandleResult(await _categoryService.ChangeCategoryStatus(categoryId, newStatus));
