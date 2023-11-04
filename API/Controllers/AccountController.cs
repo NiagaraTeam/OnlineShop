@@ -45,7 +45,7 @@ namespace API.Controllers
             var result = await _userManager.CheckPasswordAsync(user, loginDto.Password);
 
             if (result)
-                return await CreateUserObject(user);
+                return await CreateUserObject(user, false);
 
             return Unauthorized();
         }
@@ -64,7 +64,7 @@ namespace API.Controllers
             var result = await _userManager.CheckPasswordAsync(user, loginDto.Password);
 
             if (result)
-                return await CreateUserObject(user);
+                return await CreateUserObject(user, true);
 
             return Unauthorized();
         }
@@ -96,7 +96,7 @@ namespace API.Controllers
             if (result.Succeeded)
             {
                 await _userManager.AddToRoleAsync(user, StaticUserRoles.CUSTOMER);
-                return await CreateUserObject(user);
+                return await CreateUserObject(user, false);
             }
 
             return BadRequest(result.Errors);
@@ -113,7 +113,7 @@ namespace API.Controllers
 
             if (result.Succeeded)
             {
-                return await CreateUserObject(user);
+                return await CreateUserObject(user, await HasRole(user, StaticUserRoles.ADMIN));
             }
             
             ModelState.AddModelError("currentpassword", "Invalid password");
@@ -126,7 +126,7 @@ namespace API.Controllers
         {
             var user = await _userManager.FindByEmailAsync(User.FindFirstValue(ClaimTypes.Email));
 
-            return await CreateUserObject(user);
+            return await CreateUserObject(user, await HasRole(user, StaticUserRoles.ADMIN));
         }
 
         [HttpDelete("accounts/{userId}")] //api/accounts/userId
@@ -176,13 +176,14 @@ namespace API.Controllers
             return HandleResult(await _userService.SetUserDiscount(userId, discountValue));
         }
 
-        private async Task<UserDto> CreateUserObject(AppUser user)
+        private async Task<UserDto> CreateUserObject(AppUser user, bool isAdmin)
         {
             return new UserDto
             {
                 UserName = user.UserName,
                 Email = user.Email,
-                Token = await _tokenService.CreateToken(user),  
+                Token = await _tokenService.CreateToken(user),
+                IsAdmin = isAdmin
             };
         }
 

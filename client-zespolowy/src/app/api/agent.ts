@@ -1,15 +1,18 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { ChangePasswordFormValues, User, UserFormValues } from "../models/User";
-import { Category } from "../models/Category";
-import { Product } from "../models/Product";
+import { ChangePasswordFormValues, User, UserFormValues } from "../models/common/User";
+import { Category } from "../models/onlineshop/Category";
+import { Product } from "../models/onlineshop/Product";
 import { CategoryStatus } from "../models/enums/CategoryStatus";
 import { ProductStatus } from "../models/enums/ProductStatus";
-import { Discount } from "../models/Discount";
-import { Question } from "../models/Question";
-import { Address } from "../models/Address";
-import { Order } from "../models/Order";
-import { OrderItem, OrderItemNewQuantity } from "../models/OrderItem";
+import { Discount } from "../models/onlineshop/Discount";
+import { Question } from "../models/onlineshop/Question";
+import { Address } from "../models/onlineshop/Address";
+import { Order } from "../models/onlineshop/Order";
+import { OrderItem, OrderItemNewQuantity } from "../models/onlineshop/OrderItem";
 import { OrderStatus } from "../models/enums/OrderStatus";
+import { ShippingMethod } from "../models/onlineshop/ShippingMethod";
+import { PaymentMethod } from "../models/onlineshop/PaymentMethod";
+import { store } from "../stores/store";
 
 const sleep = (delay: number) => {
     return new Promise((resolve) => {
@@ -20,7 +23,7 @@ const sleep = (delay: number) => {
 axios.defaults.baseURL = import.meta.env.VITE_API_URL;
 
 axios.interceptors.response.use(async response => {
-    if (import.meta.env.DEV) await sleep(500);
+    if (import.meta.env.DEV) await sleep(0);
     return response;
 }, (error: AxiosError) => {
     //tu będzie skonfigurowana obsługa błędów zwracanych przez serwer 
@@ -29,11 +32,11 @@ axios.interceptors.response.use(async response => {
 
 const responseBody = <T> (response: AxiosResponse<T>) => response.data;
 
-// axios.interceptors.request.use(config => {
-//     const token = store.commonStore.token;
-//     if (token && config.headers) config.headers.Authorization = `Bearer ${token}`;
-//     return config;
-// })
+axios.interceptors.request.use(config => {
+    const token = store.commonStore.token;
+    if (token && config.headers) config.headers.Authorization = `Bearer ${token}`;
+    return config;
+})
 
 const requests = {
     get: <T> (url: string) => axios.get<T>(url).then(responseBody),
@@ -45,7 +48,8 @@ const requests = {
 
 const Account = {
     current: () => requests.get<User>('/account'),
-    login: (user: UserFormValues) => requests.post<User>('/account/login', user),
+    loginCustomer: (user: UserFormValues) => requests.post<User>('/account/login-customer', user),
+    loginAdmin: (user: UserFormValues) => requests.post<User>('/account/login-admin', user),
     register: (user: UserFormValues) => requests.post<User>('/account/register', user),
     changePassword: (values: ChangePasswordFormValues) => requests.post<void>('/account/changepassword/', values),
 
@@ -94,15 +98,25 @@ const Orders = {
     changeOrderStatus: (orderId: number, status: OrderStatus) => requests.patch<void>(`/orders/${orderId}/${status}`, {}),
 };
 
+const ShippingMethods = {
+    create: (method: ShippingMethod) => requests.post<number>("/shipping-methods", method),
+    list: () => requests.get<ShippingMethod[]>("shipping-methods"),
+    delete: (methodId: number) => requests.del<void>(`shipping-methods/${methodId}`),
+}
 
-
-
+const PaymentMethods = {
+    create: (method: PaymentMethod) => requests.post<number>("/payment-methods", method),
+    list: () => requests.get<PaymentMethod[]>("payment-methods"),
+    delete: (methodId: number) => requests.del<void>(`payment-methods/${methodId}`),
+}
 
 const agent = {
     Account,
     Categories,
     Products,
-    Orders
+    Orders,
+    ShippingMethods,
+    PaymentMethods
 }
 
 export default agent;

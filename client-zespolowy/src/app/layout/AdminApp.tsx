@@ -3,10 +3,10 @@ import './App.css'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '../stores/store';
 import { Outlet, ScrollRestoration } from 'react-router-dom';
-import { Header } from '../../components/customer/common/Header';
-import { Footer } from '../../components/customer/common/Footer';
+import { Header } from '../../components/admin/common/Header';
+import { Footer } from '../../components/admin/common/Footer';
 
-export const App = observer(() => {
+export const AdminApp = observer(() => {
   const { commonStore, userStore } = useStore();
 
   useEffect(() => {
@@ -18,19 +18,13 @@ export const App = observer(() => {
   }, [commonStore, userStore]);
 
   return (
-    <>
+    <>  
       <div className='container'>
         <ScrollRestoration/>
         <Header/>
-          {location.pathname === '/' 
-          ? 
-            <h1>strona głowna klienta</h1>
-          : 
-            <Outlet/>
-          }
+        <Outlet/>
         <Footer/>
-        </div>
+      </div>
     </>
   )
 })
-
