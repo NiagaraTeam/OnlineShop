@@ -1,4 +1,6 @@
+using Application.Dto.ShippingPayment;
 using AutoMapper;
+using Domain;
 
 namespace Application.Core
 {
@@ -6,7 +8,11 @@ namespace Application.Core
     {
         public MappingProfiles()
         {
-            //CreateMap<Class, ClassDto>();
+            CreateMap<PaymentMethod, PaymentMethodDto>();
+            CreateMap<PaymentMethodCreateUpdateDto, PaymentMethod>();
+
+            CreateMap<ShippingMethod, ShippingMethodDto>();
+            CreateMap<ShippingMethodCreateUpdateDto, ShippingMethod>();
         }
     }
 }
