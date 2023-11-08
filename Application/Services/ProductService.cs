@@ -6,7 +6,7 @@ using AutoMapper;
 using Domain.Enums;
 using Persistence;
 
-namespace Application.Services
+namespace Application.Services  // Siema
 {
     public class ProductService : IProductService
     {
