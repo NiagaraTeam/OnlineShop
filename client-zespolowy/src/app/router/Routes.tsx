@@ -4,10 +4,25 @@ import ServerError from "../../components/errors/ServerError";
 import NotFound from "../../components/errors/NotFound";
 import { LoginPage as CustomerLogin }  from "../../components/customer/pages/LoginPage";
 import { LoginPage as AdminLogin }  from "../../components/admin/pages/LoginPage";
-import { ManageProducts } from "../../components/admin/pages/ManageProducts";
 import { AdminApp } from "../layout/AdminApp";
-import { Products } from "../../components/customer/features/Products";
+import { ProductsPage as CustomerProductsPage } from "../../components/customer/pages/ProductsPage";
 import { AccountPage } from "../../components/customer/pages/AccountPage";
+import { ProductsPage as AdminProductsPage } from "../../components/admin/pages/ProductsPage";
+import { OrdersPage } from "../../components/admin/pages/OrdersPage";
+import { OrderDetailsPage } from "../../components/admin/pages/OrderDetailsPage";
+import { ShippingMethodsPage } from "../../components/admin/pages/ShippingMethodsPage";
+import { PaymentMethodsPage } from "../../components/admin/pages/PaymentMethodsPage";
+import { CustomersPage } from "../../components/admin/pages/CustomersPage";
+import { CustomerDetailsPage } from "../../components/admin/pages/CutomerDetailsPage";
+import { ProductCreatePage } from "../../components/admin/pages/ProductCreatePage";
+import { ProductUpdatePage } from "../../components/admin/pages/ProductUpdatePage";
+import { AboutPage } from "../../components/customer/pages/AboutPage";
+import { ContactPage } from "../../components/customer/pages/ContactPage";
+import { CartPage } from "../../components/customer/pages/CartPage";
+import { FavouriteProductsPage } from "../../components/customer/pages/FavouriteProductsPage";
+import { OffertsPage } from "../../components/customer/pages/OffertsPage";
+import { ProductDetailsPage } from "../../components/customer/pages/ProductDetailsPage";
+import { RegisterPage } from "../../components/customer/pages/RegisterPage";
 
 export const routes: RouteObject[] = [
     {
@@ -16,10 +31,19 @@ export const routes: RouteObject[] = [
         children: [
             //login required as customer
             {path: 'account', element: <AccountPage />},
+            {path: 'products/favourite', element: <FavouriteProductsPage />},
             
             //no login required
-            {path: 'products', element: <Products />},
+            {path: 'products', element: <CustomerProductsPage />},
+            {path: 'product/:id', element: <ProductDetailsPage />},
+            {path: 'offerts', element: <OffertsPage />},
+            {path: 'cart', element: <CartPage />},
+            {path: 'about', element: <AboutPage />},
+            {path: 'contact', element: <ContactPage />},
+            
             {path: 'login', element: <CustomerLogin />},
+            {path: 'register', element: <RegisterPage />},
+
             {path: 'server-error', element: <ServerError />},
             {path: '*', element: <NotFound />}
         ],
@@ -29,7 +53,15 @@ export const routes: RouteObject[] = [
         element: <AdminApp/>,
         children: [
             //login required as admin
-            {path: 'products/manage', element: <ManageProducts/> },
+            {path: 'products', element: <AdminProductsPage/> },
+            {path: 'products/create', element: <ProductCreatePage/> },
+            {path: 'products/update', element: <ProductUpdatePage/> },
+            {path: 'orders', element: <OrdersPage/> },
+            {path: 'order/:id', element: <OrderDetailsPage/> },
+            {path: 'methods/shipping', element: <ShippingMethodsPage/> },
+            {path: 'methods/payment', element: <PaymentMethodsPage/> },
+            {path: 'customers', element: <CustomersPage/> },
+            {path: 'customer/:id', element: <CustomerDetailsPage/> },
 
             //no login required
             {path: 'login', element: <AdminLogin />},

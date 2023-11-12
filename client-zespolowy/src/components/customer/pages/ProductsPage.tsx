@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite"
 import { useStore } from "../../../app/stores/store";
 
-export const Products = observer(() => {
+export const ProductsPage = observer(() => {
     const {userStore: {isLoggedIn}} = useStore();
 
     console.log(isLoggedIn);
