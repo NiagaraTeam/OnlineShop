@@ -23,6 +23,8 @@ import { FavouriteProductsPage } from "../../components/customer/pages/Favourite
 import { OffertsPage } from "../../components/customer/pages/OffertsPage";
 import { ProductDetailsPage } from "../../components/customer/pages/ProductDetailsPage";
 import { RegisterPage } from "../../components/customer/pages/RegisterPage";
+import { RequireCustomerAuth } from "./RequireCustomerAuth";
+import { RequireAdminAuth } from "./RequireAdminAuth";
 
 export const routes: RouteObject[] = [
     {
@@ -30,9 +32,10 @@ export const routes: RouteObject[] = [
         element: <App/>,
         children: [
             //login required as customer
-            {path: 'account', element: <AccountPage />},
-            {path: 'products/favourite', element: <FavouriteProductsPage />},
-            
+            {element: <RequireCustomerAuth/>, children: [
+                {path: 'account', element: <AccountPage />},
+                {path: 'products/favourite', element: <FavouriteProductsPage />},
+            ]},
             //no login required
             {path: 'products', element: <CustomerProductsPage />},
             {path: 'product/:id', element: <ProductDetailsPage />},
@@ -53,18 +56,20 @@ export const routes: RouteObject[] = [
         element: <AdminApp/>,
         children: [
             //login required as admin
-            {path: 'products', element: <AdminProductsPage/> },
-            {path: 'products/create', element: <ProductCreatePage/> },
-            {path: 'products/update', element: <ProductUpdatePage/> },
-            {path: 'orders', element: <OrdersPage/> },
-            {path: 'order/:id', element: <OrderDetailsPage/> },
-            {path: 'methods/shipping', element: <ShippingMethodsPage/> },
-            {path: 'methods/payment', element: <PaymentMethodsPage/> },
-            {path: 'customers', element: <CustomersPage/> },
-            {path: 'customer/:id', element: <CustomerDetailsPage/> },
-
+            {element: <RequireAdminAuth/>, children: [
+                {path: 'products', element: <AdminProductsPage/> },
+                {path: 'products/create', element: <ProductCreatePage/> },
+                {path: 'products/update', element: <ProductUpdatePage/> },
+                {path: 'orders', element: <OrdersPage/> },
+                {path: 'order/:id', element: <OrderDetailsPage/> },
+                {path: 'methods/shipping', element: <ShippingMethodsPage/> },
+                {path: 'methods/payment', element: <PaymentMethodsPage/> },
+                {path: 'customers', element: <CustomersPage/> },
+                {path: 'customer/:id', element: <CustomerDetailsPage/> },
+            ]},
             //no login required
             {path: 'login', element: <AdminLogin />},
+            {path: '*', element: <NotFound />}
         ]
     }
 ]

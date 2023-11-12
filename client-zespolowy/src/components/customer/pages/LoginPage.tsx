@@ -1,20 +1,18 @@
-import { LoginForm } from "../forms/LoginForm"
+import { LoginForm } from "../../common/forms/LoginForm"
 import { useStore } from "../../../app/stores/store";
 import { observer } from "mobx-react-lite";
 import { Navigate } from "react-router-dom";
 
 export const LoginPage = observer(() => {
-    const {userStore: {isLoggedIn}} = useStore();
+    const {userStore: {isLoggedIn, isAdmin}} = useStore();
 
-    console.log(isLoggedIn);
-
-    if (isLoggedIn)
+    if (isLoggedIn && !isAdmin)
         return <Navigate to="/products"/>;
 
     return (
         <>
-            {isLoggedIn && "Jesteś zalogowany"}
-            <div className="p-4 col-6 offset-3">
+            <div className="p-4 col-4 offset-4">
+                <h3 className="text-center mb-5">Login to OnlineShop</h3>
                 <LoginForm />
             </div>
         </>
