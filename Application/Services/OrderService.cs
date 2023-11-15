@@ -1,9 +1,11 @@
+using System.Collections.Immutable;
 using Application.Core;
 using Application.Dto.Order;
 using Application.Interfaces;
 using AutoMapper;
 using Domain;
 using Domain.Enums;
+using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 namespace Application.Services
@@ -44,8 +46,30 @@ namespace Application.Services
 
         public async Task<Result<object>> ChangeOrderItemQuantity(int orderId, OrderItemNewQuantityDto item)
         {
-            //?????????????? howww
-            throw new NotImplementedException();
+            var order = await _context.Orders
+        .Include(o => o.Items)
+        .FirstOrDefaultAsync(o => o.Id == orderId);
+
+            if (order == null)
+            {
+                return Result<object>.Failure("Order with id not found");
+            }
+
+            var orderItem = order.Items.FirstOrDefault(i => i.ProductId == item.ProductId);
+
+            if (orderItem == null)
+            {
+                return Result<object>.Failure($"Item with ProductId not found in order with ID.");
+            }
+            orderItem.Quantity = item.Quantity;
+            _context.Update(orderItem);
+
+            if (await _context.SaveChangesAsync() > 0)
+                return Result<object>.Success(null);
+
+            return Result<object>.Failure("Failed to update orderitem quantity");
+
+
         }
 
         public async Task<Result<object>> ChangeOrderStatus(int orderId, OrderStatus status)
@@ -79,9 +103,28 @@ namespace Application.Services
 
         public async Task<Result<OrderDto>> Details(int orderId)
         {
+            var order = await _context.Orders.FindAsync(orderId);
+            if (order == null)
+            {
+                return Result<OrderDto>.Failure("Order with id not found");
+            }
 
-            //?? pozniej sie dorobi 
-            throw new NotImplementedException();
+            var orderDto = new OrderDto
+            {
+                Id = order.Id,
+                OrderDate = order.OrderDate,
+                Status = order.Status,
+                CustomerDetailsId = order.CustomerDetailsId,
+                PaymentMethod = order.PaymentMethod,
+                ShippingMethod = order.ShippingMethod,
+                Items = order.Items.Select(oi => new OrderItemDto
+                {
+                    ProductId = oi.ProductId,
+                    Quantity = oi.Quantity
+                }).ToList()
+            };
+            return Result<OrderDto>.Success(orderDto);
+
         }
 
         public async Task<Result<object>> RemoveOrderItem(int orderId, int productId)
