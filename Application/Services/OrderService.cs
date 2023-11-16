@@ -119,6 +119,7 @@ namespace Application.Services
                 ShippingMethod = order.ShippingMethod,
                 Items = order.Items.Select(oi => new OrderItemDto
                 {
+                    //ProductDto=...
                     ProductId = oi.ProductId,
                     Quantity = oi.Quantity
                 }).ToList()

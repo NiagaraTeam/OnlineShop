@@ -9,6 +9,7 @@ namespace Application.Dto.Order
     public class OrderItemDto
     {
         public decimal Quantity { get; set; }
-        public int ProductId;
+        public int ProductId { get; set; }
+        //public ProductDto ProductDto{ get; set; }
     }
 }
