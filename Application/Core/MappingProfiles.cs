@@ -22,6 +22,9 @@ namespace Application.Core
             CreateMap<Category, CategoryDto>();
             CreateMap<Photo, PhotoDto>();
             CreateMap<ProductDiscount, DiscountDto>();
+
+            CreateMap<DiscountDto, ProductDiscount>();
+
         }
     }
 }

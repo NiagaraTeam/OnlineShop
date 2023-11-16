@@ -6,6 +6,7 @@ using AutoMapper;
 using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using Domain;
 
 namespace Application.Services  // Siema
 {
@@ -25,7 +26,21 @@ namespace Application.Services  // Siema
 
         public async Task<Result<object>> AddProductDiscount(int productId, DiscountDto discount)
         {
-            throw new NotImplementedException();
+            var product = await _context.Products
+                .Include(p => p.ProductDiscounts)
+                .FirstOrDefaultAsync(p => p.Id == productId);
+
+            if(product == null)
+                return null;
+
+            var newDiscount = _mapper.Map<ProductDiscount>(discount);
+            product.ProductDiscounts.Add(newDiscount);
+
+            _context.Update(product);
+            await _context.SaveChangesAsync();
+
+            return Result<object>.Success("Discount added successfully");
+
         }
 
         public async Task<Result<object>> ChangeProductStatus(int productId, ProductStatus newStatus)
