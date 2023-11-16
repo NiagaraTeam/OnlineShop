@@ -24,6 +24,7 @@ namespace Application.Core
             CreateMap<ProductDiscount, DiscountDto>();
 
             CreateMap<DiscountDto, ProductDiscount>();
+                
 
         }
     }
