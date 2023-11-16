@@ -74,14 +74,14 @@ namespace Application.Services  // Siema
         public async Task<Result<IEnumerable<ProductDto>>> GetDiscountedProducts(DateRangeDto dateRange)
         {
             var discountedProducts = await _context.Products
-            .Include(p => p.ProductInfo)
-            .Include(p => p.Photo)
-            .Include(p => p.Category)
-            .Include(p => p.ProductExpert)
-            .Include(p => p.ProductDiscounts)
-            .Where(p => p.ProductDiscounts
-            .Any(d => d.Start >= dateRange.Start && d.End <= dateRange.End)
-            ).ToListAsync();
+                .Include(p => p.ProductInfo)
+                .Include(p => p.Photo)
+                .Include(p => p.Category)
+                .Include(p => p.ProductExpert)
+                .Include(p => p.ProductDiscounts)
+                .Where(p => p.ProductDiscounts
+                .Any(d => d.Start >= dateRange.Start && d.End <= dateRange.End))
+                .ToListAsync();
 
             if ( discountedProducts == null)
                 return null;
@@ -94,7 +94,22 @@ namespace Application.Services  // Siema
 
         public async Task<Result<IEnumerable<ProductDto>>> GetNewestProducts()
         {
-            throw new NotImplementedException();
+             var newestProducts = await _context.Products
+                .Include(p => p.ProductInfo)
+                .Include(p => p.Photo)
+                .Include(p => p.Category)
+                .Include(p => p.ProductExpert)
+                .Include(p => p.ProductDiscounts)
+                .OrderByDescending(p => p.CreatedAt)
+                .Take(3)
+                .ToListAsync();
+
+            if (newestProducts == null)
+                return null;
+
+            var newestProductsDto = _mapper.Map<IEnumerable<ProductDto>>(newestProducts);
+
+            return Result<IEnumerable<ProductDto>>.Success(newestProductsDto);
         }
 
         public async Task<MemoryStream> GetPDFWithPriceList(int categoryId)
