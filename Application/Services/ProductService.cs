@@ -4,6 +4,7 @@ using Application.Dto.Product;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Enums;
+using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 namespace Application.Services  // Siema
@@ -32,7 +33,7 @@ namespace Application.Services  // Siema
             throw new NotImplementedException();
         }
 
-        public async Task<Result<int>> Create(ProductCreateUpdateDto product)
+        public async Task<Result<int>> Create(ProductCreateUpdateDto product)  /**/
         {
             throw new NotImplementedException();
         }
@@ -49,7 +50,20 @@ namespace Application.Services  // Siema
 
         public async Task<Result<ProductDto>> Details(int productId)
         {
-            throw new NotImplementedException();
+            var product = await _context.Products
+                .Include(p => p.ProductInfo)
+                .Include(p => p.Photo)
+                .Include(p => p.Category)
+                .Include(p => p.ProductExpert)
+                .Include(p => p.ProductDiscounts)
+                .FirstOrDefaultAsync(p => p.Id == productId);
+
+            if ( product == null)
+                return null;
+
+            var productDto = _mapper.Map<ProductDto>(product);
+            
+            return Result<ProductDto>.Success(productDto);
         }
 
         public async Task<Result<IEnumerable<ProductDto>>> GetDeletedProducts()
