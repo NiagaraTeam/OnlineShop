@@ -62,7 +62,7 @@ namespace Application.Services  // Siema
                 return null;
 
             var productDto = _mapper.Map<ProductDto>(product);
-            
+
             return Result<ProductDto>.Success(productDto);
         }
 
@@ -73,7 +73,23 @@ namespace Application.Services  // Siema
 
         public async Task<Result<IEnumerable<ProductDto>>> GetDiscountedProducts(DateRangeDto dateRange)
         {
-            throw new NotImplementedException();
+            var discountedProducts = await _context.Products
+            .Include(p => p.ProductInfo)
+            .Include(p => p.Photo)
+            .Include(p => p.Category)
+            .Include(p => p.ProductExpert)
+            .Include(p => p.ProductDiscounts)
+            .Where(p => p.ProductDiscounts
+            .Any(d => d.Start >= dateRange.Start && d.End <= dateRange.End)
+            ).ToListAsync();
+
+            if ( discountedProducts == null)
+                return null;
+
+            var discountedProductDtos = _mapper.Map<IEnumerable<ProductDto>>(discountedProducts);
+
+            return Result<IEnumerable<ProductDto>>.Success(discountedProductDtos);
+
         }
 
         public async Task<Result<IEnumerable<ProductDto>>> GetNewestProducts()
