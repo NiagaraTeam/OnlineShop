@@ -124,7 +124,18 @@ namespace Application.Services  // Siema
 
         public async Task<Result<IEnumerable<ProductDto>>> TopPurchasedProducts()
         {
-            throw new NotImplementedException();
+            var topProducts = await _context.Products
+                .Include(p => p.ProductInfo)
+                .OrderByDescending(p => p.ProductInfo.TotalSold)
+                .Take(3)
+                .ToListAsync();
+
+            if ( topProducts == null)
+                return null;
+
+            var topProductsDto = _mapper.Map<IEnumerable<ProductDto>>(topProducts);
+
+            return Result<IEnumerable<ProductDto>>.Success(topProductsDto);
         }
 
         public async Task<Result<ProductDto>> Update(int productId, ProductCreateUpdateDto product)
