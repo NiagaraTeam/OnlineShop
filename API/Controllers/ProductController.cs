@@ -18,14 +18,14 @@ namespace API.Controllers
 
         [HttpPost("products")] //api/products
         [Authorize(Roles = StaticUserRoles.ADMIN)]
-        public async Task<IActionResult> CreateProduct(ProductCreateUpdateDto product)
+        public async Task<IActionResult> CreateProduct(ProductCreateDto product)
         {
             return HandleResult(await _productService.Create(product));
         }
 
         [HttpPut("products/{productId}")] //api/products/productId
         [Authorize(Roles = StaticUserRoles.ADMIN)]
-        public async Task<IActionResult> UpdateProduct(int productId, ProductCreateUpdateDto product)
+        public async Task<IActionResult> UpdateProduct(int productId, ProductUpdateDto product)
         {
             return HandleResult(await _productService.Update(productId, product));
         }
