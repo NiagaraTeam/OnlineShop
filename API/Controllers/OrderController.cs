@@ -39,7 +39,7 @@ namespace API.Controllers
 
         [HttpPost("orders/{orderId}/items")] //api/orders/orderId/items
         [Authorize(Roles = StaticUserRoles.CUSTOMER)]
-        public async Task<IActionResult> AddOrderItem(int orderId, OrderItemDto item)
+        public async Task<IActionResult> AddOrderItem(int orderId, OrderItemAddDto item)
         {
             return HandleResult(await _orderService.AddOrderItem(orderId, item));
         }
