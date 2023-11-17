@@ -49,14 +49,17 @@ namespace Application.Services
             return Result<object>.Failure("Couldn't save changes");
 
         }
-
-        //Do poprawy! 
+ 
         public async Task<Result<int>> Create(ProductCreateUpdateDto product)
         {
             var createProduct = _mapper.Map<Product>(product);
             if (createProduct == null) {
                 return null;
             }
+            createProduct.CreatedAt = DateTime.UtcNow;
+            createProduct.ModificationDate = DateTime.UtcNow;
+            var productInfo = new ProductInfo{CurrentStock = 10, TotalSold = 0};
+            createProduct.ProductInfo = productInfo;
             _context.Products.Add(createProduct);
 
             if(await _context.SaveChangesAsync() > 0) {
