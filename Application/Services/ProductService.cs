@@ -33,14 +33,25 @@ namespace Application.Services  // Siema
             if(product == null)
                 return null;
 
+            // Sprawdź, czy nowy rabat nakłada się na istniejące rabaty
+            bool isOverlap = product.ProductDiscounts.Any(existingDiscount =>
+                (discount.Start >= existingDiscount.Start && discount.Start <= existingDiscount.End) ||
+                (discount.End >= existingDiscount.Start && discount.End <= existingDiscount.End) ||
+                (discount.Start <= existingDiscount.Start && discount.End >= existingDiscount.End));
+
+            if (isOverlap)
+            {
+                // Jeżeli istnieje nakładanie się rabatów, zwróć błąd
+                return Result<object>.Failure("New discount period overlaps with existing discounts.");
+            }
+
             var newDiscount = _mapper.Map<ProductDiscount>(discount);
             product.ProductDiscounts.Add(newDiscount);
 
             _context.Update(product);
             await _context.SaveChangesAsync();
 
-            return Result<object>.Success("Discount added successfully");
-
+            return Result<object>.Success(null);
         }
 
         public async Task<Result<object>> ChangeProductStatus(int productId, ProductStatus newStatus)
@@ -73,7 +84,7 @@ namespace Application.Services  // Siema
                 .Include(p => p.ProductDiscounts)
                 .FirstOrDefaultAsync(p => p.Id == productId);
 
-            if ( product == null)
+            if (product == null)
                 return null;
 
             var productDto = _mapper.Map<ProductDto>(product);
@@ -86,8 +97,10 @@ namespace Application.Services  // Siema
             throw new NotImplementedException();
         }
 
-        public async Task<Result<IEnumerable<ProductDto>>> GetDiscountedProducts(DateRangeDto dateRange)
+        public async Task<Result<IEnumerable<ProductDto>>> GetDiscountedProducts()
         {
+            DateTime currentDate = DateTime.UtcNow;
+
             var discountedProducts = await _context.Products
                 .Include(p => p.ProductInfo)
                 .Include(p => p.Photo)
@@ -95,16 +108,15 @@ namespace Application.Services  // Siema
                 .Include(p => p.ProductExpert)
                 .Include(p => p.ProductDiscounts)
                 .Where(p => p.ProductDiscounts
-                .Any(d => d.Start >= dateRange.Start && d.End <= dateRange.End))
+                    .Any(d => d.Start <= currentDate && d.End >= currentDate))
                 .ToListAsync();
 
-            if ( discountedProducts == null)
+            if (discountedProducts == null)
                 return null;
 
             var discountedProductDtos = _mapper.Map<IEnumerable<ProductDto>>(discountedProducts);
 
             return Result<IEnumerable<ProductDto>>.Success(discountedProductDtos);
-
         }
 
         public async Task<Result<IEnumerable<ProductDto>>> GetNewestProducts()
@@ -116,7 +128,7 @@ namespace Application.Services  // Siema
                 .Include(p => p.ProductExpert)
                 .Include(p => p.ProductDiscounts)
                 .OrderByDescending(p => p.CreatedAt)
-                .Take(3)
+                .Take(10)
                 .ToListAsync();
 
             if (newestProducts == null)
@@ -142,7 +154,7 @@ namespace Application.Services  // Siema
             var topProducts = await _context.Products
                 .Include(p => p.ProductInfo)
                 .OrderByDescending(p => p.ProductInfo.TotalSold)
-                .Take(3)
+                .Take(10)
                 .ToListAsync();
 
             if ( topProducts == null)
