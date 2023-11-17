@@ -1,6 +1,8 @@
 using System.Collections.Immutable;
 using Application.Core;
 using Application.Dto.Order;
+using Application.Dto.Product;
+using Application.Dto.ShippingPayment;
 using Application.Interfaces;
 using AutoMapper;
 using Domain;
@@ -34,8 +36,8 @@ namespace Application.Services
 
             var itemToAdd = _mapper.Map<OrderItem>(item);
 
-
             _context.OrderItems.Add(itemToAdd);
+            _context.Update(order);
 
             if (await _context.SaveChangesAsync() > 0)
                 return Result<object>.Success(null);
@@ -46,27 +48,27 @@ namespace Application.Services
 
         public async Task<Result<object>> ChangeOrderItemQuantity(int orderId, OrderItemNewQuantityDto item)
         {
-            var order = await _context.Orders
-        .Include(o => o.Items)
-        .FirstOrDefaultAsync(o => o.Id == orderId);
+            /* var order = await _context.Orders
+         .Include(o => o.Items)
+         .FirstOrDefaultAsync(o => o.Id == orderId);
 
-            if (order == null)
-            {
-                return Result<object>.Failure("Order with id not found");
-            }
+             if (order == null)
+             {
+                 return Result<object>.Failure("Order with id not found");
+             }
 
-            var orderItem = order.Items.FirstOrDefault(i => i.ProductId == item.ProductId);
+             var orderItem = order.Items.FirstOrDefault(i => i.ProductId == item.ProductId);
 
-            if (orderItem == null)
-            {
-                return Result<object>.Failure($"Item with ProductId not found in order with ID.");
-            }
-            orderItem.Quantity = item.Quantity;
-            _context.Update(orderItem);
+             if (orderItem == null)
+             {
+                 return Result<object>.Failure($"Item with ProductId not found in order with ID.");
+             }
+             orderItem.Quantity = item.Quantity;
+             _context.Update(orderItem);
 
-            if (await _context.SaveChangesAsync() > 0)
-                return Result<object>.Success(null);
-
+             if (await _context.SaveChangesAsync() > 0)
+                 return Result<object>.Success(null);
+ */
             return Result<object>.Failure("Failed to update orderitem quantity");
 
 
@@ -92,6 +94,10 @@ namespace Application.Services
         public async Task<Result<int>> Create(OrderCreateUpdateDto order)
         {
             var orderToCreate = _mapper.Map<Order>(order);
+            if (orderToCreate == null)
+            {
+                return Result<int>.Failure("Failed mapping order to create");
+            }
 
             _context.Orders.Add(orderToCreate);
 
@@ -104,6 +110,42 @@ namespace Application.Services
         public async Task<Result<OrderDto>> Details(int orderId)
         {
             var order = await _context.Orders.FindAsync(orderId);
+
+            if (order == null)
+            {
+                return Result<OrderDto>.Failure("Order with id not found");
+            }
+
+            var orderDto = new OrderDto
+            {
+                PaymentMethod = _mapper.Map<PaymentMethodDto>(order.PaymentMethod),
+                ShippingMethod = _mapper.Map<ShippingMethodDto>(order.ShippingMethod),
+                Id = order.Id,
+                OrderDate = order.OrderDate,
+                Status = order.Status,
+                Items = new List<OrderItemDto> { }
+            };
+
+            foreach (var orderItem in order.Items)
+            {
+                OrderItemDto orderItemDto = new OrderItemDto
+                {
+                    Product = _mapper.Map<ProductDto>(orderItem.Product),
+                    Quantity = orderItem.Quantity
+                };
+                orderDto.Items.Add(orderItemDto);
+            }
+            return Result<OrderDto>.Success(orderDto);
+            /*
+            var order = await _context.Orders
+            .Include(o => o.OrderDate)
+            .Include(o => o.Status)
+            .Include(o => o.CustomerDetails)
+            .Include(o => o.Items)
+            .Include(o => o.PaymentMethod)
+            .Include(o => o.ShippingMethod)
+            .FirstOrDefaultAsync(o => o.Id == orderId);
+
             if (order == null)
             {
                 return Result<OrderDto>.Failure("Order with id not found");
@@ -120,16 +162,17 @@ namespace Application.Services
                 Items = order.Items.Select(oi => new OrderItemDto
                 {
                     //ProductDto=...
-                    ProductId = oi.ProductId,
+                    ProductDto = oi.,
                     Quantity = oi.Quantity
                 }).ToList()
-            };
-            return Result<OrderDto>.Success(orderDto);
+            };*/
+            //return Result<OrderDto>.Success(orderDto);
 
         }
 
         public async Task<Result<object>> RemoveOrderItem(int orderId, int productId)
         {
+
             var orderToRemoveItemFrom = await _context.Orders.FindAsync(orderId);
             if (orderToRemoveItemFrom == null)
             {
@@ -153,8 +196,12 @@ namespace Application.Services
         public async Task<Result<object>> Update(int orderId, OrderCreateUpdateDto order)
         {
             var updatedOrder = _mapper.Map<Order>(order);
-            var existingOrder = await _context.Orders.FindAsync(orderId);
+            if (updatedOrder == null)
+            {
+                return Result<object>.Failure("Failed with mapping updated order");
+            }
 
+            var existingOrder = await _context.Orders.FindAsync(orderId);
             if (existingOrder == null)
             {
                 return Result<object>.Failure("Order with id not found");
