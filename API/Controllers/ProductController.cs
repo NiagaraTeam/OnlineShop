@@ -78,11 +78,10 @@ namespace API.Controllers
             return HandleResult(await _productService.GetNewestProducts());
         }
 
-        //ten enpoint trzeba przemyśleć (chodzi o sposób podawania parametrów)
-        [HttpGet("products/discounted")] //api/products/discouted 
-        public async Task<IActionResult> GetDiscountedProducts([FromQuery] DateRangeDto dateRange)
+        [HttpGet("products/discounted")] //api/products/discouted
+        public async Task<IActionResult> GetDiscountedProducts()
         {
-            return HandleResult(await _productService.GetDiscountedProducts(dateRange));
+            return HandleResult(await _productService.GetDiscountedProducts());
         }
 
         [HttpPatch("products/{productId}/image")] //api/products/productId/image

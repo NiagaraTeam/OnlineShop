@@ -12,11 +12,18 @@ namespace Application.Core
         {
             CreateMap<PaymentMethod, PaymentMethodDto>();
             CreateMap<PaymentMethodCreateUpdateDto, PaymentMethod>();
-            CreateMap<Category, CategoryDto>();
-            CreateMap<CategoryCreateUpdateDto, Category>();
+            
             CreateMap<ShippingMethod, ShippingMethodDto>();
             CreateMap<ShippingMethodCreateUpdateDto, ShippingMethod>();
+            
+            CreateMap<Category, CategoryDto>();
+            CreateMap<CategoryCreateUpdateDto, Category>();
+            
             CreateMap<Product, ProductDto>();
+            CreateMap<ProductExpert, ProductExpertDto>();
+            CreateMap<ProductInfo, ProductInfoDto>();
+            CreateMap<Photo, PhotoDto>();
+            CreateMap<ProductDiscount, DiscountDto>();
             CreateMap<ProductUpdateDto, Product>();
             CreateMap<ProductCreateDto, Product>();
         }

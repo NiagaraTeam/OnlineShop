@@ -7,8 +7,9 @@ using Domain;
 using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using Domain;
 
-namespace Application.Services
+namespace Application.Services  // Siema
 {
     public class ProductService : IProductService
     {
@@ -26,8 +27,32 @@ namespace Application.Services
 
         public async Task<Result<object>> AddProductDiscount(int productId, DiscountDto discount)
         {
+            var product = await _context.Products
+                .Include(p => p.ProductDiscounts)
+                .FirstOrDefaultAsync(p => p.Id == productId);
 
-            throw new NotImplementedException();
+            if(product == null)
+                return null;
+
+            // Sprawdź, czy nowy rabat nakłada się na istniejące rabaty
+            bool isOverlap = product.ProductDiscounts.Any(existingDiscount =>
+                (discount.Start >= existingDiscount.Start && discount.Start <= existingDiscount.End) ||
+                (discount.End >= existingDiscount.Start && discount.End <= existingDiscount.End) ||
+                (discount.Start <= existingDiscount.Start && discount.End >= existingDiscount.End));
+
+            if (isOverlap)
+            {
+                // Jeżeli istnieje nakładanie się rabatów, zwróć błąd
+                return Result<object>.Failure("New discount period overlaps with existing discounts.");
+            }
+
+            var newDiscount = _mapper.Map<ProductDiscount>(discount);
+            product.ProductDiscounts.Add(newDiscount);
+
+            _context.Update(product);
+            await _context.SaveChangesAsync();
+
+            return Result<object>.Success(null);
         }
 
         public async Task<Result<object>> ChangeProductStatus(int productId, ProductStatus newStatus)
@@ -43,10 +68,7 @@ namespace Application.Services
                 return Result<object>.Success(null);
             }
 
-            return Result<object>.Failure("Couldn't save changes");
 
-        }
- 
         public async Task<Result<int>> Create(ProductCreateDto product)
         {
             var createProduct = _mapper.Map<Product>(product);
@@ -96,7 +118,20 @@ namespace Application.Services
 
         public async Task<Result<ProductDto>> Details(int productId)
         {
-            throw new NotImplementedException();
+            var product = await _context.Products
+                .Include(p => p.ProductInfo)
+                .Include(p => p.Photo)
+                .Include(p => p.Category)
+                .Include(p => p.ProductExpert)
+                .Include(p => p.ProductDiscounts)
+                .FirstOrDefaultAsync(p => p.Id == productId);
+
+            if (product == null)
+                return null;
+
+            var productDto = _mapper.Map<ProductDto>(product);
+
+            return Result<ProductDto>.Success(productDto);
         }
 
         public async Task<Result<IEnumerable<ProductDto>>> GetDeletedProducts()
@@ -104,14 +139,46 @@ namespace Application.Services
             throw new NotImplementedException();
         }
 
-        public async Task<Result<IEnumerable<ProductDto>>> GetDiscountedProducts(DateRangeDto dateRange)
+        public async Task<Result<IEnumerable<ProductDto>>> GetDiscountedProducts()
         {
-            throw new NotImplementedException();
+            DateTime currentDate = DateTime.UtcNow;
+
+            var discountedProducts = await _context.Products
+                .Include(p => p.ProductInfo)
+                .Include(p => p.Photo)
+                .Include(p => p.Category)
+                .Include(p => p.ProductExpert)
+                .Include(p => p.ProductDiscounts)
+                .Where(p => p.ProductDiscounts
+                    .Any(d => d.Start <= currentDate && d.End >= currentDate))
+                .ToListAsync();
+
+            if (discountedProducts == null)
+                return null;
+
+            var discountedProductDtos = _mapper.Map<IEnumerable<ProductDto>>(discountedProducts);
+
+            return Result<IEnumerable<ProductDto>>.Success(discountedProductDtos);
         }
 
         public async Task<Result<IEnumerable<ProductDto>>> GetNewestProducts()
         {
-            throw new NotImplementedException();
+             var newestProducts = await _context.Products
+                .Include(p => p.ProductInfo)
+                .Include(p => p.Photo)
+                .Include(p => p.Category)
+                .Include(p => p.ProductExpert)
+                .Include(p => p.ProductDiscounts)
+                .OrderByDescending(p => p.CreatedAt)
+                .Take(10)
+                .ToListAsync();
+
+            if (newestProducts == null)
+                return null;
+
+            var newestProductsDto = _mapper.Map<IEnumerable<ProductDto>>(newestProducts);
+
+            return Result<IEnumerable<ProductDto>>.Success(newestProductsDto);
         }
 
         public async Task<MemoryStream> GetPDFWithPriceList(int categoryId)
@@ -126,7 +193,18 @@ namespace Application.Services
 
         public async Task<Result<IEnumerable<ProductDto>>> TopPurchasedProducts()
         {
-            throw new NotImplementedException();
+            var topProducts = await _context.Products
+                .Include(p => p.ProductInfo)
+                .OrderByDescending(p => p.ProductInfo.TotalSold)
+                .Take(10)
+                .ToListAsync();
+
+            if ( topProducts == null)
+                return null;
+
+            var topProductsDto = _mapper.Map<IEnumerable<ProductDto>>(topProducts);
+
+            return Result<IEnumerable<ProductDto>>.Success(topProductsDto);
         }
 
         public async Task<Result<ProductDto>> Update(int productId, ProductUpdateDto product)
