@@ -34,15 +34,14 @@ namespace Application.Services
                 return null;
             }
 
-            /* var orderItem = new OrderItem
-             {
-                 ProductId = item.ProductId,
-                 OrderId = orderId,
-                 Quantity = item.Quantity,                
-             };*/
+            var orderItem = new OrderItem
+            {
+                ProductId = item.ProductId,
+                OrderId = orderId,
+                Quantity = item.Quantity,
+            };
 
-            var orderItem = _mapper.Map<OrderItem>(item);
-            orderItem.OrderId = orderId;
+
 
             /*if (order.Items == null)
              {
