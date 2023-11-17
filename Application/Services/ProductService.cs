@@ -68,6 +68,9 @@ namespace Application.Services  // Siema
                 return Result<object>.Success(null);
             }
 
+            return Result<object>.Failure("Couldn't save changes");
+
+        }
 
         public async Task<Result<int>> Create(ProductCreateDto product)
         {
