@@ -23,7 +23,7 @@ namespace Application.Core
             CreateMap<OrderItemDto, OrderItem>();
             CreateMap<OrderItemNewQuantityDto, OrderItem>();
 
-            //CreateMap<Product, ProductDto>();
+            CreateMap<Product, ProductDto>();
 
 
         }

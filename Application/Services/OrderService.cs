@@ -28,23 +28,26 @@ namespace Application.Services
 
         public async Task<Result<object>> AddOrderItem(int orderId, OrderItemAddDto item)
         {
-            var order = await _context.Orders.Include(p => p.Items).FirstOrDefaultAsync(o => o.Id == orderId);
+            var order = await _context.Orders.Include(o => o.Items).FirstOrDefaultAsync(o => o.Id == orderId);
             if (order == null)
             {
                 return null;
             }
 
-            var orderItem = new OrderItem
-            {
-                ProductId = item.ProductId,
-                OrderId = orderId,
-                Quantity = item.Quantity
-            };
-            if (order.Items == null)
-            {
-                return Result<object>.Failure("list do not exist");
+            /* var orderItem = new OrderItem
+             {
+                 ProductId = item.ProductId,
+                 OrderId = orderId,
+                 Quantity = item.Quantity,                
+             };*/
 
-            }
+            var orderItem = _mapper.Map<OrderItem>(item);
+            orderItem.OrderId = orderId;
+
+            /*if (order.Items == null)
+             {
+                 return null;
+             }*/
             order.Items.Add(orderItem);
 
             _context.Orders.Update(order);
@@ -61,20 +64,17 @@ namespace Application.Services
         {
             var orderItem = await _context.OrderItems.FirstOrDefaultAsync(oi => oi.OrderId == orderId && oi.
             ProductId == item.ProductId);
-            if (orderItem != null)
-            {
-                orderItem.Quantity = item.Quantity;
-                _context.Update(orderItem);
-
-                if (await _context.SaveChangesAsync() > 0)
-                    return Result<object>.Success(null);
-
-                return Result<object>.Failure("Failed updating order item quantity");
-            }
-            else
-            {
+            if (orderItem == null)
                 return null;
-            }
+
+            orderItem.Quantity = item.Quantity;
+            _context.Update(orderItem);
+
+            if (await _context.SaveChangesAsync() > 0)
+                return Result<object>.Success(null);
+
+            return Result<object>.Failure("Failed updating order item quantity");
+
         }
 
         public async Task<Result<object>> ChangeOrderStatus(int orderId, OrderStatus status)
@@ -104,6 +104,7 @@ namespace Application.Services
 
             orderToCreate.OrderDate = DateTime.UtcNow;
             orderToCreate.Status = OrderStatus.New;
+
             _context.Orders.Add(orderToCreate);
 
             if (await _context.SaveChangesAsync() > 0)
@@ -114,8 +115,31 @@ namespace Application.Services
 
         public async Task<Result<OrderDto>> Details(int orderId)
         {
-            // xd
-                        return Result<OrderDto>.Failure("Failed creating order");
+            var order = await _context.Orders
+            .Include(o => o.PaymentMethod)
+            .Include(o => o.ShippingMethod)
+            .Include(o => o.Items)
+            .FirstOrDefaultAsync(o => o.Id == orderId);
+            if (order == null)
+                return null;
+
+            var orderdto = _mapper.Map<OrderDto>(order);
+
+            /*foreach(var item in orderdto.Items){
+                    var product = await _context.Products
+                    .Include(p => p.ProductInfo)
+                    .Include(p => p.Photo)
+                    .Include(p => p.Category)
+                    .Include(p => p.ProductExpert)
+                    .Include(p => p.ProductDiscounts)
+                    .FirstOrDefaultAsync(p => p.Id == item.ProductId);
+                    if (product == null)
+                        return null;
+                    item.Product =_mapper.Map<ProductDto>(product);
+
+            }*/
+
+            return Result<OrderDto>.Success(orderdto);
 
         }
 
@@ -136,7 +160,8 @@ namespace Application.Services
             return Result<object>.Failure("Failed to save removeorderitem");
         }
 
-        public async Task<Result<object>> Update(int orderId, OrderCreateUpdateDto order)
+        //public async Task<Result<object>> Update(int orderId, OrderCreateUpdateDto order)
+        public async Task<Result<OrderDto>> Update(int orderId, OrderCreateUpdateDto order)
         {
             var updateOrder = await _context.Orders.FindAsync(orderId);
             if (updateOrder == null)
@@ -144,13 +169,15 @@ namespace Application.Services
                 return null;
             }
 
-            _mapper.Map(order, updateOrder);
+            updateOrder.ShippingMethod = await _context.ShippingMethods.FindAsync(order.ShippingMethodId);
+            updateOrder.PaymentMethod = await _context.PaymentMethods.FindAsync(order.PaymentMethodId);
             _context.Orders.Update(updateOrder);
 
             if (await _context.SaveChangesAsync() > 0)
-                return Result<object>.Success(null);
+                return Result<OrderDto>.Success(_mapper.Map<OrderDto>(updateOrder));
 
-            return Result<object>.Failure("Failed to save updateorder");
+            return Result<OrderDto>.Failure("Failed to save updateorder");
+            // return Result<object>.Failure("Failed to save updateorder");
         }
     }
 }
