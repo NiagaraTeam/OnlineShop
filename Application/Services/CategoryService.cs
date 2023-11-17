@@ -40,6 +40,8 @@ namespace Application.Services
         {
             var categoryCreate = _mapper.Map<Category>(category);
 
+            categoryCreate.Status = CategoryStatus.Visible;
+
             _context.Categories.Add(categoryCreate);
 
             if(await _context.SaveChangesAsync() > 0) {

@@ -20,6 +20,5 @@ namespace Application.Dto.Product
         public CategoryDto Category { get; set; }
         public ProductExpertDto ProductExpert { get; set; }
         public List<DiscountDto> ProductDiscounts { get; set;}
-    
     }
 }

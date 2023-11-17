@@ -17,7 +17,8 @@ namespace Application.Core
             CreateMap<ShippingMethod, ShippingMethodDto>();
             CreateMap<ShippingMethodCreateUpdateDto, ShippingMethod>();
             CreateMap<Product, ProductDto>();
-            CreateMap<ProductCreateUpdateDto, Product>();
+            CreateMap<ProductUpdateDto, Product>();
+            CreateMap<ProductCreateDto, Product>();
         }
     }
 }

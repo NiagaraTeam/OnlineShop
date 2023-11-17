@@ -1,23 +1,27 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using Application.Core.CustomDataAnnotations;
-using Application.Dto.Category;
-using Domain;
 using Domain.Enums;
 
 namespace Application.Dto.Product
 {
-    public class ProductCreateUpdateDto
+    public class ProductUpdateDto
     {
+        [Required]
         public string Name { get; set; }
+        [Required]
         public string Description { get; set; }
+        [Required]
+        [GraterThanZero(ErrorMessage = "Field {0} must be positive number")]
         public decimal Price { get; set; }
-        public int TaxRate { get; set; } // -1/0/5/8/23 (-1 means tax free)
+        [Required]
+        // tu dodać walidację czy watość jest ze zbioru ustalonych wartości
+        // albo zamienić te pole na Enum
+        public int TaxRate { get; set; }
+        [Required]
         public int CategoryId { get; set; }
+        [Required]
         public int ProductExpertId { get; set; }
-        //public DateTime CreatedAt { get; set; }
-        //public DateTime ModificationDate { get; set; }
+        [Required]
         public ProductStatus Status { get; set; }
-        //public int ProductInfoId { get; set; }
     }
 }
