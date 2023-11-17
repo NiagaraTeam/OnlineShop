@@ -3,7 +3,9 @@ using Application.Dto;
 using Application.Dto.Product;
 using Application.Interfaces;
 using AutoMapper;
+using Domain;
 using Domain.Enums;
+using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 namespace Application.Services
@@ -24,17 +26,50 @@ namespace Application.Services
 
         public async Task<Result<object>> AddProductDiscount(int productId, DiscountDto discount)
         {
+
             throw new NotImplementedException();
         }
 
         public async Task<Result<object>> ChangeProductStatus(int productId, ProductStatus newStatus)
         {
-            throw new NotImplementedException();
-        }
+            var changeStatusProduct = await _context.Products.FindAsync(productId);
+            if (changeStatusProduct == null)
+                return null;
 
-        public async Task<Result<int>> Create(ProductCreateUpdateDto product)
+            changeStatusProduct.Status = newStatus;
+            _context.Products.Update(changeStatusProduct);
+            
+            if (await _context.SaveChangesAsync() > 0) {
+                return Result<object>.Success(null);
+            }
+
+            return Result<object>.Failure("Couldn't save changes");
+
+        }
+ 
+        public async Task<Result<int>> Create(ProductCreateDto product)
         {
-            throw new NotImplementedException();
+            var createProduct = _mapper.Map<Product>(product);
+            if (createProduct == null) {
+                return null;
+            }
+
+            createProduct.CreatedAt = DateTime.UtcNow;
+            createProduct.ModificationDate = DateTime.UtcNow;
+            var productInfo = new ProductInfo
+            {
+                CurrentStock = product.CurrentStock, 
+                TotalSold = 0
+            };
+            createProduct.ProductInfo = productInfo;
+
+            _context.Products.Add(createProduct);
+
+            if(await _context.SaveChangesAsync() > 0) {
+                return Result<int>.Success(createProduct.Id);
+            }         
+
+            return Result<int>.Failure("Failed adding shipping method");
         }
 
         public async Task<Result<object>> Delete(int productId)
@@ -44,7 +79,19 @@ namespace Application.Services
 
         public async Task<Result<object>> DeletePermanently(int productId)
         {
-            throw new NotImplementedException();
+            var deleteProduct = await _context.Products.FindAsync(productId);
+
+            if (deleteProduct == null) 
+                return Result<object>.Failure("The indicated product is not available");
+            
+            // trzeba dodać sprawdzenie czy produkt nie jest powiązany z żadnymi zamówieniami
+
+            _context.Products.Remove(deleteProduct);
+
+            if (await _context.SaveChangesAsync() > 0) 
+                return Result<object>.Success(null);
+            
+            return Result<object>.Failure("Couldn't save changes");
         }
 
         public async Task<Result<ProductDto>> Details(int productId)
@@ -82,9 +129,21 @@ namespace Application.Services
             throw new NotImplementedException();
         }
 
-        public async Task<Result<ProductDto>> Update(int productId, ProductCreateUpdateDto product)
+        public async Task<Result<ProductDto>> Update(int productId, ProductUpdateDto product)
         {
-            throw new NotImplementedException();
+            var updateProduct = await _context.Products.FirstOrDefaultAsync(p => p.Id == productId);
+            if (updateProduct == null)
+                return null;
+                
+            _mapper.Map(product, updateProduct);
+            _context.Products.Update(updateProduct);
+
+            if (await _context.SaveChangesAsync() > 0) {
+                return Result<ProductDto>.Success(_mapper.Map<ProductDto>(updateProduct));
+            }
+
+            return Result<ProductDto>.Failure("Couldn't save changes");
+
         }
 
         public async Task<Result<object>> UpdateImage(int productId, string imageId)
