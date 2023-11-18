@@ -27,7 +27,10 @@ namespace Application.Services
         }
         public async Task<Result<object>> AddFavouriteProduct(string userId, int productId)
         {
-            var user = await _context.Users.Include(u => u.CustomerDetails).FirstOrDefaultAsync(u => u.Id == userId);
+            var user = await _context.Users
+                .Include(u => u.CustomerDetails)
+                .ThenInclude(cd => cd.FavouriteProducts)
+                .FirstOrDefaultAsync(u => u.Id == userId);
 
             if (user == null)
             {
@@ -43,8 +46,13 @@ namespace Application.Services
                 return Result<Object>.Failure("Product is already in favourites");
             }
 
-            user.CustomerDetails.FavouriteProducts.Add(new CustomerDetailsProduct { ProductId = productId });
+            var favouriteProduct = new CustomerDetailsProduct { 
+                CustomerDetails = user.CustomerDetails, 
+                ProductId = productId 
+            };
 
+            user.CustomerDetails.FavouriteProducts.Add(favouriteProduct);
+                
             if (await _context.SaveChangesAsync() > 0)
                 return Result<object>.Success(null);
 
@@ -86,16 +94,14 @@ namespace Application.Services
 
         public async Task<Result<object>> RemoveFavouriteProduct(string userId, int productId)
         {
-            var user = await _context.Users.Include(u => u.CustomerDetails).FirstOrDefaultAsync(u => u.Id == userId);
+            var user = await _context.Users
+                .Include(u => u.CustomerDetails)
+                .ThenInclude(cd => cd.FavouriteProducts)
+                .FirstOrDefaultAsync(u => u.Id == userId);
 
             if (user == null)
             {
                 return Result<object>.Failure("User not found");
-            }
-
-            if (user.CustomerDetails.FavouriteProducts == null)
-            {
-                user.CustomerDetails.FavouriteProducts = new List<CustomerDetailsProduct>();
             }
 
             var favoriteProduct = user.CustomerDetails.FavouriteProducts.FirstOrDefault(fp => fp.ProductId == productId);
@@ -108,6 +114,7 @@ namespace Application.Services
             return Result<object>.Success(null);
         }
 
+        // tą fukncje trzeba będzie zmienić (Przy okazji jak będziemy robić obsługe wysyłania maili)
         public async Task<Result<object>> ResetPasswordRequest(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
@@ -119,12 +126,12 @@ namespace Application.Services
 
             var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
 
-            Console.WriteLine($"Reset token for user {user.Email}: {resetToken}");
+            //Console.WriteLine($"Reset token for user {user.Email}: {resetToken}");
 
             return Result<object>.Success(null);
         }
 
-        public async Task<Result<object>> SetUserDiscount(string userId, decimal discountValue)
+        public async Task<Result<object>> SetUserDiscount(string userId, DiscountValueDto discountValue)
         {
             var user = await _context.Users.Include(u => u.CustomerDetails).FirstOrDefaultAsync(u => u.Id == userId);
 
@@ -133,7 +140,7 @@ namespace Application.Services
                 return Result<Object>.Failure("User not found");
             }
 
-            user.CustomerDetails.DiscountValue = discountValue;
+            user.CustomerDetails.DiscountValue = discountValue.Value;
 
             if (await _context.SaveChangesAsync() > 0)
                 return Result<object>.Success(null);
@@ -143,7 +150,10 @@ namespace Application.Services
 
         public async Task<Result<object>> UpdateUserAddress(string userId, AddressDto address)
         {
-            var user = await _context.Users.Include(u => u.CustomerDetails).FirstOrDefaultAsync(u => u.Id == userId);
+            var user = await _context.Users
+                .Include(u => u.CustomerDetails)
+                .ThenInclude(cd => cd.Address)
+                .FirstOrDefaultAsync(u => u.Id == userId);
 
             if (user == null)
             {
@@ -151,6 +161,8 @@ namespace Application.Services
             }
 
             _mapper.Map(address, user.CustomerDetails.Address);
+
+            _context.Users.Update(user);
 
             if (await _context.SaveChangesAsync() > 0)
                 return Result<object>.Success(null);

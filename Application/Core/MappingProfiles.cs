@@ -1,4 +1,5 @@
 using Application.Dto.ShippingPayment;
+using Application.Dto.User;
 using AutoMapper;
 using Domain;
 
@@ -13,6 +14,8 @@ namespace Application.Core
 
             CreateMap<ShippingMethod, ShippingMethodDto>();
             CreateMap<ShippingMethodCreateUpdateDto, ShippingMethod>();
+
+            CreateMap<AddressDto, Address>();
         }
     }
 }

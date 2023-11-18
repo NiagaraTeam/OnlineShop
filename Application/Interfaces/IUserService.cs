@@ -11,6 +11,6 @@ namespace Application.Interfaces
         Task<Result<object>> RemoveFavouriteProduct(string userId, int productId);
         Task<Result<object>> ResetPasswordRequest(string userId);
         Task<Result<decimal>> GetUserDiscount(string userId);
-        Task<Result<object>> SetUserDiscount(string userId, decimal discountValue);
+        Task<Result<object>> SetUserDiscount(string userId, DiscountValueDto discountValue);
     }
 }

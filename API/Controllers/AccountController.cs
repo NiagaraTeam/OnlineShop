@@ -171,7 +171,7 @@ namespace API.Controllers
 
         [HttpPut("accounts/{userId}/discount")] //api/accounts/userId/discount
         [Authorize(Roles = StaticUserRoles.ADMIN)]
-        public async Task<IActionResult> SetUserDiscount(string userId, decimal discountValue)
+        public async Task<IActionResult> SetUserDiscount(string userId, DiscountValueDto discountValue)
         {
             return HandleResult(await _userService.SetUserDiscount(userId, discountValue));
         }
