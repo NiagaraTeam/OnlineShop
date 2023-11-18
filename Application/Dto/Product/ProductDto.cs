@@ -1,6 +1,5 @@
-using Domain;
-using Domain.Enums;
 using Application.Dto.Category;
+using Domain.Enums;
 
 namespace Application.Dto.Product
 {
@@ -21,6 +20,4 @@ namespace Application.Dto.Product
         public ProductExpertDto ProductExpert { get; set; }
         public List<DiscountDto> ProductDiscounts { get; set;}
     }
-
-
 }

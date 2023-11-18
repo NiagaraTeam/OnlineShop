@@ -18,14 +18,14 @@ namespace API.Controllers
 
         [HttpPost("products")] //api/products
         [Authorize(Roles = StaticUserRoles.ADMIN)]
-        public async Task<IActionResult> CreateProduct(ProductCreateUpdateDto product)
+        public async Task<IActionResult> CreateProduct(ProductCreateDto product)
         {
             return HandleResult(await _productService.Create(product));
         }
 
         [HttpPut("products/{productId}")] //api/products/productId
         [Authorize(Roles = StaticUserRoles.ADMIN)]
-        public async Task<IActionResult> UpdateProduct(int productId, ProductCreateUpdateDto product)
+        public async Task<IActionResult> UpdateProduct(int productId, ProductUpdateDto product)
         {
             return HandleResult(await _productService.Update(productId, product));
         }
@@ -78,11 +78,10 @@ namespace API.Controllers
             return HandleResult(await _productService.GetNewestProducts());
         }
 
-        //ten enpoint trzeba przemyśleć (chodzi o sposób podawania parametrów)
-        [HttpGet("products/discounted")] //api/products/discouted 
-        public async Task<IActionResult> GetDiscountedProducts([FromQuery] DateRangeDto dateRange)
+        [HttpGet("products/discounted")] //api/products/discouted
+        public async Task<IActionResult> GetDiscountedProducts()
         {
-            return HandleResult(await _productService.GetDiscountedProducts(dateRange));
+            return HandleResult(await _productService.GetDiscountedProducts());
         }
 
         [HttpPatch("products/{productId}/image")] //api/products/productId/image

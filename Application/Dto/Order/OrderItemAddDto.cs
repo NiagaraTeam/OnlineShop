@@ -1,11 +1,12 @@
 using System.ComponentModel.DataAnnotations;
+
 namespace Application.Dto.Order
 {
-    public class OrderItemNewQuantityDto
+    public class OrderItemAddDto
     {
         [Required]
-        public decimal Quantity { get; set; }
+        public int ProductId{ get; set; }
         [Required]
-        public int ProductId { get; set; }
+        public Decimal Quantity{ get; set; }
     }
 }
