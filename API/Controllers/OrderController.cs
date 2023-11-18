@@ -24,7 +24,6 @@ namespace API.Controllers
         }
 
         [HttpGet("orders/{orderId}")] //api/orders/orderId
-        [Authorize(Roles = StaticUserRoles.CUSTOMER)]
         public async Task<IActionResult> GetOrderDetails(int orderId)
         {
             return HandleResult(await _orderService.Details(orderId));
@@ -39,7 +38,7 @@ namespace API.Controllers
 
         [HttpPost("orders/{orderId}/items")] //api/orders/orderId/items
         [Authorize(Roles = StaticUserRoles.CUSTOMER)]
-        public async Task<IActionResult> AddOrderItem(int orderId, OrderItemDto item)
+        public async Task<IActionResult> AddOrderItem(int orderId, OrderItemAddDto item)
         {
             return HandleResult(await _orderService.AddOrderItem(orderId, item));
         }
