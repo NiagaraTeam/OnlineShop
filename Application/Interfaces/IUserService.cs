@@ -1,4 +1,5 @@
 using Application.Core;
+using Application.Dto.Product;
 using Application.Dto.User;
 
 namespace Application.Interfaces
@@ -12,5 +13,6 @@ namespace Application.Interfaces
         Task<Result<object>> ResetPasswordRequest(string userId);
         Task<Result<decimal>> GetUserDiscount(string userId);
         Task<Result<object>> SetUserDiscount(string userId, DiscountValueDto discountValue);
+        Task<Result<IEnumerable<ProductDto>>> GetFavouriteProducts(string userId);
     }
 }

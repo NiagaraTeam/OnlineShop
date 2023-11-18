@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Persistence;
 using Domain;
 using Microsoft.AspNetCore.Identity;
+using Application.Dto.Product;
 
 namespace Application.Services
 {
@@ -25,6 +26,7 @@ namespace Application.Services
             _mapper = mapper;
             _userManager = userManager;
         }
+
         public async Task<Result<object>> AddFavouriteProduct(string userId, int productId)
         {
             var user = await _context.Users
@@ -168,6 +170,28 @@ namespace Application.Services
                 return Result<object>.Success(null);
 
             return Result<object>.Failure("Failed updating the address");
+        }
+
+
+        public async Task<Result<IEnumerable<ProductDto>>> GetFavouriteProducts(string userId)
+        {
+            
+           var user = await _context.Users
+            .Include(u => u.CustomerDetails)
+            .ThenInclude(cd => cd.FavouriteProducts)
+            .ThenInclude(fp => fp.Product) 
+            .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null)
+            {
+                return Result<IEnumerable<ProductDto>>.Failure("User not found");
+            }
+           
+           var favoriteProductsDto = user.CustomerDetails.FavouriteProducts
+            .Select(fp => _mapper.Map<ProductDto>(fp.Product)).ToList();
+
+            return Result<IEnumerable<ProductDto>>.Success(favoriteProductsDto);
+            
         }
     }
 }

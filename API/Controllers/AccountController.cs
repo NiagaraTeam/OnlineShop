@@ -143,6 +143,13 @@ namespace API.Controllers
             return HandleResult(await _userService.UpdateUserAddress(userId, address));
         }
 
+        [HttpGet("accounts/{userId}/favourites")]//api/accounts/userId/favourites
+        [Authorize(Roles = StaticUserRoles.CUSTOMER)]
+        public async Task<IActionResult> GetFavouriteProducts(string userId)
+        {
+            return HandleResult(await _userService.GetFavouriteProducts(userId));
+        }
+
         [HttpPost("accounts/{userId}/favourites/{productId}")] //api/accounts/userId/favourites/productId
         [Authorize(Roles = StaticUserRoles.CUSTOMER)]
         public async Task<IActionResult> AddFavouriteProduct(string userId, int productId)
