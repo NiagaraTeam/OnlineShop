@@ -1,9 +1,14 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Application.Dto.Product
 {
     public class DiscountDto
     {
+        [Required]
         public decimal Value { get; set; }
-        public DateTime StartDate { get; set; }  
-        public DateTime EndDate { get; set; } 
+        [Required]
+        public DateTime Start { get; set; } 
+        [Required] 
+        public DateTime End { get; set; } 
     }
 }
