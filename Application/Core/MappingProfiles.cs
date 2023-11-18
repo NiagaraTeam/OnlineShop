@@ -4,7 +4,6 @@ using Application.Dto.ShippingPayment;
 using Application.Dto.Order;
 using AutoMapper;
 using Domain;
-using Application.Dto.Product;
 
 namespace Application.Core
 {

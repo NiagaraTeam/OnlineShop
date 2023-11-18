@@ -7,9 +7,8 @@ using Domain;
 using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
-using Domain;
 
-namespace Application.Services  // Siema
+namespace Application.Services
 {
     public class ProductService : IProductService
     {
