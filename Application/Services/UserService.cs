@@ -7,6 +7,7 @@ using Persistence;
 using Domain;
 using Microsoft.AspNetCore.Identity;
 using Application.Dto.Product;
+using Domain.Enums;
 
 namespace Application.Services
 {
@@ -35,9 +36,7 @@ namespace Application.Services
                 .FirstOrDefaultAsync(u => u.Id == userId);
 
             if (user == null)
-            {
-                return Result<Object>.Failure("User not found");
-            }
+                return null;
 
             if (user.CustomerDetails.FavouriteProducts == null)
             {
@@ -63,14 +62,14 @@ namespace Application.Services
 
         public async Task<Result<object>> DeleteAccount(string userId)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            var user = await _context.Users
+                .Include(u => u.CustomerDetails)
+                .FirstOrDefaultAsync(u => u.Id == userId);
 
             if (user == null)
-            {
-                return Result<Object>.Failure("User not found");
-            }
+                return null;
 
-            _context.Users.Remove(user);
+            user.CustomerDetails.Status = AccountStatus.Deleted;
 
             if (await _context.SaveChangesAsync() > 0)
                 return Result<object>.Success(null);
@@ -83,9 +82,8 @@ namespace Application.Services
             var user = await _context.Users.Include(u => u.CustomerDetails).FirstOrDefaultAsync(u => u.Id == userId);
 
             if (user == null)
-            {
-                return Result<decimal>.Failure("User not found");
-            }
+                return null;
+
             if (user.CustomerDetails == null )
             {
                 return Result<decimal>.Failure("Discount data not available");
@@ -102,9 +100,7 @@ namespace Application.Services
                 .FirstOrDefaultAsync(u => u.Id == userId);
 
             if (user == null)
-            {
-                return Result<object>.Failure("User not found");
-            }
+                return null;
 
             var favoriteProduct = user.CustomerDetails.FavouriteProducts.FirstOrDefault(fp => fp.ProductId == productId);
             if (favoriteProduct != null)
@@ -122,9 +118,7 @@ namespace Application.Services
             var user = await _userManager.FindByIdAsync(userId);
 
             if (user == null)
-            {
-                return Result<Object>.Failure("User not found");
-            }
+                return null;
 
             var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
 
@@ -138,9 +132,7 @@ namespace Application.Services
             var user = await _context.Users.Include(u => u.CustomerDetails).FirstOrDefaultAsync(u => u.Id == userId);
 
             if (user == null)
-            {
-                return Result<Object>.Failure("User not found");
-            }
+                return null;
 
             user.CustomerDetails.DiscountValue = discountValue.Value;
 
@@ -158,9 +150,7 @@ namespace Application.Services
                 .FirstOrDefaultAsync(u => u.Id == userId);
 
             if (user == null)
-            {
-                return Result<Object>.Failure("User not found");
-            }
+                return null;
 
             _mapper.Map(address, user.CustomerDetails.Address);
 
@@ -175,7 +165,6 @@ namespace Application.Services
 
         public async Task<Result<IEnumerable<ProductDto>>> GetFavouriteProducts(string userId)
         {
-            
            var user = await _context.Users
             .Include(u => u.CustomerDetails)
             .ThenInclude(cd => cd.FavouriteProducts)
@@ -183,15 +172,12 @@ namespace Application.Services
             .FirstOrDefaultAsync(u => u.Id == userId);
 
             if (user == null)
-            {
-                return Result<IEnumerable<ProductDto>>.Failure("User not found");
-            }
+                return null;
            
            var favoriteProductsDto = user.CustomerDetails.FavouriteProducts
             .Select(fp => _mapper.Map<ProductDto>(fp.Product)).ToList();
 
             return Result<IEnumerable<ProductDto>>.Success(favoriteProductsDto);
-            
         }
     }
 }
