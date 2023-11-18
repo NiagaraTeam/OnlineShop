@@ -8,7 +8,7 @@ namespace Application.Interfaces
     {
         Task<Result<int>> Create(OrderCreateUpdateDto order);
         Task<Result<OrderDto>> Details(int orderId);
-        Task<Result<OrderDto>> Update(int orderId, OrderCreateUpdateDto order);
+        Task<Result<object>> Update(int orderId, OrderCreateUpdateDto order);
         Task<Result<object>> AddOrderItem(int orderId, OrderItemAddDto item);
         Task<Result<object>> RemoveOrderItem(int orderId, int productId);
         Task<Result<object>> ChangeOrderItemQuantity(int orderId, OrderItemNewQuantityDto item);

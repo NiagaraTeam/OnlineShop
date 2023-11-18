@@ -1,13 +1,14 @@
-using Domain;
-using Domain.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace Application.Dto.Order
 {
     public class OrderCreateUpdateDto
     {
-        public ICollection<OrderItemDto> Items { get; set; }
+        [Required]
+        public ICollection<OrderItemAddDto> Items { get; set; }
+        [Required]
         public int PaymentMethodId { get; set; }
+        [Required]
         public int ShippingMethodId { get; set; }
-
     }
 }

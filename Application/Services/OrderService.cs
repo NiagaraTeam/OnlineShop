@@ -1,8 +1,5 @@
-using System.Collections.Immutable;
 using Application.Core;
 using Application.Dto.Order;
-using Application.Dto.Product;
-using Application.Dto.ShippingPayment;
 using Application.Interfaces;
 using AutoMapper;
 using Domain;
@@ -16,14 +13,17 @@ namespace Application.Services
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
+        private readonly IUserAccessor _userAccessor;
 
         public OrderService(
             DataContext context,
-            IMapper mapper
+            IMapper mapper,
+            IUserAccessor userAccessor
         )
         {
             _context = context;
             _mapper = mapper;
+            _userAccessor = userAccessor;
         }
 
         public async Task<Result<object>> AddOrderItem(int orderId, OrderItemAddDto item)
@@ -41,12 +41,6 @@ namespace Application.Services
                 Quantity = item.Quantity,
             };
 
-
-
-            /*if (order.Items == null)
-             {
-                 return null;
-             }*/
             order.Items.Add(orderItem);
 
             _context.Orders.Update(order);
@@ -55,7 +49,6 @@ namespace Application.Services
                 return Result<object>.Success(null);
 
             return Result<object>.Failure("Failed saving adding order item");
-
         }
 
 
@@ -95,12 +88,17 @@ namespace Application.Services
 
         public async Task<Result<int>> Create(OrderCreateUpdateDto order)
         {
+            var user = await _context.Users
+                .Include(u => u.CustomerDetails)
+                .FirstOrDefaultAsync(u => u.Email == _userAccessor.GetUserEmail());
+
             var orderToCreate = _mapper.Map<Order>(order);
             if (orderToCreate == null)
             {
                 return null;
             }
 
+            orderToCreate.CustomerDetailsId = user.CustomerDetails.Id;
             orderToCreate.OrderDate = DateTime.UtcNow;
             orderToCreate.Status = OrderStatus.New;
 
@@ -118,28 +116,14 @@ namespace Application.Services
             .Include(o => o.PaymentMethod)
             .Include(o => o.ShippingMethod)
             .Include(o => o.Items)
+                .ThenInclude(o => o.Product)
             .FirstOrDefaultAsync(o => o.Id == orderId);
             if (order == null)
                 return null;
 
             var orderdto = _mapper.Map<OrderDto>(order);
 
-            /*foreach(var item in orderdto.Items){
-                    var product = await _context.Products
-                    .Include(p => p.ProductInfo)
-                    .Include(p => p.Photo)
-                    .Include(p => p.Category)
-                    .Include(p => p.ProductExpert)
-                    .Include(p => p.ProductDiscounts)
-                    .FirstOrDefaultAsync(p => p.Id == item.ProductId);
-                    if (product == null)
-                        return null;
-                    item.Product =_mapper.Map<ProductDto>(product);
-
-            }*/
-
             return Result<OrderDto>.Success(orderdto);
-
         }
 
         public async Task<Result<object>> RemoveOrderItem(int orderId, int productId)
@@ -159,8 +143,7 @@ namespace Application.Services
             return Result<object>.Failure("Failed to save removeorderitem");
         }
 
-        //public async Task<Result<object>> Update(int orderId, OrderCreateUpdateDto order)
-        public async Task<Result<OrderDto>> Update(int orderId, OrderCreateUpdateDto order)
+        public async Task<Result<object>> Update(int orderId, OrderCreateUpdateDto order)
         {
             var updateOrder = await _context.Orders.FindAsync(orderId);
             if (updateOrder == null)
@@ -173,10 +156,9 @@ namespace Application.Services
             _context.Orders.Update(updateOrder);
 
             if (await _context.SaveChangesAsync() > 0)
-                return Result<OrderDto>.Success(_mapper.Map<OrderDto>(updateOrder));
+                return Result<object>.Success(null);
 
-            return Result<OrderDto>.Failure("Failed to save updateorder");
-            // return Result<object>.Failure("Failed to save updateorder");
+            return Result<object>.Failure("Failed to save updateorder");
         }
     }
 }

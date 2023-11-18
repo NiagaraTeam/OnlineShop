@@ -21,6 +21,7 @@ namespace Application.Core
 
             CreateMap<OrderItem, OrderItemDto>();
             CreateMap<OrderItemDto, OrderItem>();
+            CreateMap<OrderItemAddDto, OrderItem>();
             CreateMap<OrderItemNewQuantityDto, OrderItem>();
 
             CreateMap<Product, ProductDto>();

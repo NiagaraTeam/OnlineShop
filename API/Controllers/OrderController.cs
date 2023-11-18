@@ -24,7 +24,6 @@ namespace API.Controllers
         }
 
         [HttpGet("orders/{orderId}")] //api/orders/orderId
-        [Authorize(Roles = StaticUserRoles.CUSTOMER)]
         public async Task<IActionResult> GetOrderDetails(int orderId)
         {
             return HandleResult(await _orderService.Details(orderId));
