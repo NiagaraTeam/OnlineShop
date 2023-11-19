@@ -9,5 +9,6 @@ namespace Application.Interfaces
         Task<Result<int>> Create(CategoryCreateUpdateDto category);
         Task<Result<object>> Update(int categoryId, CategoryCreateUpdateDto category);
         Task<Result<object>> ChangeCategoryStatus(int categoryId, CategoryStatus newStatus);
+        Task<Result<CategoryTreeDto>> GetAllCategories();
     }
 }

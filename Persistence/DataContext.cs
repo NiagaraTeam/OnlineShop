@@ -22,7 +22,7 @@ namespace Persistence
         public DbSet<ProductExpert> ProductExperts { get; set; }
         public DbSet<ProductInfo> ProductInfos { get; set; }
         public DbSet<CustomerDetails> CustomerDetails { get; set; }
-        public DbSet<CustomerDetailsProduct> CustomerDetailsProducts { get; set; }
+        public DbSet<CustomerDetailsProduct> CustomerDetailsProduct { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{

@@ -16,12 +16,14 @@ namespace API.Controllers
         }
 
         [HttpGet("shipping-methods")] //api/shipping-methods
+        [AllowAnonymous]
         public async Task<IActionResult> GetShippingMethods()
         {
             return HandleResult(await _shippingPaymentService.GetShippingMethods());
         }
 
         [HttpGet("payment-methods")] //api/payment-methods
+        [AllowAnonymous]
         public async Task<IActionResult> GetPaymentMethods()
         {
             return HandleResult(await _shippingPaymentService.GetPaymentMethods());

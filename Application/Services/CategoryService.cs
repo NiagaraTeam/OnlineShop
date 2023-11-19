@@ -66,7 +66,27 @@ namespace Application.Services
             }
 
             return Result<object>.Failure("Couldn't save changes");
-            
+        }
+
+        public async Task<Result<CategoryTreeDto>> GetAllCategories()
+        {
+            var categories = await _context.Categories
+                .Include(c => c.ParentCategory)
+                .Include(c => c.ChildCategories)
+                .ToListAsync();
+
+            var categoryTreeDto = MapToCategoryTree(categories);
+
+            return Result<CategoryTreeDto>.Success(categoryTreeDto);
+        }
+
+        private CategoryTreeDto MapToCategoryTree(List<Category> categories)
+        {
+            var rootCategory = categories.Where(c => c.ParentCategoryId == null).FirstOrDefault();
+
+            var categoryTreeDto = _mapper.Map<CategoryTreeDto>(rootCategory);
+
+            return categoryTreeDto;
         }
     }
 }
