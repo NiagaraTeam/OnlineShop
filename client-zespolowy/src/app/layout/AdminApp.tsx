@@ -5,6 +5,7 @@ import { useStore } from '../stores/store';
 import { Outlet, ScrollRestoration, useLocation } from 'react-router-dom';
 import { Header } from '../../components/admin/common/Header';
 import { Footer } from '../../components/common/Footer';
+import Loading from '../../components/common/Loading';
 
 export const AdminApp = observer(() => {
   const { commonStore, userStore } = useStore();
@@ -18,6 +19,9 @@ export const AdminApp = observer(() => {
       commonStore.setApploaded();
     }
   }, [commonStore, userStore]);
+
+  if (!commonStore.appLoaded) 
+    return <div className='center'><Loading/></div>
 
   return (
     <>  
