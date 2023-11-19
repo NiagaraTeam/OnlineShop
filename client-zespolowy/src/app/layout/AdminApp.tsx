@@ -6,6 +6,7 @@ import { Outlet, ScrollRestoration, useLocation } from 'react-router-dom';
 import { Header } from '../../components/admin/common/Header';
 import { Footer } from '../../components/common/Footer';
 import Loading from '../../components/common/Loading';
+import { ToastContainer } from 'react-toastify';
 
 export const AdminApp = observer(() => {
   const { commonStore, userStore } = useStore();
@@ -27,6 +28,7 @@ export const AdminApp = observer(() => {
     <>  
       <div className='container'>
         <ScrollRestoration/>
+        <ToastContainer position='bottom-right' hideProgressBar theme='colored' />
         <Header/>
         <div className='my-5'>
           {location.pathname === '/admin' 

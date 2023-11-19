@@ -21,7 +21,7 @@ export const LoginForm = observer(({customerLogin = true}: Props) => {
             }}
                 
         >
-            {({handleSubmit, isSubmitting}) => (
+            {({handleSubmit}) => (
                 <Form 
                     onSubmit={handleSubmit} 
                     autoComplete="off"
@@ -42,7 +42,7 @@ export const LoginForm = observer(({customerLogin = true}: Props) => {
                         <button 
                             type="submit" 
                             className="btn btn-primary"
-                            disabled={isSubmitting}>
+                            >
                             Login
                         </button>
                     </div>

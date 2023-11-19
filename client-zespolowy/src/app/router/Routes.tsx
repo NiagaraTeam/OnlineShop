@@ -48,6 +48,7 @@ export const routes: RouteObject[] = [
             {path: 'register', element: <RegisterPage />},
 
             {path: 'server-error', element: <ServerError />},
+            {path: 'not-found', element: <NotFound />},
             {path: '*', element: <NotFound />}
         ],
     },
@@ -69,6 +70,7 @@ export const routes: RouteObject[] = [
             ]},
             //no login required
             {path: 'login', element: <AdminLogin />},
+            {path: 'not-found', element: <NotFound />},
             {path: '*', element: <NotFound />}
         ]
     }
