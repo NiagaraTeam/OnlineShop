@@ -1,7 +1,7 @@
 export default function NotFound() {
     return (
         <>
-            <div>
+            <div className="text-center">
                 <span style={{fontSize: '150px'}}>
                     404
                 </span>
