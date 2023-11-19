@@ -59,26 +59,28 @@ namespace API.Controllers
         }
 
         [HttpGet("products/{productId}")] //api/products/productId
+        [AllowAnonymous]
         public async Task<IActionResult> GetProductDetails(int productId)
         {
             return HandleResult(await _productService.Details(productId));
         }
 
         [HttpGet("products/top-purchased")] //api/products/top-purchased
-        [Authorize(Roles = StaticUserRoles.CUSTOMER)]
+        [AllowAnonymous]
         public async Task<IActionResult> GetTopPurchasedProducts()
         {
             return HandleResult(await _productService.TopPurchasedProducts());
         }
 
         [HttpGet("products/newest")] //api/products/newest
-        [Authorize(Roles = StaticUserRoles.CUSTOMER)]
+        [AllowAnonymous]
         public async Task<IActionResult> GetNewestProducts()
         {
             return HandleResult(await _productService.GetNewestProducts());
         }
 
         [HttpGet("products/discounted")] //api/products/discouted
+        [AllowAnonymous]
         public async Task<IActionResult> GetDiscountedProducts()
         {
             return HandleResult(await _productService.GetDiscountedProducts());
@@ -92,7 +94,7 @@ namespace API.Controllers
         }
 
         [HttpGet("products/price-list/{categoryId}")] //api/products/price-list/categoryId
-        [Authorize(Roles = StaticUserRoles.CUSTOMER)]
+        [AllowAnonymous]
         public async Task<IActionResult> GetPriceList(int categoryId)
         {
             try
@@ -115,7 +117,7 @@ namespace API.Controllers
         }
 
         [HttpPost("products/{productId}/question")] //api/products/productId/question
-        [Authorize(Roles = StaticUserRoles.CUSTOMER)]
+        [AllowAnonymous]
         public async Task<IActionResult> AskQuestionAboutProduct(int productId, QuestionDto question)
         {
             return HandleResult(await _productService.QuestionAboutProduct(productId, question));
