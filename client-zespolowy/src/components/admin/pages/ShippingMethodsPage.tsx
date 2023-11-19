@@ -21,7 +21,6 @@ export const ShippingMethodsPage = observer(() => {
 
   }, [loadShippingMethods, shippingMethods])
 
-  
   // create
   const handleCreate = (method: ShippingMethod, formikHelpers: FormikHelpers<ShippingMethod>) => {
     createShippingMethod(method)
@@ -72,7 +71,7 @@ export const ShippingMethodsPage = observer(() => {
           </ul>
         </div>
 
-        <div className="col-lg-5 offset-2">
+        <div className="col-lg-5 offset-lg-2">
           <h2 className="my-4">
             Create Shipping Method
           </h2>
