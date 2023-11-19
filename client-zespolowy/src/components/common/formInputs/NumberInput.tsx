@@ -7,10 +7,10 @@ interface Props {
 }
 
 export default function NumberInput(props: Props) {
-    const [field, meta] = useField(props.name);
+    const [field] = useField(props.name);
     return (
         <>
-            <div className="form-control">
+            <div className="form-group">
                 <label htmlFor={field.name}>
                     {props.label}
                 </label>
@@ -21,13 +21,12 @@ export default function NumberInput(props: Props) {
                     {...field} 
                     {...props}
                     value={field.value === null ? '' : field.value}
-                    className={meta.touched && meta.error ? 
-                    "error" : ""}
+                    className={"form-control"}
                 />
                 <ErrorMessage 
                     name={field.name} 
                     component="span" 
-                    className="error"
+                    className="text-danger"
                 />
             </div>
         </>

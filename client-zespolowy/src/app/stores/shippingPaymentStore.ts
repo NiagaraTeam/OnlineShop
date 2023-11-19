@@ -3,6 +3,7 @@ import { ShippingMethod } from "../models/onlineshop/ShippingMethod";
 import agent from "../api/agent";
 import { PaymentMethod } from "../models/onlineshop/PaymentMethod";
 import { store } from "./store";
+import { toast } from "react-toastify";
 
 export default class ShippingPaymentStore {
     shippingMethodsRegistry = new Map<number, ShippingMethod>();
@@ -55,6 +56,48 @@ export default class ShippingPaymentStore {
             console.log(error);
         } finally {
             runInAction(() => store.commonStore.setInitialLoading(false))
+        }
+    }
+
+    deletePaymentMethod = async (id: number) => {
+        try {
+            await agent.PaymentMethods.delete(id);
+            this.paymentMethodsRegistry.delete(id);
+        } catch (error) {
+            console.log(error);
+            toast.error('Failed to delete method');
+        }
+    }
+
+    deleteShippingMethod = async (id: number) => {
+        try {
+            await agent.ShippingMethods.delete(id);
+            this.shippingMethodsRegistry.delete(id);
+        } catch (error) {
+            console.log(error);
+            toast.error('Failed to delete method');
+        }
+    }
+
+    createShippingMethod = async (method: ShippingMethod) => {
+        try {
+            const id = await agent.ShippingMethods.create(method);
+            method.id = id;
+            runInAction(() => this.setShippingMethod(method));
+        } catch (error) {
+            console.log(error);
+            toast.error('Failed to create method');
+        }
+    }
+
+    createPaymentMethod = async (method: PaymentMethod) => {
+        try {
+            const id = await agent.PaymentMethods.create(method);
+            method.id = id;
+            runInAction(() => this.setPaymentMethod(method));
+        } catch (error) {
+            console.log(error);
+            toast.error('Failed to create method');
         }
     }
 }
