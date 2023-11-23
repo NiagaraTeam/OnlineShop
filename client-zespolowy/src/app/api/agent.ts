@@ -1,11 +1,10 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { ChangePasswordFormValues, User, UserFormValues } from "../models/common/User";
-import { Category } from "../models/onlineshop/Category";
+import { Category, CategoryTree } from "../models/onlineshop/Category";
 import { Product } from "../models/onlineshop/Product";
 import { CategoryStatus } from "../models/enums/CategoryStatus";
 import { ProductStatus } from "../models/enums/ProductStatus";
-import { Discount } from "../models/onlineshop/Discount";
-import { Question } from "../models/onlineshop/Question";
+import { UserDiscount } from "../models/onlineshop/UserDiscount";
 import { Address } from "../models/onlineshop/Address";
 import { Order } from "../models/onlineshop/Order";
 import { OrderItem, OrderItemNewQuantity } from "../models/onlineshop/OrderItem";
@@ -15,6 +14,7 @@ import { PaymentMethod } from "../models/onlineshop/PaymentMethod";
 import { store } from "../stores/store";
 import { router } from "../router/Routes";
 import { toast } from "react-toastify";
+import { ProductDiscount } from "../models/onlineshop/ProductDiscount";
 
 const sleep = (delay: number) => {
     return new Promise((resolve) => {
@@ -87,41 +87,39 @@ const Account = {
     register: (user: UserFormValues) => requests.post<User>('/account/register', user),
     changePassword: (values: ChangePasswordFormValues) => requests.post<void>('/account/changepassword/', values),
 
-    //reszta endpointów
-    delete: (userId: number) => requests.del(`/accounts/${userId}`),
-    updateAddress: (userId: number, address: Address) => requests.patch(`/accounts/${userId}/address`, address),
-    addFavouriteProduct: (userId: number, productId: number) => requests.post(`/accounts/${userId}/favourites/${productId}`, {}),
-    removeFavouriteProduct: (userId: number, productId: number) => requests.del(`/accounts/${userId}/favourites/${productId}`),
-    resetPasswordRequest: (userId: number) => requests.post(`/accounts/${userId}/reset-password`, {}),
-    getUserDiscount: (userId: number) => requests.get(`/accounts/${userId}/discount`),
-    //setUserDiscount: (userId: number, discountValue: number) => requests.put(`/accounts/${userId}/discount`, discountValue), do naprawy (trzeba discountValue zamienić na obiekt tu i na backendzie)
+    delete: (userId: string) => requests.del<void>(`/accounts/${userId}`),
+    updateAddress: (userId: string, address: Address) => requests.patch<void>(`/accounts/${userId}/address`, address),
+    addFavouriteProduct: (userId: string, productId: number) => requests.post<void>(`/accounts/${userId}/favourites/${productId}`, {}),
+    removeFavouriteProduct: (userId: string, productId: number) => requests.del<void>(`/accounts/${userId}/favourites/${productId}`),
+    //resetPasswordRequest: (userId: string) => requests.post(`/accounts/${userId}/reset-password`, {}),
+    getUserDiscount: (userId: string) => requests.get<number>(`/accounts/${userId}/discount`),
+    setUserDiscount: (userId: string, userDiscount: UserDiscount) => requests.put(`/accounts/${userId}/discount`, userDiscount), 
 }
 
 const Categories = {
     create: (category: Category) => requests.post<number>(`/categories`, category),
     update: (categoryId:number, category: Category) => requests.put<void>(`/categories/${categoryId}`, category),
     changeStatus: (categoryId: number, newStatus: CategoryStatus) => requests.patch<void>(`categories/${categoryId}/${newStatus}`, {}),
+    getCategoryTree: () => requests.get<CategoryTree>(`/categories`),
 }
 
-//typy złożone się jeszcze zmienią
 const Products = {
     create: (product: Product) => requests.post<number>("/products", product),
     update: (productId: number, product: Product) => requests.put<Product>(`/products/${productId}`, product),
     delete: (productId: number) => requests.del<void>(`/products/${productId}`),
     deletePermanently: (productId: number) => requests.del<void>(`/products/${productId}/permanently`),
-    getDeleted: () => requests.get<Product[]>("/products/deleted"),
+    //getDeleted: () => requests.get<Product[]>("/products/deleted"),
     changeStatus: (productId: number, newStatus: ProductStatus) => requests.patch<void>(`/products/${productId}/${newStatus}`, {}),
     getDetails: (productId: number) => requests.get<Product>(`/products/${productId}`),
     getTopPurchased: () => requests.get<Product[]>("/products/top-purchased"),
     getNewest: () => requests.get<Product[]>("/products/newest"),
-    //getDiscounted: (dateRange: DateRange) => requests.get<Product[]>("/products/discounted?tutajparametryDataRange"), do poprawy
-    updateImage: (productId: number, imageId: string) => requests.patch<void>(`/products/${productId}/image`, { imageId }),
-    getPriceList: (categoryId: number) => axios.get(`products/price-list/${categoryId}`, { responseType: 'arraybuffer'}),
-    addDiscount: (productId: number, discount: Discount) => requests.post<void>(`/products/${productId}/discount`, discount),
-    askQuestion: (productId: number, question: Question) => requests.post<void>(`/products/${productId}/question`, question),
+    getDiscounted: () => requests.get<Product[]>("/products/discounted"),
+    //updateImage: (productId: number, imageId: string) => requests.patch<void>(`/products/${productId}/image`, { imageId }),
+    //getPriceList: (categoryId: number) => axios.get(`products/price-list/${categoryId}`, { responseType: 'arraybuffer'}),
+    addDiscount: (productId: number, productDiscount: ProductDiscount) => requests.post<void>(`/products/${productId}/discount`, productDiscount),
+    //askQuestion: (productId: number, question: Question) => requests.post<void>(`/products/${productId}/question`, question),
 };
 
-//typy złożone się jeszcze zmienią
 const Orders = {
     create: (order: Order) => requests.post<number>("/orders", order),
     getDetails: (orderId: number) => requests.get<Order>(`/orders/${orderId}`),

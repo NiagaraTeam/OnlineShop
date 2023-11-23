@@ -6,3 +6,12 @@ export interface Category {
     parentCategoryId?: number;
     status: CategoryStatus;
 }
+
+export interface CategoryTree {
+    id: number;
+    name: string;
+    parentCategoryId?: number;
+    status: CategoryStatus;
+
+    childCategories: CategoryTree[];
+}
