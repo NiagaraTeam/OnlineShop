@@ -104,11 +104,11 @@ const Categories = {
 }
 
 const Products = {
+    //list:
     create: (product: Product) => requests.post<number>("/products", product),
     update: (productId: number, product: Product) => requests.put<Product>(`/products/${productId}`, product),
-    delete: (productId: number) => requests.del<void>(`/products/${productId}`),
     deletePermanently: (productId: number) => requests.del<void>(`/products/${productId}/permanently`),
-    //getDeleted: () => requests.get<Product[]>("/products/deleted"),
+    getDeleted: () => requests.get<Product[]>("/products/deleted"),
     changeStatus: (productId: number, newStatus: ProductStatus) => requests.patch<void>(`/products/${productId}/${newStatus}`, {}),
     getDetails: (productId: number) => requests.get<Product>(`/products/${productId}`),
     getTopPurchased: () => requests.get<Product[]>("/products/top-purchased"),

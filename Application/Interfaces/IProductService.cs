@@ -9,7 +9,6 @@ namespace Application.Interfaces
     {
         Task<Result<int>> Create(ProductCreateDto product);
         Task<Result<ProductDto>> Update(int productId, ProductUpdateDto product);
-        Task<Result<object>> Delete(int productId);
         Task<Result<object>> DeletePermanently(int productId);
         //Task<Result<IEnumerable<ProductDto>> List(???); // parametry work in progress
         Task<Result<IEnumerable<ProductDto>>> GetDeletedProducts();

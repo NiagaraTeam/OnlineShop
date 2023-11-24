@@ -63,6 +63,7 @@ export default class ShippingPaymentStore {
         try {
             await agent.PaymentMethods.delete(id);
             this.paymentMethodsRegistry.delete(id);
+            toast.success(`Method deleted`);
         } catch (error) {
             console.log(error);
             toast.error('Failed to delete method');
@@ -73,6 +74,7 @@ export default class ShippingPaymentStore {
         try {
             await agent.ShippingMethods.delete(id);
             this.shippingMethodsRegistry.delete(id);
+            toast.success(`Method deleted`);
         } catch (error) {
             console.log(error);
             toast.error('Failed to delete method');
@@ -84,6 +86,7 @@ export default class ShippingPaymentStore {
             const id = await agent.ShippingMethods.create(method);
             method.id = id;
             runInAction(() => this.setShippingMethod(method));
+            toast.success(`Method "${method.name}" created`);
         } catch (error) {
             console.log(error);
             toast.error('Failed to create method');
@@ -95,6 +98,7 @@ export default class ShippingPaymentStore {
             const id = await agent.PaymentMethods.create(method);
             method.id = id;
             runInAction(() => this.setPaymentMethod(method));
+            toast.success(`Method "${method.name}" created`);
         } catch (error) {
             console.log(error);
             toast.error('Failed to create method');

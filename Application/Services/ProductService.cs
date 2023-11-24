@@ -30,7 +30,7 @@ namespace Application.Services
                 .Include(p => p.ProductDiscounts)
                 .FirstOrDefaultAsync(p => p.Id == productId);
 
-            if(product == null)
+            if(product == null || product.Status == ProductStatus.Deleted)
                 return null;
 
             // Sprawdź, czy nowy rabat nakłada się na istniejące rabaty
@@ -96,11 +96,6 @@ namespace Application.Services
             return Result<int>.Failure("Failed adding shipping method");
         }
 
-        public async Task<Result<object>> Delete(int productId)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<Result<object>> DeletePermanently(int productId)
         {
             var deleteProduct = await _context.Products.FindAsync(productId);
@@ -128,7 +123,7 @@ namespace Application.Services
                 .Include(p => p.ProductDiscounts)
                 .FirstOrDefaultAsync(p => p.Id == productId);
 
-            if (product == null)
+            if (product == null || product.Status == ProductStatus.Deleted)
                 return null;
 
             var productDto = _mapper.Map<ProductDto>(product);
@@ -138,7 +133,21 @@ namespace Application.Services
 
         public async Task<Result<IEnumerable<ProductDto>>> GetDeletedProducts()
         {
-            throw new NotImplementedException();
+            var deletedProducts = await _context.Products
+                .Include(p => p.ProductInfo)
+                .Include(p => p.Photo)
+                .Include(p => p.Category)
+                .Include(p => p.ProductExpert)
+                .Include(p => p.ProductDiscounts)
+                .Where(p => p.Status == ProductStatus.Deleted)
+                .ToListAsync();
+
+            if (deletedProducts == null)
+                return null;
+
+            var deletedProductDtos = _mapper.Map<IEnumerable<ProductDto>>(deletedProducts);
+
+            return Result<IEnumerable<ProductDto>>.Success(deletedProductDtos);
         }
 
         public async Task<Result<IEnumerable<ProductDto>>> GetDiscountedProducts()
@@ -151,7 +160,7 @@ namespace Application.Services
                 .Include(p => p.Category)
                 .Include(p => p.ProductExpert)
                 .Include(p => p.ProductDiscounts)
-                .Where(p => p.ProductDiscounts
+                .Where(p => p.Status != ProductStatus.Deleted && p.ProductDiscounts
                     .Any(d => d.Start <= currentDate && d.End >= currentDate))
                 .ToListAsync();
 
@@ -171,6 +180,7 @@ namespace Application.Services
                 .Include(p => p.Category)
                 .Include(p => p.ProductExpert)
                 .Include(p => p.ProductDiscounts)
+                .Where(p => p.Status != ProductStatus.Deleted)
                 .OrderByDescending(p => p.CreatedAt)
                 .Take(10)
                 .ToListAsync();
@@ -197,6 +207,7 @@ namespace Application.Services
         {
             var topProducts = await _context.Products
                 .Include(p => p.ProductInfo)
+                .Where(p => p.Status != ProductStatus.Deleted)
                 .OrderByDescending(p => p.ProductInfo.TotalSold)
                 .Take(10)
                 .ToListAsync();

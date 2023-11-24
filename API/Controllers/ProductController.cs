@@ -30,13 +30,6 @@ namespace API.Controllers
             return HandleResult(await _productService.Update(productId, product));
         }
 
-        [HttpDelete("products/{productId}")] //api/products/productId
-        [Authorize(Roles = StaticUserRoles.ADMIN)]
-        public async Task<IActionResult> DeleteProduct(int productId)
-        {
-            return HandleResult(await _productService.Delete(productId));
-        }
-
         [HttpDelete("products/{productId}/permanently")] //api/products/productId/permanently
         [Authorize(Roles = StaticUserRoles.ADMIN)]
         public async Task<IActionResult> DeleteProductPermanently(int productId)

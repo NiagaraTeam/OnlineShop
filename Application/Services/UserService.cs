@@ -162,7 +162,6 @@ namespace Application.Services
             return Result<object>.Failure("Failed updating the address");
         }
 
-
         public async Task<Result<IEnumerable<ProductDto>>> GetFavouriteProducts(string userId)
         {
            var user = await _context.Users
