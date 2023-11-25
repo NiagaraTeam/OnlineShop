@@ -32,8 +32,6 @@ export default class ExpertsStore {
         try {
             this.productExpertsRegistry.clear();
             const experts = await agent.Products.getProductsExperts();
-            console.log(experts); // Add this line
-
             experts.forEach(expert => this.setProductExpert(expert));
             runInAction(() => store.commonStore.setInitialLoading(false));
         } catch (error) {

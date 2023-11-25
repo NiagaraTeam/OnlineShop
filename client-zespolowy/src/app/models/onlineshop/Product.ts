@@ -22,15 +22,15 @@ export interface Product {
 }
 
 export class ProductFormValues {
-    id?: string = undefined;
+    id?: number = undefined;
     name: string = '';
     description: string = '';
-    price?: number | null = null;
+    price: number | null = null;
     taxRate: number = 23;
     categoryId: number = 1;
     productExpertId: number = 1;
     status: ProductStatus = ProductStatus.Available;
-    currentStock: number = 50;
+    currentStock: number | null = null;
 
     constructor(product?: ProductFormValues) {
         if (product) {
@@ -44,5 +44,19 @@ export class ProductFormValues {
             this.status = product.status;
             this.currentStock = product.currentStock;
         }
+    }
+
+    static createFromProduct(product: Product): ProductFormValues {
+        return new ProductFormValues({
+            id: product.id,
+            name: product.name,
+            description: product.description,
+            price: product.price,
+            taxRate: product.taxRate,
+            categoryId: product.category.id,
+            productExpertId: product.productExpert.id,
+            status: product.status,
+            currentStock: product.productInfo.currentStock
+        });
     }
 }

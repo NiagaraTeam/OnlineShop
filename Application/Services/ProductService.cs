@@ -202,6 +202,7 @@ namespace Application.Services
         public async Task<Result<PagedList<ProductDto>>> GetProducts(PagingParams parameters)
         {
             var query = _context.Products
+                .Where(p => p.Status != ProductStatus.Deleted)
                 .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
                 .AsQueryable();
 
@@ -235,19 +236,30 @@ namespace Application.Services
 
         public async Task<Result<ProductDto>> Update(int productId, ProductUpdateDto product)
         {
-            var updateProduct = await _context.Products.FirstOrDefaultAsync(p => p.Id == productId);
+            var updateProduct = await _context.Products
+                .FirstOrDefaultAsync(p => p.Id == productId);
+
             if (updateProduct == null)
                 return null;
                 
             _mapper.Map(product, updateProduct);
             _context.Products.Update(updateProduct);
 
-            if (await _context.SaveChangesAsync() > 0) {
-                return Result<ProductDto>.Success(_mapper.Map<ProductDto>(updateProduct));
+            if (await _context.SaveChangesAsync() == 0) {
+                return Result<ProductDto>.Failure("Couldn't save changes");
             }
 
-            return Result<ProductDto>.Failure("Couldn't save changes");
+            var result = await _context.Products
+                .Include(p => p.ProductInfo)
+                .Include(p => p.Photo)
+                .Include(p => p.Category)
+                .Include(p => p.ProductExpert)
+                .Include(p => p.ProductDiscounts)
+                .FirstOrDefaultAsync(p => p.Id == productId);
 
+            var productDto = _mapper.Map<ProductDto>(result);
+            
+            return Result<ProductDto>.Success(_mapper.Map<ProductDto>(productDto));
         }
 
         public async Task<Result<IEnumerable<ProductExpertDto>>> GetProductsExperts()

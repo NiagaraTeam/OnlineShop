@@ -68,13 +68,10 @@ export default class ProductStore {
     }
 
     loadProduct = async (id: number) => {
-        store.commonStore.setInitialLoading(true);
-
         let product = this.getProduct(id);
 
         if (product) {
             this.selectedProduct = product;
-            store.commonStore.setInitialLoading(false)
             return product;
         } else {
             try {
@@ -85,8 +82,6 @@ export default class ProductStore {
             } catch (error) {
                 console.log(error);
                 toast.error('Failed to load product');
-            } finally {
-                runInAction(() => store.commonStore.setInitialLoading(false)); 
             }
         }
     }
@@ -143,5 +138,21 @@ export default class ProductStore {
             toast.error('Failed to create product');
         }
     };
+
+    updateProduct = async (id: number, product: ProductFormValues) => {
+        try {
+            const updatedProduct = await agent.Products.update(id, product);
+
+            runInAction(() => {
+                this.setProduct(updatedProduct);
+                this.selectedProduct = updatedProduct;
+            });
+
+            toast.success('Product updated');
+        } catch (error) {
+            console.log(error);
+            toast.error('Failed to update product');
+        }
+    }
 
 }

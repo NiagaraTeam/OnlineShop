@@ -16,10 +16,11 @@ interface Props {
     onSubmit: (product: ProductFormValues, formikHelpers: FormikHelpers<ProductFormValues>) => void;
     buttonText: string;
     product?: ProductFormValues;
+    editMode?: boolean;
 }
 
 export const ProductForm = observer(
-    ({onSubmit, product, buttonText}: Props) => {
+    ({onSubmit, product, buttonText, editMode = false}: Props) => {
 
     const {categoryStore, expertsStore, commonStore} = useStore();
     const {loadCategories, categories, categoriesAsOptions} = categoryStore;
@@ -94,10 +95,13 @@ export const ProductForm = observer(
                 <SelectInput label="Status" name="status" options={enumToOptions(ProductStatus)}/>
             </div>
 
+            
             {/* CurrentStock */}
+            {!editMode &&
             <div className="my-2">
                 <NumberInput placeholder="Enter current stock" name="currentStock" label="Stock"/>
-            </div>
+            </div>}
+            
             
             {/* Button */}
             <div className="text-center my-4">

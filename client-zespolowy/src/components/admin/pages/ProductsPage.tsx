@@ -10,13 +10,16 @@ import { ProductFormValues } from "../../../app/models/onlineshop/Product";
 
 export const ProductsPage = observer(() => {
     const {productStore, commonStore} = useStore();
-    const {products, loadProducts, deleteProduct, createProduct} = productStore;
+    const {products, selectedProduct, loadProducts, deleteProduct, createProduct, loadProduct, updateProduct} = productStore;
     const {initialLoading} = commonStore;
+
+    // view logic
+    const [showEditForm, setShowEditForm] = useState(false);
 
     // on load
     useEffect(() => {
         if (products.length == 0)
-        loadProducts();
+            loadProducts();
 
     }, [loadProducts, products])
 
@@ -40,9 +43,16 @@ export const ProductsPage = observer(() => {
     }
 
     // edit
-    function handleEdit(id: number): void {
-        console.log(id);
-        throw new Error("Function not implemented.");
+    function displayEditForm(id: number): void {
+        loadProduct(id)
+            .then(() => setShowEditForm(true));
+    }
+
+    function handleEdit(product: ProductFormValues, formikHelpers: FormikHelpers<ProductFormValues>): void {
+        updateProduct(product.id!, product).then(() => {
+            setShowEditForm(false);
+            formikHelpers.resetForm();
+        });
     }
 
     // create
@@ -64,11 +74,11 @@ export const ProductsPage = observer(() => {
                 <ul className="list-group">
                     {products.map((product) => (
                     <li key={product.id} className="list-group-item d-flex justify-content-between align-items-center">
-                        {product.name} ({product.category.name})
+                        <span>{product.name} ({product.category.name})</span>
                         <EditDeleteButtons
                         loading={loading[product.id]}
                         deleteAction={() => handleDelete(product.id)}
-                        editAction={() => handleEdit(product.id)}
+                        editAction={() => displayEditForm(product.id)}
                         size={25}
                         />
                     </li>
@@ -77,10 +87,27 @@ export const ProductsPage = observer(() => {
                 </div>
             
                 <div className="col-lg-5 offset-lg-1">
-                    <h2 className="my-4">
-                    Create Product
-                    </h2>
-                    <ProductForm onSubmit={handleCreate} buttonText="Create" product={new ProductFormValues()}/>
+                    {!showEditForm 
+                    ?
+                    <>
+                        <h2 className="my-4">
+                        Create Product
+                        </h2>
+                        <ProductForm onSubmit={handleCreate} buttonText="Create" product={new ProductFormValues()}/>
+                    </>
+                    : 
+                    <>
+                        <h2 className="my-4 d-flex justify-content-between align-items-center">
+                            <span>Edit Product</span>
+                            <button className="btn btn-close" onClick={() => setShowEditForm(false)}></button>
+                        </h2>
+                        <ProductForm 
+                            key={selectedProduct!.id} 
+                            onSubmit={handleEdit} buttonText="Save" editMode={true}
+                            product={ProductFormValues.createFromProduct(selectedProduct!)}
+                        />
+                    </>
+                    }
                 </div>
             
             </div>
