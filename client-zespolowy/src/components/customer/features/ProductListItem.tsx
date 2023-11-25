@@ -5,12 +5,14 @@ interface Props {
     name: string;
     price: number;
     discount?: number;
+    new?: boolean;
 }
 
-export const ProductListItem: React.FC<Props> = observer(({ name, price, discount}) => {
+export const ProductListItem: React.FC<Props> = observer(({ name, price, discount, new: isNew}) => {
     const discountedPrice = discount ? price - discount : price;
     return (
       <div className="card w-10 m-2">
+        {isNew ? <h5><p>New</p></h5> : null}
         <img src={Image} className="card-img-top" alt={name} />
         <div className="card-body">
             <h6 className="card-title">{name}</h6>
