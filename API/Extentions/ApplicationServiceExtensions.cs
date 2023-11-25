@@ -1,6 +1,7 @@
 using Application.Core;
 using Application.Interfaces;
 using Application.Services;
+using Infrastructure.Photos;
 using Infrastructure.Security;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -36,7 +37,9 @@ namespace API.Extentions
             services.AddHttpContextAccessor();
 
             services.AddScoped<IUserAccessor, UserAccessor>();
+            services.AddScoped<IPhotoAccessor, PhotoAccessor>();
             services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IPhotoService, PhotoService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IShippingPaymentService, ShippingPaymentService>();
