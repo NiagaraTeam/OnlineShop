@@ -4,13 +4,30 @@ import { store } from "./store";
 import agent from "../api/agent";
 import { toast } from "react-toastify";
 import { ProductStatus } from "../models/enums/ProductStatus";
+import { Pagination, PagingParams } from "../models/common/Pagination";
 
 export default class ProductStore {
     productsRegistry = new Map<number,Product>();
     selectedProduct: Product | undefined = undefined;
+
+    pagination: Pagination | null = null;
+    pagingParams = new PagingParams();
     
     constructor() {
         makeAutoObservable(this);
+    }
+
+    setPagingParams = (pagingParams: PagingParams) => {
+        this.pagingParams = pagingParams;
+    }
+
+    get axiosParams() {
+        const params = new URLSearchParams();
+        
+        params.append('pageNumber', this.pagingParams.pageNumber.toString());
+        params.append('pageSize', this.pagingParams.pageSize.toString());
+
+        return params
     }
 
     get products() {
@@ -31,10 +48,12 @@ export default class ProductStore {
     loadProducts = async () => {
         store.commonStore.setInitialLoading(true);
         try {
-            const produtcs = await agent.Products.getNewest();
-            produtcs.forEach(
+            this.productsRegistry.clear();
+            const result = await agent.Products.list(this.axiosParams);
+            result.data.forEach(
                 product => this.setProduct(product)
             );
+            this.setPagination(result.pagination);
             runInAction(() => store.commonStore.setInitialLoading(false))
         } catch (error) {
             console.log(error);
@@ -42,6 +61,10 @@ export default class ProductStore {
         } finally {
             runInAction(() => store.commonStore.setInitialLoading(false))
         }
+    }
+
+    setPagination = (pagination: Pagination) => {
+        this.pagination = pagination;
     }
 
     loadProduct = async (id: number) => {

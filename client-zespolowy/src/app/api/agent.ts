@@ -15,6 +15,8 @@ import { store } from "../stores/store";
 import { router } from "../router/Routes";
 import { toast } from "react-toastify";
 import { ProductDiscount } from "../models/onlineshop/ProductDiscount";
+import { Photo } from "../models/onlineshop/Photo";
+import { PaginatedResult } from "../models/common/Pagination";
 
 const sleep = (delay: number) => {
     return new Promise((resolve) => {
@@ -26,6 +28,13 @@ axios.defaults.baseURL = import.meta.env.VITE_API_URL;
 
 axios.interceptors.response.use(async response => {
     if (import.meta.env.DEV) await sleep(500);
+
+    const pagination = response.headers['pagination'];
+    if (pagination) {
+        response.data = new PaginatedResult(response.data, JSON.parse(pagination));
+        return response as AxiosResponse<PaginatedResult<unknown>>;
+    }
+    
     return response;
 }, (error: AxiosError) => {
     const {data, status, config} = error.response as AxiosResponse;
@@ -48,10 +57,10 @@ axios.interceptors.response.use(async response => {
             }
             break;
         case 401:
-            toast.error('unauthorised')
+            toast.error('Unauthorised')
             break;
         case 403:
-            toast.error('forbidden')
+            toast.error('Forbidden')
             break;
         case 404:
             router.navigate('not-found');
@@ -104,7 +113,8 @@ const Categories = {
 }
 
 const Products = {
-    //list:
+    list: (params: URLSearchParams) => axios.get<PaginatedResult<Product[]>>(`/products`, {params})
+        .then(responseBody),
     create: (product: Product) => requests.post<number>("/products", product),
     update: (productId: number, product: Product) => requests.put<Product>(`/products/${productId}`, product),
     deletePermanently: (productId: number) => requests.del<void>(`/products/${productId}/permanently`),
@@ -114,7 +124,6 @@ const Products = {
     getTopPurchased: () => requests.get<Product[]>("/products/top-purchased"),
     getNewest: () => requests.get<Product[]>("/products/newest"),
     getDiscounted: () => requests.get<Product[]>("/products/discounted"),
-    //updateImage: (productId: number, imageId: string) => requests.patch<void>(`/products/${productId}/image`, { imageId }),
     //getPriceList: (categoryId: number) => axios.get(`products/price-list/${categoryId}`, { responseType: 'arraybuffer'}),
     addDiscount: (productId: number, productDiscount: ProductDiscount) => requests.post<void>(`/products/${productId}/discount`, productDiscount),
     //askQuestion: (productId: number, question: Question) => requests.post<void>(`/products/${productId}/question`, question),
@@ -142,13 +151,25 @@ const PaymentMethods = {
     delete: (methodId: number) => requests.del<void>(`payment-methods/${methodId}`),
 }
 
+const Photos = {
+    uploadPhoto: (productId: number, file: Blob) => {
+        const formData = new FormData();
+        formData.append('File', file);
+        return axios.post<Photo>(`product/${productId}/photo`, formData, {
+            headers: {'Content-Type': 'multipart/form-data'}
+        })
+    },
+    deletePhoto: (photoId: string) => axios.delete(`/photos/${photoId}`)
+}
+
 const agent = {
     Account,
     Categories,
     Products,
     Orders,
     ShippingMethods,
-    PaymentMethods
+    PaymentMethods,
+    Photos
 }
 
 export default agent;
