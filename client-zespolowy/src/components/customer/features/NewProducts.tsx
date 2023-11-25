@@ -18,7 +18,7 @@ export const NewProducts = observer(() => {
 
   return (
     <div className="m-3 border p-3">
-      <h5><p>TopSoldProducts</p></h5>
+      <h5><p>New products</p></h5>
       <div className="row row-cols-2 row-cols-md-5 g-2">
         {products.map((product, index) => (
           <div className="col" key={index}>

@@ -12,7 +12,7 @@ export const ProductListItem: React.FC<Props> = observer(({ name, price, discoun
     const discountedPrice = discount ? price - discount : price;
     return (
       <div className="card w-10 m-2">
-        {isNew ? <h5><p>New</p></h5> : null}
+        {isNew ? <h4 className="text-success"><p>New</p></h4> : null}
         <img src={Image} className="card-img-top" alt={name} />
         <div className="card-body">
             <h6 className="card-title">{name}</h6>
