@@ -3,6 +3,7 @@ using Application.Dto;
 using Application.Dto.Product;
 using Application.Interfaces;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Domain;
 using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
@@ -196,6 +197,18 @@ namespace Application.Services
         public async Task<MemoryStream> GetPDFWithPriceList(int categoryId)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<Result<PagedList<ProductDto>>> GetProducts(PagingParams parameters)
+        {
+            var query = _context.Products
+                .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
+                .AsQueryable();
+
+            return Result<PagedList<ProductDto>>.Success(
+                    await PagedList<ProductDto>.CreateAsync(query, parameters.PageNumber, 
+                        parameters.PageSize)
+                );
         }
 
         public async Task<Result<object>> QuestionAboutProduct(int productId, QuestionDto question)

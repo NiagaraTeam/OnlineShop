@@ -1,3 +1,4 @@
+using Application.Core;
 using Application.Dto;
 using Application.Dto.Product;
 using Application.Interfaces;
@@ -14,6 +15,13 @@ namespace API.Controllers
         public ProductController(IProductService productService)
         {
             _productService = productService;
+        }
+
+        [HttpGet("products")] //api/products
+        [AllowAnonymous]
+        public async Task<IActionResult> CreateProduct([FromQuery] PagingParams param)
+        {
+            return HandlePagedResult(await _productService.GetProducts(param));
         }
 
         [HttpPost("products")] //api/products

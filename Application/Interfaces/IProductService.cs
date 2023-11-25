@@ -10,7 +10,7 @@ namespace Application.Interfaces
         Task<Result<int>> Create(ProductCreateDto product);
         Task<Result<ProductDto>> Update(int productId, ProductUpdateDto product);
         Task<Result<object>> DeletePermanently(int productId);
-        //Task<Result<IEnumerable<ProductDto>> List(???); // parametry work in progress
+        Task<Result<PagedList<ProductDto>>> GetProducts(PagingParams parameters); 
         Task<Result<IEnumerable<ProductDto>>> GetDeletedProducts();
         Task<Result<object>> ChangeProductStatus(int productId, ProductStatus newStatus);
         Task<Result<ProductDto>> Details(int productId);
