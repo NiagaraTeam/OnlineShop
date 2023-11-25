@@ -4,12 +4,13 @@ import { useEffect, useState } from "react";
 import Loading from "../../common/Loading";
 import EditDeleteButtons from "../../common/EditDeleteButtons";
 import { LoadingState } from "../../../app/models/common/LoadingState";
-//import { FormikHelpers } from "formik";
-//import { Product } from "../../../app/models/onlineshop/Product";
+import { ProductForm } from "../forms/ProductForm";
+import { FormikHelpers } from "formik";
+import { ProductFormValues } from "../../../app/models/onlineshop/Product";
 
 export const ProductsPage = observer(() => {
     const {productStore, commonStore} = useStore();
-    const {products, loadProducts, deleteProduct} = productStore;
+    const {products, loadProducts, deleteProduct, createProduct} = productStore;
     const {initialLoading} = commonStore;
 
     // on load
@@ -45,17 +46,16 @@ export const ProductsPage = observer(() => {
     }
 
     // create
-    // function handleCreate(product: Product, formikHelpers: FormikHelpers<Product>): void {
-    //     console.log(product);
-    //     console.log(formikHelpers);
-    //     throw new Error("Function not implemented.");
-    // }
+    function handleCreate(product: ProductFormValues, formikHelpers: FormikHelpers<ProductFormValues>): void {
+        createProduct(product)
+            .then(() => formikHelpers.resetForm());
+    }
 
     return (
         <div className="m-3">
             <div className="row">
 
-                <div className="col-lg-5">
+                <div className="col-lg-6">
                 <div className="d-flex justify-content-between align-items-center">
                     <h2 className="my-4">
                     Products
@@ -76,11 +76,11 @@ export const ProductsPage = observer(() => {
                 </ul>
                 </div>
             
-                <div className="col-lg-5 offset-lg-2">
+                <div className="col-lg-5 offset-lg-1">
                     <h2 className="my-4">
                     Create Product
                     </h2>
-                    //Create Product form
+                    <ProductForm onSubmit={handleCreate} buttonText="Create" product={new ProductFormValues()}/>
                 </div>
             
             </div>

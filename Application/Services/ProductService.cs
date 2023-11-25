@@ -249,5 +249,14 @@ namespace Application.Services
             return Result<ProductDto>.Failure("Couldn't save changes");
 
         }
+
+        public async Task<Result<IEnumerable<ProductExpertDto>>> GetProductsExperts()
+        {
+            var experts = await _context.ProductExperts.ToListAsync();
+
+            var expertsDto = _mapper.Map<IEnumerable<ProductExpertDto>>(experts);
+
+            return Result<IEnumerable<ProductExpertDto>>.Success(expertsDto);
+        }
     }
 }

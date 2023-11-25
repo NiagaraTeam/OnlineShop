@@ -20,5 +20,6 @@ namespace Application.Interfaces
         Task<MemoryStream> GetPDFWithPriceList(int categoryId);
         Task<Result<object>> AddProductDiscount(int productId, DiscountDto discount);
         Task<Result<object>> QuestionAboutProduct(int productId, QuestionDto question);
+        Task<Result<IEnumerable<ProductExpertDto>>> GetProductsExperts();
     }
 }

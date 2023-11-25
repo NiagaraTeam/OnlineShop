@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { ChangePasswordFormValues, User, UserFormValues } from "../models/common/User";
 import { Category, CategoryTree } from "../models/onlineshop/Category";
-import { Product } from "../models/onlineshop/Product";
+import { Product, ProductFormValues } from "../models/onlineshop/Product";
 import { CategoryStatus } from "../models/enums/CategoryStatus";
 import { ProductStatus } from "../models/enums/ProductStatus";
 import { UserDiscount } from "../models/onlineshop/UserDiscount";
@@ -17,6 +17,7 @@ import { toast } from "react-toastify";
 import { ProductDiscount } from "../models/onlineshop/ProductDiscount";
 import { Photo } from "../models/onlineshop/Photo";
 import { PaginatedResult } from "../models/common/Pagination";
+import { ProductExpert } from "../models/onlineshop/ProductExpert";
 
 const sleep = (delay: number) => {
     return new Promise((resolve) => {
@@ -115,8 +116,8 @@ const Categories = {
 const Products = {
     list: (params: URLSearchParams) => axios.get<PaginatedResult<Product[]>>(`/products`, {params})
         .then(responseBody),
-    create: (product: Product) => requests.post<number>("/products", product),
-    update: (productId: number, product: Product) => requests.put<Product>(`/products/${productId}`, product),
+    create: (product: ProductFormValues) => requests.post<number>("/products", product),
+    update: (productId: number, product: ProductFormValues) => requests.put<Product>(`/products/${productId}`, product),
     deletePermanently: (productId: number) => requests.del<void>(`/products/${productId}/permanently`),
     getDeleted: () => requests.get<Product[]>("/products/deleted"),
     changeStatus: (productId: number, newStatus: ProductStatus) => requests.patch<void>(`/products/${productId}/${newStatus}`, {}),
@@ -127,6 +128,7 @@ const Products = {
     //getPriceList: (categoryId: number) => axios.get(`products/price-list/${categoryId}`, { responseType: 'arraybuffer'}),
     addDiscount: (productId: number, productDiscount: ProductDiscount) => requests.post<void>(`/products/${productId}/discount`, productDiscount),
     //askQuestion: (productId: number, question: Question) => requests.post<void>(`/products/${productId}/question`, question),
+    getProductsExperts: () => requests.get<ProductExpert[]>("/products/experts"),
 };
 
 const Orders = {

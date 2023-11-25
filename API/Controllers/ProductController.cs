@@ -116,5 +116,12 @@ namespace API.Controllers
         {
             return HandleResult(await _productService.QuestionAboutProduct(productId, question));
         }
+
+        [HttpGet("products/experts")] //api/products/experts
+        [AllowAnonymous]
+        public async Task<IActionResult> GetProductsExperts()
+        {
+            return HandleResult(await _productService.GetProductsExperts());
+        }
     }
 }

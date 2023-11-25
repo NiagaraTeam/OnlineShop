@@ -1,5 +1,5 @@
 import { makeAutoObservable, runInAction } from "mobx";
-import { Product } from "../models/onlineshop/Product";
+import { Product, ProductFormValues } from "../models/onlineshop/Product";
 import { store } from "./store";
 import agent from "../api/agent";
 import { toast } from "react-toastify";
@@ -122,5 +122,26 @@ export default class ProductStore {
             toast.error(`Failed to change product status`);
         }
     }
+
+    createProduct = async (product: ProductFormValues) => {
+        try {
+            const createdProductId = await agent.Products.create(product);
+    
+            const createdProduct = await agent.Products.getDetails(createdProductId);
+    
+            runInAction(() => {
+                this.setProduct(createdProduct);
+            });
+    
+            runInAction(() => {
+                this.selectedProduct = createdProduct;
+            });
+    
+            toast.success('Product created successfully');
+        } catch (error) {
+            console.log(error);
+            toast.error('Failed to create product');
+        }
+    };
 
 }
