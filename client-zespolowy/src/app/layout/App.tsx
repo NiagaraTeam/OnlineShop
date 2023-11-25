@@ -7,6 +7,7 @@ import { Header } from '../../components/customer/common/Header';
 import { Footer } from '../../components/common/Footer';
 import Loading from '../../components/common/Loading';
 import { ToastContainer } from 'react-toastify';
+import { HomePage } from '../../components/customer/pages/HomePage';
 
 export const App = observer(() => {
   const { commonStore, userStore } = useStore();
@@ -33,7 +34,7 @@ export const App = observer(() => {
         <div className='my-5'>
           {location.pathname === '/' 
           ? 
-            <h3 className='text-center'>Strona głowna klienta</h3>
+            <HomePage/>
           : 
             <Outlet />
           }

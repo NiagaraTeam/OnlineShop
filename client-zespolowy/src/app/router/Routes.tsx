@@ -19,7 +19,6 @@ import { ProductUpdatePage } from "../../components/admin/pages/ProductUpdatePag
 import { AboutPage } from "../../components/customer/pages/AboutPage";
 import { ContactPage } from "../../components/customer/pages/ContactPage";
 import { CartPage } from "../../components/customer/pages/CartPage";
-import { FavouriteProductsPage } from "../../components/customer/pages/FavouriteProductsPage";
 import { OffertsPage } from "../../components/customer/pages/OffertsPage";
 import { ProductDetailsPage } from "../../components/customer/pages/ProductDetailsPage";
 import { RegisterPage } from "../../components/customer/pages/RegisterPage";
@@ -34,7 +33,6 @@ export const routes: RouteObject[] = [
             //login required as customer
             {element: <RequireCustomerAuth/>, children: [
                 {path: 'account', element: <AccountPage />},
-                {path: 'products/favourite', element: <FavouriteProductsPage />},
             ]},
             //no login required
             {path: 'products', element: <CustomerProductsPage />},
