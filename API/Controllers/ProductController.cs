@@ -87,13 +87,6 @@ namespace API.Controllers
             return HandleResult(await _productService.GetDiscountedProducts());
         }
 
-        [HttpPatch("products/{productId}/image")] //api/products/productId/image
-        [Authorize(Roles = StaticUserRoles.ADMIN)]
-        public async Task<IActionResult> UpdateProductImage(int productId, string imageId)
-        {
-            return HandleResult(await _productService.UpdateImage(productId, imageId));
-        }
-
         [HttpGet("products/price-list/{categoryId}")] //api/products/price-list/categoryId
         [AllowAnonymous]
         public async Task<IActionResult> GetPriceList(int categoryId)

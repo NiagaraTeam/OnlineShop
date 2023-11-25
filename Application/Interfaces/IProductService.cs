@@ -17,7 +17,6 @@ namespace Application.Interfaces
         Task<Result<IEnumerable<ProductDto>>> TopPurchasedProducts();
         Task<Result<IEnumerable<ProductDto>>> GetNewestProducts();
         Task<Result<IEnumerable<ProductDto>>> GetDiscountedProducts();
-        Task<Result<object>> UpdateImage(int productId, string imageId);
         Task<MemoryStream> GetPDFWithPriceList(int categoryId);
         Task<Result<object>> AddProductDiscount(int productId, DiscountDto discount);
         Task<Result<object>> QuestionAboutProduct(int productId, QuestionDto question);

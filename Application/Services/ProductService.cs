@@ -249,10 +249,5 @@ namespace Application.Services
             return Result<ProductDto>.Failure("Couldn't save changes");
 
         }
-
-        public async Task<Result<object>> UpdateImage(int productId, string imageId)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
