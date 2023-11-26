@@ -8,6 +8,7 @@ import { ManageProducts } from "../../components/admin/pages/ManageProducts";
 import { AdminApp } from "../layout/AdminApp";
 import { Products } from "../../components/customer/features/Products";
 import { AccountPage } from "../../components/customer/pages/AccountPage";
+import { ProductPage } from "../../components/customer/features/ProductPage";
 
 export const routes: RouteObject[] = [
     {
@@ -18,7 +19,8 @@ export const routes: RouteObject[] = [
             {path: 'account', element: <AccountPage />},
             
             //no login required
-            {path: 'products', element: <Products />},
+            { path: 'products', element: <Products /> },
+            {path: 'product', element: <ProductPage />},
             {path: 'login', element: <CustomerLogin />},
             {path: 'server-error', element: <ServerError />},
             {path: '*', element: <NotFound />}
