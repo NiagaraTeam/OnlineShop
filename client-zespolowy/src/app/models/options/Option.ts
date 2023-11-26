@@ -8,7 +8,7 @@ export function enumToOptions(enumObject: any): Option[] {
     return Object.keys(enumObject)
       .filter(key => !isNaN(Number(enumObject[key])))
       .map(key => ({
-        value: enumObject[key],
+        value: parseInt(enumObject[key]),
         text: key,
       }));
   }

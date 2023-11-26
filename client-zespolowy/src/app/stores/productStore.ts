@@ -8,6 +8,7 @@ import { Pagination, PagingParams } from "../models/common/Pagination";
 
 export default class ProductStore {
     productsRegistry = new Map<number,Product>();
+    deletedProductsRegistry = new Map<number,Product>();
     selectedProduct: Product | undefined = undefined;
 
     pagination: Pagination | null = null;
@@ -34,6 +35,10 @@ export default class ProductStore {
         return Array.from(this.productsRegistry.values());
     }
 
+    get deletedProducts() {
+        return Array.from(this.deletedProductsRegistry.values());
+    }
+
     // tutaj trzeba dodać konwertowanie czasu
     private setProduct = (product: Product) => {
         this.productsRegistry.set(product.id, product);
@@ -41,6 +46,15 @@ export default class ProductStore {
 
     private getProduct = (id: number) => {
         return this.productsRegistry.get(id);
+    }
+
+    // tutaj trzeba dodać konwertowanie czasu
+    private setDeletedProduct = (product: Product) => {
+        this.deletedProductsRegistry.set(product.id, product);
+    }
+
+    private getDeletedProduct = (id: number) => {
+        return this.deletedProductsRegistry.get(id);
     }
 
     //zmienić jak będzie zrobiony endpoint pobierający liste produktów 
@@ -86,31 +100,37 @@ export default class ProductStore {
         }
     }
 
+    loadDeletedProducts = async () => {
+        store.commonStore.setInitialLoading(true);
+        try {
+            this.deletedProductsRegistry.clear();
+            const deletedProducts = await agent.Products.getDeleted();
+            deletedProducts.forEach(
+                product => this.setDeletedProduct(product)
+            );
+            runInAction(() => store.commonStore.setInitialLoading(false))
+        } catch (error) {
+            console.log(error);
+            toast.error('Failed to load deleted products');
+        } finally {
+            runInAction(() => store.commonStore.setInitialLoading(false))
+        }
+    }
+
     deleteProduct = async (id: number) => {
         await this.changeStatus(id, ProductStatus.Deleted);
     }
 
+    restoreProduct = async (id: number) => {
+        await this.changeStatus(id, ProductStatus.Hidden);
+    }
+
     changeStatus = async (id:number, status: ProductStatus) => {
-        if (this.selectedProduct)
-        {
-            this.selectedProduct.status = status;
-            this.selectedProduct.modificationDate = new Date();
-        }
         try {
             await agent.Products.changeStatus(id, status);
             runInAction(() => {
-                if (status === ProductStatus.Deleted)
-                {
-                    this.productsRegistry.delete(id);
-                    toast.success(`Product deleted`);
-                }
-                else
-                {
-                    //not using this.setProduct(product) on purpose
-                    //product object is not from db so dont need 
-                    //to deal w date and time
-                    this.productsRegistry.set(id, this.selectedProduct as Product);
-                }
+                this.moveProductBetweenRegistries(id, status);
+                toast.success(`Product status changed`);
             })                
         } catch (error) {
             console.log(error);
@@ -120,6 +140,8 @@ export default class ProductStore {
 
     createProduct = async (product: ProductFormValues) => {
         try {
+            product.status = parseInt(product.status.toString());
+
             const createdProductId = await agent.Products.create(product);
     
             const createdProduct = await agent.Products.getDetails(createdProductId);
@@ -141,11 +163,15 @@ export default class ProductStore {
 
     updateProduct = async (id: number, product: ProductFormValues) => {
         try {
+            
+            product.status = parseInt(product.status.toString());
+            
             const updatedProduct = await agent.Products.update(id, product);
 
+            runInAction(() => this.setProduct(updatedProduct));
+
             runInAction(() => {
-                this.setProduct(updatedProduct);
-                this.selectedProduct = updatedProduct;
+                this.moveProductBetweenRegistries(id, product.status);
             });
 
             toast.success('Product updated');
@@ -155,4 +181,63 @@ export default class ProductStore {
         }
     }
 
+    deletePermanently = async (id: number) => {
+        try {
+            await agent.Products.deletePermanently(id);
+            runInAction(() => {
+                this.deletedProductsRegistry.delete(id);
+            });
+            toast.success(`Product permanently deleted`);
+        } catch (error) {
+            console.log(error);
+            toast.error(`Failed to permanently delete product`);
+        }
+    }
+
+    deleteAll = async () => {
+        try {
+            const deletedProductIds = Array.from(this.deletedProductsRegistry.keys());
+
+            await Promise.all(deletedProductIds.map(async (productId) => {
+                await agent.Products.deletePermanently(productId);
+                runInAction(() => {
+                    this.deletedProductsRegistry.delete(productId);
+                });
+            }));
+
+            toast.success(`All deleted products permanently deleted`);
+        } catch (error) {
+            console.log(error);
+            toast.error(`Failed to permanently delete all deleted products`);
+        }
+    }
+
+    private moveProductBetweenRegistries = (id: number, newStatus: ProductStatus) => {
+        const productInRegistry = this.getProduct(id);
+        const deletedProductInRegistry = this.getDeletedProduct(id);
+
+        if (newStatus === ProductStatus.Deleted) {
+            // Move to deletedProductsRegistry
+            if (productInRegistry) {
+                productInRegistry.status = ProductStatus.Deleted;
+                productInRegistry.modificationDate = new Date();
+                this.deletedProductsRegistry.set(id, productInRegistry);
+                this.productsRegistry.delete(id);
+            } else if (deletedProductInRegistry) {
+                // Product is already in deletedProductsRegistry
+                // You may choose to update the status or leave it as is
+            }
+        } else {
+            // Move to productsRegistry
+            if (deletedProductInRegistry) {
+                deletedProductInRegistry.status = newStatus;
+                deletedProductInRegistry.modificationDate = new Date();
+                this.productsRegistry.set(id,deletedProductInRegistry);
+                this.deletedProductsRegistry.delete(id);
+            } else if (productInRegistry) {
+                // Product is already in productsRegistry
+                // You may choose to update the status or leave it as is
+            }
+        }
+    }
 }

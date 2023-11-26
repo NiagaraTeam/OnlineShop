@@ -25,6 +25,7 @@ import { ProductDetailsPage } from "../../components/customer/pages/ProductDetai
 import { RegisterPage } from "../../components/customer/pages/RegisterPage";
 import { RequireCustomerAuth } from "./RequireCustomerAuth";
 import { RequireAdminAuth } from "./RequireAdminAuth";
+import { ManageCategoriesPage } from "../../components/admin/pages/ManageCategoriesPage";
 
 export const routes: RouteObject[] = [
     {
@@ -63,6 +64,7 @@ export const routes: RouteObject[] = [
                 {path: 'products/update', element: <ProductUpdatePage/> },
                 {path: 'orders', element: <OrdersPage/> },
                 {path: 'order/:id', element: <OrderDetailsPage/> },
+                {path: 'categories', element: <ManageCategoriesPage/> },
                 {path: 'methods/shipping', element: <ShippingMethodsPage/> },
                 {path: 'methods/payment', element: <PaymentMethodsPage/> },
                 {path: 'customers', element: <CustomersPage/> },

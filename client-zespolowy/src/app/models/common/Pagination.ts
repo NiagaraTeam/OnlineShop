@@ -17,5 +17,5 @@ export class PaginatedResult<T> {
 
 export class PagingParams {
     pageNumber = 1;
-    pageSize = 10;
+    pageSize = 50;
 }
