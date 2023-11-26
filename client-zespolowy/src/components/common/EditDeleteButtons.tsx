@@ -1,4 +1,5 @@
 import { FaCircleNotch, FaEdit, FaTrash } from "react-icons/fa"
+import MyTooltip from "./MyTooltip";
 
 interface Props {
     loading: boolean;
@@ -14,17 +15,21 @@ const EditDeleteButtons = ({loading, editAction, deleteAction,
   return (
     <div>
         {showEdit &&
-        <FaEdit
-            className="mx-2 hover-primary"
-            size={size}
-            onClick={editAction}
-        />
+        <MyTooltip placement="left" text="Edit">
+            <FaEdit
+                className="mx-2 hover-primary"
+                size={size}
+                onClick={editAction}
+            />
+        </MyTooltip>
         }
         {showDelete && 
         (loading ?
             <FaCircleNotch className="spinner" size={size}/>
         :
-            <FaTrash className="hover-danger" size={size} onClick={deleteAction}/>
+            <MyTooltip placement="right" text="Move to trash">
+                <FaTrash className="hover-danger" size={size} onClick={deleteAction}/>
+            </MyTooltip>
         ) 
         }
     </div>

@@ -39,7 +39,8 @@ namespace Application.Core
             CreateMap<Category, CategoryTreeDto>();
             CreateMap<CategoryCreateUpdateDto, Category>();
             
-            CreateMap<Photo, PhotoDto>();
+            CreateMap<Photo, Dto.Product.PhotoDto>();
+            CreateMap<Photo, Dto.Photo.PhotoDto>();
         }
     }
 }

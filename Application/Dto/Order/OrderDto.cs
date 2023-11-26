@@ -12,6 +12,5 @@ namespace Application.Dto.Order
         public PaymentMethodDto PaymentMethod { get; set; }
         public ShippingMethodDto ShippingMethod { get; set; }
         public ICollection<OrderItemDto> Items { get; set; }
-
     }
 }

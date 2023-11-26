@@ -21,6 +21,7 @@ export const Header = observer(() => {
                     <li><NavLink to="/admin/products" className="nav-link px-2 link-dark">Products</NavLink></li>
                     <li><NavLink to="/admin/orders" className="nav-link px-2 link-dark">Orders</NavLink></li>
                     <li><NavLink to="/admin/customers" className="nav-link px-2 link-dark">Customers</NavLink></li>
+                    <li><NavLink to="/admin/categories" className="nav-link px-2 link-dark">Categories</NavLink></li>
                     <li><NavLink to="/admin/methods/payment" className="nav-link px-2 link-dark">Payment Methods</NavLink></li>
                     <li><NavLink to="/admin/methods/shipping" className="nav-link px-2 link-dark">Shipping Methods</NavLink></li>
                 </ul>
