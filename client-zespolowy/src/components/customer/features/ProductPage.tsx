@@ -10,7 +10,7 @@ export const ProductPage = observer(() => {
         price: 20,
         photo: "https://kimchi.pl/pol_pl_Paluszki-Pocky-Czekoladowe-Original-40g-Glico-902_2.png",
         taxrate: 23,
-        discount: { value: 10, Start: new Date('2023-01-01'), End: new Date('2023-12-30') },
+        discount: { value: 0.2, Start: new Date('2023-01-01'), End: new Date('2023-12-30') },
         quantity: 15,
 
     };
@@ -44,8 +44,8 @@ export const ProductPage = observer(() => {
                         {produkt.discount && produkt.discount.Start < currentDate && produkt.discount.End > currentDate ? (
                             <>
                                 <h5 className="text-decoration-line-through">Cena: {produkt.price} zł</h5>
-                                <h5>Cena po obniżce: {produkt.price - produkt.discount.value} zł </h5>
-                                <p>Cena po obniżce z VAT: {(produkt.price - produkt.discount.value) * (100 + produkt.taxrate) / 100} zł </p>
+                                <h5>Cena po obniżce: {produkt.price * (1 - produkt.discount.value)} zł </h5>
+                                <p>Cena po obniżce z VAT: {(produkt.price * (1 - produkt.discount.value)) * (100 + produkt.taxrate) / 100} zł </p>
 
                             </>
                         ) : (
