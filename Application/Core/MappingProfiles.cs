@@ -1,10 +1,11 @@
+using Application.Dto.User;
 using Application.Dto.Category;
 using Application.Dto.Product;
 using Application.Dto.ShippingPayment;
 using Application.Dto.Order;
+
 using AutoMapper;
 using Domain;
-using Application.Dto.Product;
 
 namespace Application.Core
 {
@@ -17,6 +18,8 @@ namespace Application.Core
             
             CreateMap<ShippingMethod, ShippingMethodDto>();
             CreateMap<ShippingMethodCreateUpdateDto, ShippingMethod>();
+
+            CreateMap<AddressDto, Address>();
 
             CreateMap<Order, OrderDto>();
             CreateMap<OrderCreateUpdateDto, Order>();
@@ -33,9 +36,11 @@ namespace Application.Core
             CreateMap<ProductCreateDto, Product>();
             
             CreateMap<Category, CategoryDto>();
+            CreateMap<Category, CategoryTreeDto>();
             CreateMap<CategoryCreateUpdateDto, Category>();
             
-            CreateMap<Photo, PhotoDto>();
+            CreateMap<Photo, Dto.Product.PhotoDto>();
+            CreateMap<Photo, Dto.Photo.PhotoDto>();
         }
     }
 }

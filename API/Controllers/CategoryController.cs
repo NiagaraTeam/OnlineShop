@@ -36,5 +36,12 @@ namespace API.Controllers
         {
             return HandleResult(await _categoryService.ChangeCategoryStatus(categoryId, newStatus));
         }
+
+        [HttpGet("categories")] //api/categories
+        [AllowAnonymous]
+        public async Task<IActionResult> GetAllCategories()
+        {
+            return HandleResult(await _categoryService.GetAllCategories());
+        }
     }
 }

@@ -131,47 +131,54 @@ namespace API.Controllers
 
         [HttpDelete("accounts/{userId}")] //api/accounts/userId
         [Authorize(Roles = StaticUserRoles.ADMIN)]
-        public async Task<IActionResult> DeleteAccount(int userId)
+        public async Task<IActionResult> DeleteAccount(string userId)
         {
             return HandleResult(await _userService.DeleteAccount(userId));
         }
 
         [HttpPatch("accounts/{userId}/address")] //api/accounts/userId/address
         [Authorize(Roles = StaticUserRoles.CUSTOMER)]
-        public async Task<IActionResult> UpdateUserAddress(int userId, AddressDto address)
+        public async Task<IActionResult> UpdateUserAddress(string userId, AddressDto address)
         {
             return HandleResult(await _userService.UpdateUserAddress(userId, address));
         }
 
+        [HttpGet("account/favourites")] //api/account/favourites
+        [Authorize(Roles = StaticUserRoles.CUSTOMER)]
+        public async Task<IActionResult> GetFavouriteProducts()
+        {
+            return HandleResult(await _userService.GetFavouriteProducts());
+        }
+
         [HttpPost("accounts/{userId}/favourites/{productId}")] //api/accounts/userId/favourites/productId
         [Authorize(Roles = StaticUserRoles.CUSTOMER)]
-        public async Task<IActionResult> AddFavouriteProduct(int userId, int productId)
+        public async Task<IActionResult> AddFavouriteProduct(string userId, int productId)
         {
             return HandleResult(await _userService.AddFavouriteProduct(userId, productId));
         }
 
         [HttpDelete("accounts/{userId}/favourites/{productId}")] //api/accounts/userId/favourites/productId
         [Authorize(Roles = StaticUserRoles.CUSTOMER)]
-        public async Task<IActionResult> RemoveFavouriteProduct(int userId, int productId)
+        public async Task<IActionResult> RemoveFavouriteProduct(string userId, int productId)
         {
             return HandleResult(await _userService.RemoveFavouriteProduct(userId, productId));
         }
 
         [HttpPost("accounts/{userId}/reset-password")] //api/accounts/userId/reset-password
-        public async Task<IActionResult> ResetPasswordRequest(int userId)
+        public async Task<IActionResult> ResetPasswordRequest(string userId)
         {
             return HandleResult(await _userService.ResetPasswordRequest(userId));
         }
 
         [HttpGet("accounts/{userId}/discount")] //api/accounts/userId/discount
-        public async Task<IActionResult> GetUserDiscount(int userId)
+        public async Task<IActionResult> GetUserDiscount(string userId)
         {
             return HandleResult(await _userService.GetUserDiscount(userId));
         }
 
         [HttpPut("accounts/{userId}/discount")] //api/accounts/userId/discount
         [Authorize(Roles = StaticUserRoles.ADMIN)]
-        public async Task<IActionResult> SetUserDiscount(int userId, decimal discountValue)
+        public async Task<IActionResult> SetUserDiscount(string userId, DiscountValueDto discountValue)
         {
             return HandleResult(await _userService.SetUserDiscount(userId, discountValue));
         }

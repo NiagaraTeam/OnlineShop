@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Application.Dto.ShippingPayment;
-using Domain;
 using Domain.Enums;
 
 namespace Application.Dto.Order
@@ -17,6 +12,5 @@ namespace Application.Dto.Order
         public PaymentMethodDto PaymentMethod { get; set; }
         public ShippingMethodDto ShippingMethod { get; set; }
         public ICollection<OrderItemDto> Items { get; set; }
-
     }
 }

@@ -1,5 +1,4 @@
 using Application.Dto.Category;
-using Domain;
 using Domain.Enums;
 
 namespace Application.Dto.Product

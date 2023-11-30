@@ -1,3 +1,4 @@
+using Application.Core;
 using Application.Dto;
 using Application.Dto.Product;
 using Application.Interfaces;
@@ -16,6 +17,13 @@ namespace API.Controllers
             _productService = productService;
         }
 
+        [HttpGet("products")] //api/products
+        [AllowAnonymous]
+        public async Task<IActionResult> CreateProduct([FromQuery] PagingParams param)
+        {
+            return HandlePagedResult(await _productService.GetProducts(param));
+        }
+
         [HttpPost("products")] //api/products
         [Authorize(Roles = StaticUserRoles.ADMIN)]
         public async Task<IActionResult> CreateProduct(ProductCreateDto product)
@@ -28,13 +36,6 @@ namespace API.Controllers
         public async Task<IActionResult> UpdateProduct(int productId, ProductUpdateDto product)
         {
             return HandleResult(await _productService.Update(productId, product));
-        }
-
-        [HttpDelete("products/{productId}")] //api/products/productId
-        [Authorize(Roles = StaticUserRoles.ADMIN)]
-        public async Task<IActionResult> DeleteProduct(int productId)
-        {
-            return HandleResult(await _productService.Delete(productId));
         }
 
         [HttpDelete("products/{productId}/permanently")] //api/products/productId/permanently
@@ -59,40 +60,35 @@ namespace API.Controllers
         }
 
         [HttpGet("products/{productId}")] //api/products/productId
+        [AllowAnonymous]
         public async Task<IActionResult> GetProductDetails(int productId)
         {
             return HandleResult(await _productService.Details(productId));
         }
 
         [HttpGet("products/top-purchased")] //api/products/top-purchased
-        [Authorize(Roles = StaticUserRoles.CUSTOMER)]
+        [AllowAnonymous]
         public async Task<IActionResult> GetTopPurchasedProducts()
         {
             return HandleResult(await _productService.TopPurchasedProducts());
         }
 
         [HttpGet("products/newest")] //api/products/newest
-        [Authorize(Roles = StaticUserRoles.CUSTOMER)]
+        [AllowAnonymous]
         public async Task<IActionResult> GetNewestProducts()
         {
             return HandleResult(await _productService.GetNewestProducts());
         }
 
         [HttpGet("products/discounted")] //api/products/discouted
+        [AllowAnonymous]
         public async Task<IActionResult> GetDiscountedProducts()
         {
             return HandleResult(await _productService.GetDiscountedProducts());
         }
 
-        [HttpPatch("products/{productId}/image")] //api/products/productId/image
-        [Authorize(Roles = StaticUserRoles.ADMIN)]
-        public async Task<IActionResult> UpdateProductImage(int productId, string imageId)
-        {
-            return HandleResult(await _productService.UpdateImage(productId, imageId));
-        }
-
         [HttpGet("products/price-list/{categoryId}")] //api/products/price-list/categoryId
-        [Authorize(Roles = StaticUserRoles.CUSTOMER)]
+        [AllowAnonymous]
         public async Task<IActionResult> GetPriceList(int categoryId)
         {
             try
@@ -115,10 +111,17 @@ namespace API.Controllers
         }
 
         [HttpPost("products/{productId}/question")] //api/products/productId/question
-        [Authorize(Roles = StaticUserRoles.CUSTOMER)]
+        [AllowAnonymous]
         public async Task<IActionResult> AskQuestionAboutProduct(int productId, QuestionDto question)
         {
             return HandleResult(await _productService.QuestionAboutProduct(productId, question));
+        }
+
+        [HttpGet("products/experts")] //api/products/experts
+        [AllowAnonymous]
+        public async Task<IActionResult> GetProductsExperts()
+        {
+            return HandleResult(await _productService.GetProductsExperts());
         }
     }
 }

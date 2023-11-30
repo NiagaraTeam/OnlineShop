@@ -2,12 +2,17 @@ import { useEffect } from 'react'
 import './App.css'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '../stores/store';
-import { Outlet, ScrollRestoration } from 'react-router-dom';
+import { Outlet, ScrollRestoration, useLocation } from 'react-router-dom';
 import { Header } from '../../components/customer/common/Header';
-import { Footer } from '../../components/customer/common/Footer';
+import { Footer } from '../../components/common/Footer';
+import Loading from '../../components/common/Loading';
+import { ToastContainer } from 'react-toastify';
+import { HomePage } from '../../components/customer/pages/HomePage';
 
 export const App = observer(() => {
   const { commonStore, userStore } = useStore();
+
+  const location = useLocation();
 
   useEffect(() => {
     if (commonStore.token) {
@@ -17,17 +22,23 @@ export const App = observer(() => {
     }
   }, [commonStore, userStore]);
 
+  if (!commonStore.appLoaded) 
+    return <div className='center'><Loading/></div>
+
   return (
     <>
       <div className='container'>
         <ScrollRestoration/>
+        <ToastContainer position='bottom-right' hideProgressBar theme='colored' />
         <Header/>
+        <div className='my-5'>
           {location.pathname === '/' 
           ? 
-            <h1>strona głowna klienta</h1>
+            <HomePage/>
           : 
-            <Outlet/>
+            <Outlet />
           }
+        </div>
         <Footer/>
         </div>
     </>

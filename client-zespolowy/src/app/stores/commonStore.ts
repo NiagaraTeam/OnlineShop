@@ -7,6 +7,7 @@ export default class CommonStore {
     info: Info | undefined = undefined;
     token: string | null = localStorage.getItem('jwt');
     appLoaded = false;
+    initialLoading = false;
 
     constructor() {
         makeAutoObservable(this);
@@ -45,5 +46,9 @@ export default class CommonStore {
 
     setApploaded = () => { 
         this.appLoaded = true;
+    }
+
+    setInitialLoading = (loading :boolean) => {
+        this.initialLoading = loading;
     }
 }

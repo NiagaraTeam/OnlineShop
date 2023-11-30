@@ -8,7 +8,7 @@ interface Props {
 }
 
 export default function TextInput(props: Props) {
-    const [field, meta] = useField(props.name);
+    const [field] = useField(props.name);
     return (
         <>
             <div className="form-group">
@@ -20,13 +20,12 @@ export default function TextInput(props: Props) {
                     {...field} 
                     {...props}
                     autoComplete='off'
-                    className={meta.touched && meta.error ? 
-                    "form-control error" : "form-control"}
+                    className={"form-control"}
                 />
                 <ErrorMessage 
                     name={field.name} 
                     component="span" 
-                    className="error"
+                    className="text-danger"
                 />
             </div>
         </>

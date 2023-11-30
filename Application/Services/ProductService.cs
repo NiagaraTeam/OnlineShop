@@ -3,13 +3,13 @@ using Application.Dto;
 using Application.Dto.Product;
 using Application.Interfaces;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Domain;
 using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
-using Domain;
 
-namespace Application.Services  // Siema
+namespace Application.Services
 {
     public class ProductService : IProductService
     {
@@ -31,7 +31,7 @@ namespace Application.Services  // Siema
                 .Include(p => p.ProductDiscounts)
                 .FirstOrDefaultAsync(p => p.Id == productId);
 
-            if(product == null)
+            if(product == null || product.Status == ProductStatus.Deleted)
                 return null;
 
             // Sprawdź, czy nowy rabat nakłada się na istniejące rabaty
@@ -97,11 +97,6 @@ namespace Application.Services  // Siema
             return Result<int>.Failure("Failed adding shipping method");
         }
 
-        public async Task<Result<object>> Delete(int productId)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<Result<object>> DeletePermanently(int productId)
         {
             var deleteProduct = await _context.Products.FindAsync(productId);
@@ -129,7 +124,7 @@ namespace Application.Services  // Siema
                 .Include(p => p.ProductDiscounts)
                 .FirstOrDefaultAsync(p => p.Id == productId);
 
-            if (product == null)
+            if (product == null || product.Status == ProductStatus.Deleted)
                 return null;
 
             var productDto = _mapper.Map<ProductDto>(product);
@@ -139,7 +134,21 @@ namespace Application.Services  // Siema
 
         public async Task<Result<IEnumerable<ProductDto>>> GetDeletedProducts()
         {
-            throw new NotImplementedException();
+            var deletedProducts = await _context.Products
+                .Include(p => p.ProductInfo)
+                .Include(p => p.Photo)
+                .Include(p => p.Category)
+                .Include(p => p.ProductExpert)
+                .Include(p => p.ProductDiscounts)
+                .Where(p => p.Status == ProductStatus.Deleted)
+                .ToListAsync();
+
+            if (deletedProducts == null)
+                return null;
+
+            var deletedProductDtos = _mapper.Map<IEnumerable<ProductDto>>(deletedProducts);
+
+            return Result<IEnumerable<ProductDto>>.Success(deletedProductDtos);
         }
 
         public async Task<Result<IEnumerable<ProductDto>>> GetDiscountedProducts()
@@ -152,7 +161,7 @@ namespace Application.Services  // Siema
                 .Include(p => p.Category)
                 .Include(p => p.ProductExpert)
                 .Include(p => p.ProductDiscounts)
-                .Where(p => p.ProductDiscounts
+                .Where(p => p.Status != ProductStatus.Deleted && p.ProductDiscounts
                     .Any(d => d.Start <= currentDate && d.End >= currentDate))
                 .ToListAsync();
 
@@ -172,6 +181,7 @@ namespace Application.Services  // Siema
                 .Include(p => p.Category)
                 .Include(p => p.ProductExpert)
                 .Include(p => p.ProductDiscounts)
+                .Where(p => p.Status != ProductStatus.Deleted)
                 .OrderByDescending(p => p.CreatedAt)
                 .Take(10)
                 .ToListAsync();
@@ -189,6 +199,19 @@ namespace Application.Services  // Siema
             throw new NotImplementedException();
         }
 
+        public async Task<Result<PagedList<ProductDto>>> GetProducts(PagingParams parameters)
+        {
+            var query = _context.Products
+                .Where(p => p.Status != ProductStatus.Deleted)
+                .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
+                .AsQueryable();
+
+            return Result<PagedList<ProductDto>>.Success(
+                    await PagedList<ProductDto>.CreateAsync(query, parameters.PageNumber, 
+                        parameters.PageSize)
+                );
+        }
+
         public async Task<Result<object>> QuestionAboutProduct(int productId, QuestionDto question)
         {
             throw new NotImplementedException();
@@ -198,6 +221,7 @@ namespace Application.Services  // Siema
         {
             var topProducts = await _context.Products
                 .Include(p => p.ProductInfo)
+                .Where(p => p.Status != ProductStatus.Deleted)
                 .OrderByDescending(p => p.ProductInfo.TotalSold)
                 .Take(10)
                 .ToListAsync();
@@ -212,24 +236,39 @@ namespace Application.Services  // Siema
 
         public async Task<Result<ProductDto>> Update(int productId, ProductUpdateDto product)
         {
-            var updateProduct = await _context.Products.FirstOrDefaultAsync(p => p.Id == productId);
+            var updateProduct = await _context.Products
+                .FirstOrDefaultAsync(p => p.Id == productId);
+
             if (updateProduct == null)
                 return null;
                 
             _mapper.Map(product, updateProduct);
             _context.Products.Update(updateProduct);
 
-            if (await _context.SaveChangesAsync() > 0) {
-                return Result<ProductDto>.Success(_mapper.Map<ProductDto>(updateProduct));
+            if (await _context.SaveChangesAsync() == 0) {
+                return Result<ProductDto>.Failure("Couldn't save changes");
             }
 
-            return Result<ProductDto>.Failure("Couldn't save changes");
+            var result = await _context.Products
+                .Include(p => p.ProductInfo)
+                .Include(p => p.Photo)
+                .Include(p => p.Category)
+                .Include(p => p.ProductExpert)
+                .Include(p => p.ProductDiscounts)
+                .FirstOrDefaultAsync(p => p.Id == productId);
 
+            var productDto = _mapper.Map<ProductDto>(result);
+            
+            return Result<ProductDto>.Success(_mapper.Map<ProductDto>(productDto));
         }
 
-        public async Task<Result<object>> UpdateImage(int productId, string imageId)
+        public async Task<Result<IEnumerable<ProductExpertDto>>> GetProductsExperts()
         {
-            throw new NotImplementedException();
+            var experts = await _context.ProductExperts.ToListAsync();
+
+            var expertsDto = _mapper.Map<IEnumerable<ProductExpertDto>>(experts);
+
+            return Result<IEnumerable<ProductExpertDto>>.Success(expertsDto);
         }
     }
 }

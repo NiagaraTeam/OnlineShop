@@ -1,7 +1,6 @@
 import { observer } from "mobx-react-lite";
 import { useStore } from "../../../app/stores/store";
 import { LoginPage } from "./LoginPage";
-//import { Navigate } from "react-router-dom";
 
 export const AccountPage = observer(() => {
     const {userStore: {user, isLoggedIn, isAdmin, logout}} = useStore();
