@@ -21,6 +21,11 @@ export const HomePage = observer(() => {
 
   return (
     <div>
+      {isLoggedIn && !isAdmin &&
+        <div className="m-3 p-3">
+          <ProductsSection label="Your favorite products" products={favouriteProducts} />
+        </div>
+      }
       <div className="m-3 p-3">
         <ProductsSection label="Bestsellers" products={topSoldProducts} />
       </div>
@@ -30,11 +35,6 @@ export const HomePage = observer(() => {
       <div className="m-3 p-3">
         <ProductsSection label="New products" products={newProducts} />
       </div>
-      {isLoggedIn && !isAdmin &&
-        <div className="m-3 p-3">
-          <ProductsSection label="Your favorite products" products={favouriteProducts} />
-        </div>
-      }
     </div>
   )
 })

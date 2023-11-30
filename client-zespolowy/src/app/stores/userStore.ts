@@ -41,6 +41,7 @@ export default class UserStore {
         try {
             const user = await agent.Account.loginCustomer(creds);
             user.isAdmin = false;
+            store.productStore.homePageLoaded = false;
             store.commonStore.setToken(user.token);
             store.commonStore.clearInfo();
             runInAction(() => {
