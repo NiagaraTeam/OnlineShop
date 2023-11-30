@@ -16,16 +16,19 @@ namespace Application.Services
         private readonly DataContext _context;
         private readonly IMapper _mapper;
         private readonly UserManager<AppUser> _userManager;
+        private readonly IUserAccessor _userAccessor;
 
         public UserService(
             DataContext context,
             IMapper mapper,
-            UserManager<AppUser> userManager
+            UserManager<AppUser> userManager,
+            IUserAccessor userAccessor
         )
         {
             _context = context;
             _mapper = mapper;
             _userManager = userManager;
+            _userAccessor = userAccessor;
         }
 
         public async Task<Result<object>> AddFavouriteProduct(string userId, int productId)
@@ -162,18 +165,32 @@ namespace Application.Services
             return Result<object>.Failure("Failed updating the address");
         }
 
-        public async Task<Result<IEnumerable<ProductDto>>> GetFavouriteProducts(string userId)
+        public async Task<Result<IEnumerable<ProductDto>>> GetFavouriteProducts()
         {
-           var user = await _context.Users
-            .Include(u => u.CustomerDetails)
-            .ThenInclude(cd => cd.FavouriteProducts)
-            .ThenInclude(fp => fp.Product) 
-            .FirstOrDefaultAsync(u => u.Id == userId);
+           var userEmail = _userAccessor.GetUserEmail();
 
-            if (user == null)
+            var customerDetails = await _context.CustomerDetails
+                .Include(cd => cd.FavouriteProducts)
+                    .ThenInclude(cdp => cdp.Product)
+                    .ThenInclude(p => p.ProductInfo)
+                .Include(cd => cd.FavouriteProducts)
+                    .ThenInclude(cdp => cdp.Product)
+                    .ThenInclude(p => p.Photo)
+                .Include(cd => cd.FavouriteProducts)
+                    .ThenInclude(cdp => cdp.Product)
+                    .ThenInclude(p => p.Category)
+                .Include(cd => cd.FavouriteProducts)
+                    .ThenInclude(cdp => cdp.Product)
+                    .ThenInclude(p => p.ProductExpert)
+                .Include(cd => cd.FavouriteProducts)
+                    .ThenInclude(cdp => cdp.Product)
+                    .ThenInclude(p => p.ProductDiscounts)
+                .FirstOrDefaultAsync(cd => cd.User.Email == userEmail);
+
+            if (customerDetails == null)
                 return null;
            
-           var favoriteProductsDto = user.CustomerDetails.FavouriteProducts
+           var favoriteProductsDto = customerDetails.FavouriteProducts
             .Select(fp => _mapper.Map<ProductDto>(fp.Product)).ToList();
 
             return Result<IEnumerable<ProductDto>>.Success(favoriteProductsDto);

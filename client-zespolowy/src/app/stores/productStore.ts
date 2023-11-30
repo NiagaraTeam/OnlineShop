@@ -11,6 +11,12 @@ export default class ProductStore {
     deletedProductsRegistry = new Map<number,Product>();
     selectedProduct: Product | undefined = undefined;
 
+    topSoldProducts: Product[] = [];
+    discoutedProducts: Product[] = [];
+    newProducts: Product[] = [];
+    favouriteProducts: Product[] = [];
+    homePageLoaded = false;
+
     pagination: Pagination | null = null;
     pagingParams = new PagingParams();
     
@@ -39,22 +45,41 @@ export default class ProductStore {
         return Array.from(this.deletedProductsRegistry.values());
     }
 
-    // tutaj trzeba dodać konwertowanie czasu
     private setProduct = (product: Product) => {
-        this.productsRegistry.set(product.id, product);
+        this.productsRegistry.set(product.id, this.initializeDate(product));
     }
 
     private getProduct = (id: number) => {
         return this.productsRegistry.get(id);
     }
 
-    // tutaj trzeba dodać konwertowanie czasu
     private setDeletedProduct = (product: Product) => {
-        this.deletedProductsRegistry.set(product.id, product);
+        this.deletedProductsRegistry.set(product.id, this.initializeDate(product));
     }
 
     private getDeletedProduct = (id: number) => {
         return this.deletedProductsRegistry.get(id);
+    }
+
+    private initializeDate = (product: Product): Product => {
+        product.createdAt = new Date(product.createdAt);
+        product.modificationDate = new Date(product.modificationDate);
+
+        product.productDiscounts.forEach((discout) => {
+            discout.start = new Date(discout.start);
+            discout.end = new Date(discout.end);
+        })
+        return product;
+    }
+
+    private initializeDates = (products: Product[]): Product[] => {
+        const initializedProducts: Product[] = [];
+
+        products.forEach((product) => {
+            initializedProducts.push(this.initializeDate(product));
+        })
+
+        return initializedProducts;
     }
 
     //zmienić jak będzie zrobiony endpoint pobierający liste produktów 
@@ -112,6 +137,35 @@ export default class ProductStore {
         } catch (error) {
             console.log(error);
             toast.error('Failed to load deleted products');
+        } finally {
+            runInAction(() => store.commonStore.setInitialLoading(false))
+        }
+    }
+
+    loadHomePageProducts = async () => {
+        store.commonStore.setInitialLoading(true);
+        try {
+            const topSold = await agent.Products.getTopPurchased();
+            const discouted = await agent.Products.getDiscounted();
+            const newest = await agent.Products.getNewest();
+            let favourites: Product[] = [];
+
+            if (store.userStore.isLoggedIn && !store.userStore.isAdmin)
+                favourites = await agent.Account.getFavouriteProducts();
+
+            runInAction(() => {
+                if (store.userStore.isLoggedIn && !store.userStore.isAdmin)
+                    this.favouriteProducts = this.initializeDates(favourites);
+            
+                this.topSoldProducts = this.initializeDates(topSold);
+                this.discoutedProducts = this.initializeDates(discouted);
+                this.newProducts = this.initializeDates(newest);
+                store.commonStore.setInitialLoading(false);
+                this.homePageLoaded = true;
+            });
+        } catch (error) {
+            console.log(error);
+            toast.error('Failed to load home page products');
         } finally {
             runInAction(() => store.commonStore.setInitialLoading(false))
         }

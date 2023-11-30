@@ -5,20 +5,47 @@ import { ProductInfo } from "./ProductInfo";
 import { ProductDiscount } from "./ProductDiscount";
 import { ProductExpert } from "./ProductExpert";
 
-export interface Product {
-    id: number;
-    name: string;
-    description: string;
-    price: number;
-    taxRate: number;
-    createdAt: Date;
-    modificationDate: Date;
-    status: ProductStatus;
-    productInfo: ProductInfo;
-    photo: Photo;
-    category: Category;
-    productExpert: ProductExpert;
-    productDiscounts: ProductDiscount[];
+export class Product {
+    constructor(
+        public id: number,
+        public name: string,
+        public description: string,
+        public price: number,
+        public taxRate: number,
+        public createdAt: Date,
+        public modificationDate: Date,
+        public status: ProductStatus,
+        public productInfo: ProductInfo,
+        public photo: Photo,
+        public category: Category,
+        public productExpert: ProductExpert,
+        public productDiscounts: ProductDiscount[]
+    ) {}
+
+    // Funkcja sprawdzająca, czy jest aktualna promocja na produkt
+    static isOnSale(product: Product): boolean {       
+        const currentDate = new Date();
+        return product.productDiscounts.some(
+            (discount) => currentDate >= discount.start && currentDate <= discount.end
+        );
+    }
+
+    // Funkcja pobierająca discount value i zwracająca zniżoną cenę
+    static getDiscountedPrice(product: Product): number {
+
+        if (Product.isOnSale(product)) {
+            const currentDiscount = product.productDiscounts.find((discount) => {
+                const currentDate = new Date();
+                return currentDate >= discount.start && currentDate <= discount.end;
+            });
+
+            if (currentDiscount) {
+                return Math.floor((product.price * (1 - currentDiscount.value)) * 100) / 100;
+            }
+        }
+
+        return product.price; // Jeśli brak promocji, zwracamy standardową cenę
+    }
 }
 
 export class ProductFormValues {

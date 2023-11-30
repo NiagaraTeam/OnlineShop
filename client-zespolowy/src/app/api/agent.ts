@@ -99,6 +99,7 @@ const Account = {
 
     delete: (userId: string) => requests.del<void>(`/accounts/${userId}`),
     updateAddress: (userId: string, address: Address) => requests.patch<void>(`/accounts/${userId}/address`, address),
+    getFavouriteProducts: () => requests.get<Product[]>(`/account/favourites`),
     addFavouriteProduct: (userId: string, productId: number) => requests.post<void>(`/accounts/${userId}/favourites/${productId}`, {}),
     removeFavouriteProduct: (userId: string, productId: number) => requests.del<void>(`/accounts/${userId}/favourites/${productId}`),
     //resetPasswordRequest: (userId: string) => requests.post(`/accounts/${userId}/reset-password`, {}),

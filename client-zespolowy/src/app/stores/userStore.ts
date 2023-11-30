@@ -71,6 +71,7 @@ export default class UserStore {
 
     logout = () => {
         store.commonStore.setToken(null);
+        store.productStore.homePageLoaded = false;
         
         const isAdmin = this.user?.isAdmin;
         this.user = null;
