@@ -7,11 +7,14 @@ import { FavoriteProducts } from "../features/FavoriteProducts"
 export const HomePage = observer(() => {
   return (
     <div>
-      <p>HomePage</p>
       {/* <TopSoldProducts/> */}
+      <TopSoldProducts/>
       {/* <DiscountedProducts/> */}
+      <DiscountedProducts/>
       {/* <NewProducts/> */}
+      <NewProducts/>
       {/* <FavoriteProducts/> */}
+      <FavoriteProducts />
     </div>
   )
 })

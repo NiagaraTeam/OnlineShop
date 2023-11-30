@@ -16,8 +16,8 @@ export const TopSoldProducts = observer(() => {
   ];
 
   return (
-    <div className="m-3 border p-3">
-      <h5><p>TopSoldProducts</p></h5>
+    <div className="m-3 p-3">
+      <h5><p>Bestsellers</p></h5>
       <div className="row row-cols-2 row-cols-md-5 g-2">
         {products.map((product, index) => (
           <div className="col" key={index}>

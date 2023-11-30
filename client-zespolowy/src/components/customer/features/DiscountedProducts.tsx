@@ -17,7 +17,7 @@ export const DiscountedProducts = observer(() => {
     ];
 
   return (
-    <div className="m-3 border p-3">
+    <div className="m-3 p-3">
       <h5><p>Discounted products</p></h5>
       <div className="row row-cols-2 row-cols-md-5 g-2">
         {products.map((product, index) => (
