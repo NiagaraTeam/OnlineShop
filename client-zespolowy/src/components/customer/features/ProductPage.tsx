@@ -1,9 +1,8 @@
 import { observer } from "mobx-react-lite"
-import { Product } from "../../../app/models/onlineshop/Product"
 
 export const ProductPage = observer(() => {
 
-    const produkt: Product = {
+    const produkt = {
         id: 1,
         name: "Pocky - chocolate flavour",
         description: "Bardzo smaczne paluszki, oblane czekoladą, przekąska z japonii",
