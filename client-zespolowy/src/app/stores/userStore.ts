@@ -3,9 +3,11 @@ import { ChangePasswordFormValues, User, UserFormValues } from "../models/common
 import agent from "../api/agent";
 import { store } from "./store";
 import { router } from "../router/Routes";
+import { AccountDetails } from "../models/onlineshop/AccountDetails";
 
 export default class UserStore {
     user: User | null = null;
+    accountDetails: AccountDetails | null = null;
 
     constructor() {
         makeAutoObservable(this);
@@ -44,8 +46,10 @@ export default class UserStore {
             store.productStore.homePageLoaded = false;
             store.commonStore.setToken(user.token);
             store.commonStore.clearInfo();
+            const details = await agent.Account.details(user.id);
             runInAction(() => {
                 this.user = user;
+                this.accountDetails = details;
             });
             router.navigate('/account');
         } catch (error) {

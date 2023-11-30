@@ -8,6 +8,7 @@ using Domain;
 using Microsoft.AspNetCore.Identity;
 using Application.Dto.Product;
 using Domain.Enums;
+using Application.Dto.Order;
 
 namespace Application.Services
 {
@@ -29,6 +30,34 @@ namespace Application.Services
             _mapper = mapper;
             _userManager = userManager;
             _userAccessor = userAccessor;
+        }
+
+        public async Task<Result<UserDetailsDto>> UserDetails(string userId)
+        {
+            var user = await _context.Users
+                .Include(u => u.CustomerDetails)
+                    .ThenInclude(cd => cd.Address)
+                .Include(u => u.CustomerDetails.Orders)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null)
+                return null;
+
+            var userDetails = new UserDetailsDto
+            {
+                Id = user.CustomerDetails.UserId,
+                UserName = user.UserName,
+                Email = user.Email,
+                Status = user.CustomerDetails.Status,
+                DiscountValue = user.CustomerDetails.DiscountValue,
+                Newsletter = user.CustomerDetails.Newsletter,
+                Orders = user.CustomerDetails.Orders
+                    .Select(o => _mapper.Map<OrderDto>(o))
+                    .ToList(),
+                Address = _mapper.Map<AddressDto>(user.CustomerDetails.Address)
+            };
+
+            return Result<UserDetailsDto>.Success(userDetails);
         }
 
         public async Task<Result<object>> AddFavouriteProduct(string userId, int productId)
@@ -87,7 +116,7 @@ namespace Application.Services
             if (user == null)
                 return null;
 
-            if (user.CustomerDetails == null )
+            if (user.CustomerDetails == null)
             {
                 return Result<decimal>.Failure("Discount data not available");
             }

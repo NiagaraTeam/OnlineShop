@@ -18,6 +18,7 @@ import { ProductDiscount } from "../models/onlineshop/ProductDiscount";
 import { Photo } from "../models/onlineshop/Photo";
 import { PaginatedResult } from "../models/common/Pagination";
 import { ProductExpert } from "../models/onlineshop/ProductExpert";
+import { AccountDetails } from "../models/onlineshop/AccountDetails";
 
 const sleep = (delay: number) => {
     return new Promise((resolve) => {
@@ -97,6 +98,7 @@ const Account = {
     register: (user: UserFormValues) => requests.post<User>('/account/register', user),
     changePassword: (values: ChangePasswordFormValues) => requests.post<void>('/account/changepassword/', values),
 
+    details: (userId: string) => requests.get<AccountDetails>(`/account/${userId}/details`),
     delete: (userId: string) => requests.del<void>(`/accounts/${userId}`),
     updateAddress: (userId: string, address: Address) => requests.patch<void>(`/accounts/${userId}/address`, address),
     getFavouriteProducts: () => requests.get<Product[]>(`/account/favourites`),
