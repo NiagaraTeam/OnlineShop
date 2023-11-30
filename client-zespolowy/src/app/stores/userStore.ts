@@ -80,6 +80,7 @@ export default class UserStore {
         
         const isAdmin = this.user?.isAdmin;
         this.user = null;
+        this.accountDetails = null;
 
         if (isAdmin)
             router.navigate('/admin/login');
