@@ -1,9 +1,100 @@
 import { observer } from "mobx-react-lite"
+import { useStore } from "../../../app/stores/store";
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
+import Loading from "../../common/Loading";
+import { Product } from "../../../app/models/onlineshop/Product";
+import { ProductsSection } from "../features/ProductsSection";
 
 export const ProductDetailsPage = observer(() => {
-    return (
-      <div>
-        <p>ProductDetails</p>
+  const {productStore, commonStore} = useStore();
+  const {initialLoading} = commonStore;
+  const {loadProduct, selectedProduct: product, discoutedProducts, loadHomePageProducts} = productStore;
+  const {id} = useParams();
+
+  useEffect(() => {
+      if (id){
+        loadProduct(parseInt(id));
+        loadHomePageProducts()
+      } 
+  }, [id, loadProduct, loadHomePageProducts]);
+
+  if (initialLoading || !product) return <div className="text-center m-5"><Loading/></div>
+
+  return (
+      <div className="container align-center ">
+          <div className="row">
+
+            <div className="col">
+                <img className="rounded  mx-5" 
+                  src={product.photo ? product.photo.urlLarge : '/assets/telefon.png'}
+                  ></img>
+            </div>
+
+            <div className="col mt-5">
+
+                <p className="text-uppercase">Category: {product.category.name}</p>
+
+                <div>
+                  <h2>{product.name}</h2>
+                </div>
+                
+                <p>Availability: 
+                    {product.productInfo.currentStock >= 10 ? (
+                        <> High Availability</>
+                    ) : product.productInfo.currentStock < 10 && product.productInfo.currentStock > 0 ? (
+                        <> Last Few Pieces</>
+                    ) : (
+                        <> Product Unavailable</>
+                    )}
+                </p>
+
+                {Product.isOnSale(product) ?  (
+                    <>
+                        <h5 className="text-decoration-line-through">Price: {product.price} zł</h5>
+                        <h5>Discouted price: {Product.getDiscountedPrice(product)} zł </h5>
+                        <p>Discouted price with Tax: {Math.floor(Product.getDiscountedPrice(product) * (100 + product.taxRate)) / 100} zł </p>
+
+                    </>
+                ) : (
+                    <>
+                        <h5>Price: {product.price} zł</h5>
+                        <p>Price with Tax: {Math.floor(product.price * (100 + product.taxRate)) / 100} zł</p>
+                    </>
+                )}
+
+                <div className="row align-items-center">
+                    <div className="col-4">
+                        <div className="input-group mb-3">
+                            <button className="btn btn-primary" type="button">Add to cart</button>
+                            <input type="number" min={1} max={product.productInfo.currentStock} className="form-control" aria-describedby="basic-addon2" />
+                        </div>
+                        <button className="btn btn-secondary">Make favourite ♥</button>
+                    </div>
+                </div>
+
+                <div className="mt-5">
+                  <h5>Product details:</h5>
+                  <p>{product.description}</p>
+                </div>
+
+            </div>
+
+          </div>
+
+          <div className="border-top mt-5 p-3">
+              <h5>Product Expert:</h5>
+              <div className="mx-3 mt-3">
+                <p>Name: {product.productExpert.firstName} {product.productExpert.lastName}</p>
+                <p>Email: {product.productExpert.email}</p>
+                <p>Phone: {product.productExpert.phoneNumber}</p>
+              </div>
+          </div>
+          
+          <div className="border-top mt-3 p-3">
+            <ProductsSection products={discoutedProducts.slice(0, 5)} label={"Discouted Products"}/>
+          </div>
+
       </div>
-    )
+  )
 })

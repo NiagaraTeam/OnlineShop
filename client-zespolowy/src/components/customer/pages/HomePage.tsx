@@ -21,14 +21,19 @@ export const HomePage = observer(() => {
 
   return (
     <div>
-      <ProductsSection label="Bestsellers" products={topSoldProducts} />
-
-      <ProductsSection label="Discounted products" products={discoutedProducts} />
-      
-      <ProductsSection label="New products" products={newProducts} />
-
+      <div className="m-3 p-3">
+        <ProductsSection label="Bestsellers" products={topSoldProducts} />
+      </div>
+      <div className="m-3 p-3">
+        <ProductsSection label="Discounted products" products={discoutedProducts} />
+      </div>
+      <div className="m-3 p-3">
+        <ProductsSection label="New products" products={newProducts} />
+      </div>
       {isLoggedIn && !isAdmin &&
-        <ProductsSection label="Your favorite products" products={favouriteProducts} />
+        <div className="m-3 p-3">
+          <ProductsSection label="Your favorite products" products={favouriteProducts} />
+        </div>
       }
     </div>
   )
