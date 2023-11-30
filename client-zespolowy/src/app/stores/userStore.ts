@@ -46,10 +46,9 @@ export default class UserStore {
             store.productStore.homePageLoaded = false;
             store.commonStore.setToken(user.token);
             store.commonStore.clearInfo();
-            const details = await agent.Account.details(user.id);
+            await this.loadAccountDetails(user.id);
             runInAction(() => {
                 this.user = user;
-                this.accountDetails = details;
             });
             router.navigate('/account');
         } catch (error) {
@@ -108,4 +107,16 @@ export default class UserStore {
             console.log(error);
         }
     }
+
+    loadAccountDetails = async (id: string) => {
+        try {
+            const details = await agent.Account.details(id);
+            runInAction(() => {
+                this.accountDetails = details;
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
 }

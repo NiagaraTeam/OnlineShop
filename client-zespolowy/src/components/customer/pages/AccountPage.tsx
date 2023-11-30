@@ -2,14 +2,23 @@ import { observer } from "mobx-react-lite";
 import { useStore } from "../../../app/stores/store";
 import { LoginPage } from "./LoginPage";
 import { OrderStatus } from "../../../app/models/enums/OrderStatus";
+import { useEffect } from "react";
+import Loading from "../../common/Loading";
 
 export const AccountPage = observer(() => {
-    const {userStore: {user, isLoggedIn, isAdmin, logout, accountDetails}} = useStore();
+    const {userStore: {user, isLoggedIn, isAdmin, logout, accountDetails, loadAccountDetails}} = useStore();
     
+    useEffect(() => {
+        if (user && !accountDetails)
+            loadAccountDetails(user.id);
+    }, [user, accountDetails, loadAccountDetails])
+
     if (!isLoggedIn || isAdmin)
         return <LoginPage/>
     
     if (!user) return <></>
+
+    if (!accountDetails) return <div className="text-center m-5"><Loading/></div>
     
     return (
         <>
