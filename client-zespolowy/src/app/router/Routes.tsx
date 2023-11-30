@@ -5,7 +5,7 @@ import NotFound from "../../components/errors/NotFound";
 import { LoginPage as CustomerLogin }  from "../../components/customer/pages/LoginPage";
 import { LoginPage as AdminLogin }  from "../../components/admin/pages/LoginPage";
 import { AdminApp } from "../layout/AdminApp";
-import { ProductsPage as CustomerProductsPage } from "../../components/customer/pages/ProductsPage";
+import { ProductsPage as CustomerProductsPage } from "../../components/customer/features/ProductsPage";
 import { AccountPage } from "../../components/customer/pages/AccountPage";
 import { ProductsPage as AdminProductsPage } from "../../components/admin/pages/ProductsPage";
 import { OrdersPage } from "../../components/admin/pages/OrdersPage";

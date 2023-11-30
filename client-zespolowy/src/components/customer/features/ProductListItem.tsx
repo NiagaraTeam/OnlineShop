@@ -1,23 +1,28 @@
+import { observer } from "mobx-react-lite";
 import { Product } from "../../../app/models/onlineshop/Product";
 
 interface Props {
-    product: Product;
+    name: string;
+    price: number;
+    discount?: number;
+    product: Product
 }
 
-export const ProductListItem = ({ product }: Props) => {
+export const ProductListItem: React.FC<Props> = observer(({ name, price, discount}) => {
+    const discountedPrice = discount ? price - discount : price;
     return (
       <div className="card w-10 m-2">
-        <img src={product.photo ? product.photo.urlSmall : 'assets/telefon.png'} className="card-img-top p-3" alt={product.name} />
+        <img src={'assets/telefon.png'} className="card-img-top mt-3" alt={name} />
         <div className="card-body">
-            <h6 className="card-title">{product.name}</h6>
-            {Product.isOnSale(product) ? 
+            <h6 className="card-title">{name}</h6>
+            {discount ? 
                 <p>
-                    Price: <del>{product.price} zł</del> <b>{Product.getDiscountedPrice(product)} zł</b>
+                    Price: <del>{price} zł</del> <b>{discountedPrice} zł</b>
                 </p>
             : 
-                <p >Price: {product.price} zł</p>
+                <p >Price: {price} zł</p>
             }
         </div>
       </div>
     );
-};
+});
