@@ -28,7 +28,7 @@ const sleep = (delay: number) => {
 axios.defaults.baseURL = import.meta.env.VITE_API_URL;
 
 axios.interceptors.response.use(async response => {
-    if (import.meta.env.DEV) await sleep(500);
+    if (import.meta.env.DEV) await sleep(100);
 
     const pagination = response.headers['pagination'];
     if (pagination) {
