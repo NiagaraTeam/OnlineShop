@@ -43,14 +43,15 @@ export default class UserStore {
         try {
             const user = await agent.Account.loginCustomer(creds);
             user.isAdmin = false;
-            store.productStore.homePageLoaded = false;
             store.commonStore.setToken(user.token);
             store.commonStore.clearInfo();
-            await this.loadAccountDetails(user.id);
+
             runInAction(() => {
                 this.user = user;
+                this.loadAccountDetails();
+                router.navigate('/account');
             });
-            router.navigate('/account');
+            
         } catch (error) {
             console.log(error);
             throw error;
@@ -75,7 +76,6 @@ export default class UserStore {
 
     logout = () => {
         store.commonStore.setToken(null);
-        store.productStore.homePageLoaded = false;
         
         const isAdmin = this.user?.isAdmin;
         this.user = null;
@@ -108,11 +108,17 @@ export default class UserStore {
         }
     }
 
-    loadAccountDetails = async (id: string) => {
+    loadAccountDetails = async () => {
         try {
-            const details = await agent.Account.details(id);
+            if (!this.user || this.isAdmin)
+                return;
+            
+            const details = await agent.Account.details(this.user.id);
+            const favourites = await agent.Account.getFavouriteProducts();
             runInAction(() => {
                 this.accountDetails = details;
+                store.productStore.favouriteProducts 
+                    = store.productStore.initializeDates(favourites);
             });
         } catch (error) {
             console.log(error);

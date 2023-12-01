@@ -2,17 +2,11 @@ import { observer } from "mobx-react-lite";
 import { useStore } from "../../../app/stores/store";
 import { LoginPage } from "./LoginPage";
 import { OrderStatus } from "../../../app/models/enums/OrderStatus";
-import { useEffect } from "react";
 import Loading from "../../common/Loading";
 
 export const AccountPage = observer(() => {
-    const {userStore: {user, isLoggedIn, isAdmin, logout, accountDetails, loadAccountDetails}} = useStore();
+    const {userStore: {user, isLoggedIn, isAdmin, logout, accountDetails}} = useStore();
     
-    useEffect(() => {
-        if (user && !accountDetails)
-            loadAccountDetails(user.id);
-    }, [user, accountDetails, loadAccountDetails])
-
     if (!isLoggedIn || isAdmin)
         return <LoginPage/>
     
@@ -32,9 +26,7 @@ export const AccountPage = observer(() => {
             <h3>Orders</h3>
                 {accountDetails?.orders.map(order => {
                     return (
-                    <>
-                        <p>Id: {order.id} status: {OrderStatus[order.status]}</p>
-                    </>
+                        <p key={order.id}>Id: {order.id} status: {OrderStatus[order.status]}</p>
                     )
                 })}
 

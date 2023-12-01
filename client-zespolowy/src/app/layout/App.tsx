@@ -15,10 +15,16 @@ export const App = observer(() => {
   const location = useLocation();
 
   useEffect(() => {
+    commonStore.setAdminApploaded(false);
     if (commonStore.token) {
-      userStore.getUser().finally(() => commonStore.setApploaded());
+      commonStore.loadAppData()
+        .then(() => userStore.getUser()
+          .then(() => userStore.loadAccountDetails())
+          .finally(() => commonStore.setApploaded()));
+      
     } else {
-      commonStore.setApploaded();
+      commonStore.loadAppData()
+        .finally(() => commonStore.setApploaded());
     }
   }, [commonStore, userStore]);
 

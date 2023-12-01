@@ -1,12 +1,14 @@
 import { makeAutoObservable, reaction } from "mobx";
 import { ServerError } from "../models/common/ServerError"
 import { Info } from "../models/common/Info";
+import { store } from "./store";
 
 export default class CommonStore {
     serverError: ServerError | null = null;
     info: Info | undefined = undefined;
     token: string | null = localStorage.getItem('jwt');
     appLoaded = false;
+    adminAppLoaded = false;
     initialLoading = false;
 
     constructor() {
@@ -44,8 +46,12 @@ export default class CommonStore {
         this.token = token;
     }
 
-    setApploaded = () => { 
-        this.appLoaded = true;
+    setApploaded = (value: boolean = true) => { 
+        this.appLoaded = value;
+    }
+
+    setAdminApploaded = (value: boolean = true) => { 
+        this.adminAppLoaded = value;
     }
 
     setInitialLoading = (loading :boolean) => {
@@ -62,7 +68,22 @@ export default class CommonStore {
 
     loadAppData = async () => {
         try {
-            // load app data
+            await store.productStore.loadHomePageProducts();
+            await store.productStore.loadProducts();
+            await store.categoryStore.loadCategories();
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    loadAdminAppData = async () => {
+        try {
+            await store.productStore.loadProducts();
+            await store.productStore.loadDeletedProducts();
+            await store.shippingPaymentStore.loadPaymentMethods();
+            await store.shippingPaymentStore.loadShippingMethods();
+            await store.categoryStore.loadCategories();
+            await store.expertsStore.loadExperts();
         } catch (error) {
             console.log(error);
         }

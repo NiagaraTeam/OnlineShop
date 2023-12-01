@@ -9,15 +9,14 @@ import { ProductsSection } from "../features/ProductsSection";
 export const ProductDetailsPage = observer(() => {
   const {productStore, commonStore} = useStore();
   const {initialLoading} = commonStore;
-  const {loadProduct, selectedProduct: product, discoutedProducts, loadHomePageProducts} = productStore;
+  const {loadProduct, selectedProduct: product, discoutedProducts} = productStore;
   const {id} = useParams();
 
   useEffect(() => {
-      if (id){
+      if (id)
         loadProduct(parseInt(id));
-        loadHomePageProducts()
-      } 
-  }, [id, loadProduct, loadHomePageProducts]);
+
+  }, [id, loadProduct]);
 
   if (initialLoading || !product) return <div className="text-center m-5"><Loading/></div>
 
