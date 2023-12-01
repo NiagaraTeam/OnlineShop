@@ -34,3 +34,7 @@
 .hover-success:hover  {
   color: #198754;
 }
+
+.cursor-pointer {
+  cursor: pointer;
+}

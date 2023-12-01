@@ -7,7 +7,7 @@ export const LoginPage = observer(() => {
     const {userStore: {isLoggedIn, isAdmin}} = useStore();
 
     if (isLoggedIn && !isAdmin)
-        return <Navigate to="/products"/>;
+        return <Navigate to="/"/>;
 
     return (
         <>

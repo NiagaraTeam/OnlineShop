@@ -20,6 +20,7 @@ namespace Application.Core
             CreateMap<ShippingMethodCreateUpdateDto, ShippingMethod>();
 
             CreateMap<AddressDto, Address>();
+            CreateMap<Address, AddressDto>();
 
             CreateMap<Order, OrderDto>();
             CreateMap<OrderCreateUpdateDto, Order>();

@@ -129,6 +129,13 @@ namespace API.Controllers
             return await CreateUserObject(user, await HasRole(user, StaticUserRoles.ADMIN));
         }
 
+        [Authorize]
+        [HttpGet("account/{userId}/details")] //api/account/userId/details
+        public async Task<ActionResult<UserDto>> GetUserDetails(string userId)
+        {
+            return HandleResult(await _userService.UserDetails(userId));
+        }
+
         [HttpDelete("accounts/{userId}")] //api/accounts/userId
         [Authorize(Roles = StaticUserRoles.ADMIN)]
         public async Task<IActionResult> DeleteAccount(string userId)
@@ -187,6 +194,7 @@ namespace API.Controllers
         {
             return new UserDto
             {
+                Id = user.Id,
                 UserName = user.UserName,
                 Email = user.Email,
                 Token = await _tokenService.CreateToken(user),

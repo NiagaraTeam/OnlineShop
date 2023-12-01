@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite"
 import { useStore } from "../../../app/stores/store";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Loading from "../../common/Loading";
 import { LoadingState } from "../../../app/models/common/LoadingState";
 import EditDeleteButtons from "../../common/EditDeleteButtons";
@@ -10,16 +10,8 @@ import { FormikHelpers } from "formik";
 
 export const ShippingMethodsPage = observer(() => {
   const {shippingPaymentStore, commonStore} = useStore();
-  const {loadShippingMethods, deleteShippingMethod, 
-    createShippingMethod, shippingMethods} = shippingPaymentStore;
+  const {deleteShippingMethod, createShippingMethod, shippingMethods} = shippingPaymentStore;
   const {initialLoading} = commonStore;
-  
-  // on load
-  useEffect(() => {
-    if (shippingMethods.length == 0)
-      loadShippingMethods();
-
-  }, [loadShippingMethods, shippingMethods])
 
   // create
   const handleCreate = (method: ShippingMethod, formikHelpers: FormikHelpers<ShippingMethod>) => {

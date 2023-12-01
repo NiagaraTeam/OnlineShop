@@ -221,6 +221,10 @@ namespace Application.Services
         {
             var topProducts = await _context.Products
                 .Include(p => p.ProductInfo)
+                .Include(p => p.Photo)
+                .Include(p => p.Category)
+                .Include(p => p.ProductExpert)
+                .Include(p => p.ProductDiscounts)
                 .Where(p => p.Status != ProductStatus.Deleted)
                 .OrderByDescending(p => p.ProductInfo.TotalSold)
                 .Take(10)

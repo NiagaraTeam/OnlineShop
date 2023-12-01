@@ -14,14 +14,18 @@ export const AdminApp = observer(() => {
   const location = useLocation();
   
   useEffect(() => {
+    commonStore.setApploaded(false);
     if (commonStore.token) {
-      userStore.getUser().finally(() => commonStore.setApploaded());
+      commonStore.loadAdminAppData()
+        .then(() => userStore.getUser()
+          .finally(() => commonStore.setAdminApploaded()));
     } else {
-      commonStore.setApploaded();
+      commonStore.loadAdminAppData()
+        .finally(() => commonStore.setAdminApploaded());
     }
   }, [commonStore, userStore]);
 
-  if (!commonStore.appLoaded) 
+  if (!commonStore.adminAppLoaded) 
     return <div className='center'><Loading/></div>
 
   return (

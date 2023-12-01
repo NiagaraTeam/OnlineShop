@@ -3,9 +3,11 @@ import { ChangePasswordFormValues, User, UserFormValues } from "../models/common
 import agent from "../api/agent";
 import { store } from "./store";
 import { router } from "../router/Routes";
+import { AccountDetails } from "../models/onlineshop/AccountDetails";
 
 export default class UserStore {
     user: User | null = null;
+    accountDetails: AccountDetails | null = null;
 
     constructor() {
         makeAutoObservable(this);
@@ -43,10 +45,13 @@ export default class UserStore {
             user.isAdmin = false;
             store.commonStore.setToken(user.token);
             store.commonStore.clearInfo();
+
             runInAction(() => {
                 this.user = user;
+                this.loadAccountDetails();
+                router.navigate('/account');
             });
-            router.navigate('/account');
+            
         } catch (error) {
             console.log(error);
             throw error;
@@ -71,10 +76,10 @@ export default class UserStore {
 
     logout = () => {
         store.commonStore.setToken(null);
-        store.productStore.homePageLoaded = false;
         
         const isAdmin = this.user?.isAdmin;
         this.user = null;
+        this.accountDetails = null;
 
         if (isAdmin)
             router.navigate('/admin/login');
@@ -102,4 +107,22 @@ export default class UserStore {
             console.log(error);
         }
     }
+
+    loadAccountDetails = async () => {
+        try {
+            if (!this.user || this.isAdmin)
+                return;
+            
+            const details = await agent.Account.details(this.user.id);
+            const favourites = await agent.Account.getFavouriteProducts();
+            runInAction(() => {
+                this.accountDetails = details;
+                store.productStore.favouriteProducts 
+                    = store.productStore.initializeDates(favourites);
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
 }
