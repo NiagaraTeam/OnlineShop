@@ -51,4 +51,20 @@ export default class CommonStore {
     setInitialLoading = (loading :boolean) => {
         this.initialLoading = loading;
     }
+
+    loadUserData = async () => {
+        try {
+            // load user data
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    loadAppData = async () => {
+        try {
+            // load app data
+        } catch (error) {
+            console.log(error);
+        }
+    }
 }

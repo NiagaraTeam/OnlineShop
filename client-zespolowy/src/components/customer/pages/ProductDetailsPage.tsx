@@ -64,10 +64,10 @@ export const ProductDetailsPage = observer(() => {
                 )}
 
                 <div className="row align-items-center">
-                    <div className="col-4">
+                    <div className="col-5">
                         <div className="input-group mb-3">
+                            <input type="number" min={1} max={product.productInfo.currentStock} className="form-control" aria-describedby="basic-addon2" placeholder="Enter quantity"/>
                             <button className="btn btn-primary" type="button">Add to cart</button>
-                            <input type="number" min={1} max={product.productInfo.currentStock} className="form-control" aria-describedby="basic-addon2" />
                         </div>
                         <button className="btn btn-secondary">Make favourite ♥</button>
                     </div>
