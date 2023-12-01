@@ -15,9 +15,6 @@ export default class ProductStore {
     discoutedProducts: Product[] = [];
     newProducts: Product[] = [];
     favouriteProducts: Product[] = [];
-    
-    // dodane
-    allProducts: Product[] = [];
 
     pagination: Pagination | null = null;
     pagingParams = new PagingParams();
@@ -98,17 +95,15 @@ export default class ProductStore {
             result.data.forEach(
                 product => this.setProduct(product)
             );
-            //this.setPagination(result.pagination);
+            this.setPagination(result.pagination);
             runInAction(() => store.commonStore.setInitialLoading(false))
         } catch (error) {
             console.log(error);
             toast.error('Failed to load products');
         } finally {
             runInAction(() => store.commonStore.setInitialLoading(false))
-            this.allProducts = this.initializeDates(this.products)
         }
     }
-
 
     setPagination = (pagination: Pagination) => {
         this.pagination = pagination;
