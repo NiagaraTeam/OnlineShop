@@ -15,7 +15,8 @@ export default class ProductStore {
     discoutedProducts: Product[] = [];
     newProducts: Product[] = [];
     favouriteProducts: Product[] = [];
-    homePageLoaded = false;
+    allProducts: Product[] = [];
+    homePageLoaded = false; 
 
     pagination: Pagination | null = null;
     pagingParams = new PagingParams();
@@ -92,15 +93,17 @@ export default class ProductStore {
             result.data.forEach(
                 product => this.setProduct(product)
             );
-            this.setPagination(result.pagination);
+            //this.setPagination(result.pagination);
             runInAction(() => store.commonStore.setInitialLoading(false))
         } catch (error) {
             console.log(error);
             toast.error('Failed to load products');
         } finally {
             runInAction(() => store.commonStore.setInitialLoading(false))
+            this.allProducts = this.initializeDates(this.products)
         }
     }
+
 
     setPagination = (pagination: Pagination) => {
         this.pagination = pagination;
@@ -156,7 +159,6 @@ export default class ProductStore {
             runInAction(() => {
                 if (store.userStore.isLoggedIn && !store.userStore.isAdmin)
                     this.favouriteProducts = this.initializeDates(favourites);
-            
                 this.topSoldProducts = this.initializeDates(topSold);
                 this.discoutedProducts = this.initializeDates(discouted);
                 this.newProducts = this.initializeDates(newest);
