@@ -261,6 +261,44 @@ export default class ProductStore {
         }
     }
 
+    addToFavourites = async (userId: string, productId: number) => {
+        try {
+            await agent.Account.addFavouriteProduct(userId, productId);
+            const product = await this.loadProduct(productId);
+            runInAction(() => {
+                this.favouriteProducts.push(product as Product);
+            });
+            toast.success(`Product added to favourites`);
+        } catch (error) {
+            console.log(error);
+            toast.error(`Failed adding product to favourites`);
+        }
+    }
+
+    removeFromFavourites = async (userId: string, productId: number) => {
+        try {
+            await agent.Account.removeFavouriteProduct(userId, productId);
+            runInAction(() => {
+                const index = this.favouriteProducts.findIndex(product => product.id === productId);
+
+                if (index > -1) {
+                    this.favouriteProducts.splice(index, 1);
+                    toast.success(`Product removed from favourites`);
+                } else {
+                    toast.warning(`Product not found in favourites`);
+                }       
+            });
+        } catch (error) {
+            console.log(error);
+            toast.error(`Failed removing product from favourites`);
+        }
+    }
+
+    isProductInFavorites = (productId: number): boolean  => {
+        const isFavorite = this.favouriteProducts.some(product => product.id === productId);
+        return isFavorite;
+    }
+
     private moveProductBetweenRegistries = (id: number, newStatus: ProductStatus) => {
         const productInRegistry = this.getProduct(id);
         const deletedProductInRegistry = this.getDeletedProduct(id);

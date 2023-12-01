@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import Loading from "../../common/Loading";
 import { Product } from "../../../app/models/onlineshop/Product";
 import { ProductsSection } from "../features/ProductsSection";
+import { FavouriteCheckBox } from "../features/FavouriteCheckBox";
 
 export const ProductDetailsPage = observer(() => {
   const {productStore, commonStore} = useStore();
@@ -32,9 +33,14 @@ export const ProductDetailsPage = observer(() => {
 
             <div className="col mt-5">
 
-                <p className="text-uppercase">Category: {product.category.name}</p>
+                <div className="d-flex justify-content-between align-items-center">
+                    <p className="text-uppercase">Category: {product.category.name}</p>
+                    <div className="mx-5">
+                        <FavouriteCheckBox productId={product.id}/>
+                    </div>
+                </div>
 
-                <div>
+                <div className="my-4">
                   <h2>{product.name}</h2>
                 </div>
                 
@@ -67,12 +73,11 @@ export const ProductDetailsPage = observer(() => {
                         <div className="input-group mb-3">
                             <input type="number" min={1} max={product.productInfo.currentStock} className="form-control" aria-describedby="basic-addon2" placeholder="Enter quantity"/>
                             <button className="btn btn-primary" type="button">Add to cart</button>
-                        </div>
-                        <button className="btn btn-secondary">Make favourite ♥</button>
+                        </div>                        
                     </div>
                 </div>
 
-                <div className="mt-5">
+                <div className="mt-4">
                   <h5>Product details:</h5>
                   <p>{product.description}</p>
                 </div>

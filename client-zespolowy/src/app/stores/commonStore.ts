@@ -2,6 +2,7 @@ import { makeAutoObservable, reaction } from "mobx";
 import { ServerError } from "../models/common/ServerError"
 import { Info } from "../models/common/Info";
 import { store } from "./store";
+import { toast } from "react-toastify";
 
 export default class CommonStore {
     serverError: ServerError | null = null;
@@ -58,14 +59,6 @@ export default class CommonStore {
         this.initialLoading = loading;
     }
 
-    loadUserData = async () => {
-        try {
-            // load user data
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
     loadAppData = async () => {
         try {
             await store.productStore.loadHomePageProducts();
@@ -73,6 +66,7 @@ export default class CommonStore {
             await store.categoryStore.loadCategories();
         } catch (error) {
             console.log(error);
+            toast.error(`Failed to load app data`);
         }
     }
 
@@ -86,6 +80,7 @@ export default class CommonStore {
             await store.expertsStore.loadExperts();
         } catch (error) {
             console.log(error);
+            toast.error(`Failed to load admin app data`);
         }
     }
 }

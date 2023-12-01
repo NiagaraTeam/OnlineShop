@@ -14,7 +14,7 @@ export const HomePage = observer(() => {
 
   return (
     <div>
-      {isLoggedIn && !isAdmin &&
+      {isLoggedIn && !isAdmin && favouriteProducts.length > 0 &&
         <div className="m-3 p-3">
           <ProductsSection label="Your favorite products" products={favouriteProducts} />
         </div>
