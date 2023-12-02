@@ -16,24 +16,31 @@ export default class OrderStore {
   }
 
   private setOrder = (order: Order) => {
-    this.ordersRegistry.set(order.id, order);
+    this.ordersRegistry.set(order.id, this.initializeDate(order));
   };
+
+  private initializeDate = (order: Order): Order => {
+    order.orderDate = new Date(order.orderDate);
+    //order.items = store.productStore.initializeDates(order.items);
+    return order;
+  }
+
+  initializeDates = (orders: Order[]): Order[] => {
+      const initializedProducts: Order[] = [];
+
+      orders.forEach((order) => {
+          initializedProducts.push(this.initializeDate(order));
+      })
+      return initializedProducts;
+  }
 
   loadOrders = async () => {
     store.commonStore.setInitialLoading(true);
     try {
-    const orders = await agent.Orders.list();//nie zwraca sie lista
-    // czy orders jest tablicą
-    if (Array.isArray(orders)) {
-        orders.forEach(
-            order => this.setOrder(order)
-        );
-    }
-    else
-    {
-        console.error("Returned data is not an array.");
-    }
-    
+      const orders = await agent.Orders.list();
+      orders.forEach(
+          order => this.setOrder(order)
+      );
       runInAction(() => store.commonStore.setInitialLoading(false));
     } catch (error) {
         console.error("Error loading orders:", error);

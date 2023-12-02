@@ -6,7 +6,7 @@ import Loading from '../../common/Loading';
 export const OrdersPage = observer(() => {
   const { orderStore, commonStore } = useStore();
   const { orders, loadOrders } = orderStore;
-  const { initialLoading, serverError } = commonStore;
+  const { initialLoading } = commonStore;
 
   useEffect(() => {
     if (orders.length == 0)
@@ -15,8 +15,6 @@ export const OrdersPage = observer(() => {
   }, [loadOrders, orders])
 
   if (initialLoading) return <div className="text-center m-5"><Loading /></div>;
-
-  if (serverError) return <div className="text-center m-5">Error loading orders.</div>;
 
   return (
     <div className="m-3">
