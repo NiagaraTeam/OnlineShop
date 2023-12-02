@@ -4,6 +4,7 @@ import { Order } from '../models/onlineshop/Order';
 import { toast } from 'react-toastify';
 import { store } from "./store";
 import { OrderItem } from '../models/onlineshop/OrderItem';
+import { OrderStatus } from '../models/enums/OrderStatus';
 
 export default class OrderStore {
   ordersRegistry = new Map<number, Order>();
@@ -66,7 +67,18 @@ export default class OrderStore {
         runInAction(() => store.commonStore.setInitialLoading(false))
     }
   };
+  changeOrderStatus = async (orderId: number, newStatus: OrderStatus) => {
+    try {
+      await agent.Orders.changeOrderStatus(orderId, newStatus);
 
+      const orderToUpdate = this.orders.find((order) => order.id === orderId);
+      if (orderToUpdate) {
+        orderToUpdate.status = newStatus;
+      }
+    } catch (error) {
+      console.error('Error changing order status:', error);
+    }
+  };
   loadOrder = async (id: number) => {
     let order = this.getOrder(id);
 

@@ -16,7 +16,7 @@ namespace API.Controllers
             _orderService = orderService;
         }
 
-        [HttpGet("orders")] //api/orders
+        [HttpGet("getOrders")] //api/getOrders
         [Authorize(Roles = StaticUserRoles.ADMIN)] 
         public async Task<IActionResult> GetAllOrders()
         {
