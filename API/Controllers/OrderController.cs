@@ -15,7 +15,12 @@ namespace API.Controllers
         {
             _orderService = orderService;
         }
-
+        [HttpGet("orders")]
+        [Authorize(Roles = StaticUserRoles.ADMIN)] 
+        public async Task<IActionResult> GetAllOrders()
+        {
+            return HandleResult(await _orderService.GetAllOrders());
+        }
         [HttpPost("orders")] //api/orders
         [Authorize(Roles = StaticUserRoles.CUSTOMER)]
         public async Task<IActionResult> CreateOrder(OrderCreateUpdateDto order)
