@@ -28,17 +28,19 @@ export default class OrderStore {
       item.product = store.productStore.initializeDate(item.product);
       initializedItems.push(item);
     })
+
+    order.items = initializedItems;
     
     return order;
   }
 
   initializeDates = (orders: Order[]): Order[] => {
-      const initializedProducts: Order[] = [];
+      const initializedOrders: Order[] = [];
 
       orders.forEach((order) => {
-          initializedProducts.push(this.initializeDate(order));
+          initializedOrders.push(this.initializeDate(order));
       })
-      return initializedProducts;
+      return initializedOrders;
   }
 
   loadOrders = async () => {
