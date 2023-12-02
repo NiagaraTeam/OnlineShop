@@ -28,7 +28,7 @@ export const OrderDetailsPage = observer(() => {
     {
       order.shippingMethod.cost = 0;
     }
-    return totalProductAmount + order.shippingMethod.cost;
+    return Math.floor((totalProductAmount + order.shippingMethod.cost) * 100) / 100;
   }
   
   return (
@@ -49,7 +49,7 @@ export const OrderDetailsPage = observer(() => {
               <td>{item.product.name}</td>
               <td>{item.quantity}</td>
               <td>{item.product.price}</td>
-              <td>{item.product.price*item.quantity}</td>
+              <td>{Math.floor(item.product.price*item.quantity * 100) / 100}</td>
             </tr>
           ))}
         </tbody>
