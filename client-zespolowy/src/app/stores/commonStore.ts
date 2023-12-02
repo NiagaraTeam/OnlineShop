@@ -74,6 +74,7 @@ export default class CommonStore {
         try {
             await store.productStore.loadProducts();
             await store.productStore.loadDeletedProducts();
+            await store.orderStore.loadOrders();
             await store.shippingPaymentStore.loadPaymentMethods();
             await store.shippingPaymentStore.loadShippingMethods();
             await store.categoryStore.loadCategories();

@@ -13,5 +13,6 @@ namespace Application.Interfaces
         Task<Result<object>> RemoveOrderItem(int orderId, int productId);
         Task<Result<object>> ChangeOrderItemQuantity(int orderId, OrderItemNewQuantityDto item);
         Task<Result<object>> ChangeOrderStatus(int orderId, OrderStatus status);
+        Task<Result<IEnumerable<OrderDto>>> GetAllOrders();
     }
 }

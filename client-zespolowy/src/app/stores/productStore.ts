@@ -60,7 +60,7 @@ export default class ProductStore {
         return this.deletedProductsRegistry.get(id);
     }
 
-    private initializeDate = (product: Product): Product => {
+    initializeDate = (product: Product): Product => {
         product.createdAt = new Date(product.createdAt);
         product.modificationDate = new Date(product.modificationDate);
 
@@ -96,7 +96,6 @@ export default class ProductStore {
                 product => this.setProduct(product)
             );
             this.setPagination(result.pagination);
-            runInAction(() => store.commonStore.setInitialLoading(false))
         } catch (error) {
             console.log(error);
             toast.error('Failed to load products');
@@ -116,6 +115,7 @@ export default class ProductStore {
             this.selectedProduct = product;
             return product;
         } else {
+            store.commonStore.setInitialLoading(true);
             try {
                 product = await agent.Products.getDetails(id);
                 this.setProduct(product);
@@ -124,6 +124,8 @@ export default class ProductStore {
             } catch (error) {
                 console.log(error);
                 toast.error('Failed to load product');
+            } finally {
+                runInAction(() => store.commonStore.setInitialLoading(false))
             }
         }
     }

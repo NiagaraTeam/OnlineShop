@@ -85,7 +85,19 @@ namespace Application.Services
 
             return Result<object>.Failure("Failed to update order status");
         }
+        public async Task<Result<IEnumerable<OrderDto>>> GetAllOrders()
+        {
+            var orders = await _context.Orders
+                .Include(o => o.PaymentMethod)
+                .Include(o => o.ShippingMethod)
+                .Include(o => o.Items)
+                    .ThenInclude(o => o.Product)
+                .ToListAsync();
 
+            var ordersDto = _mapper.Map<IEnumerable<OrderDto>>(orders);
+
+            return Result<IEnumerable<OrderDto>>.Success(ordersDto);
+        }
         public async Task<Result<int>> Create(OrderCreateUpdateDto order)
         {
             var user = await _context.Users
