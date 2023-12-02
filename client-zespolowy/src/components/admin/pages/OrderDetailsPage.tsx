@@ -24,7 +24,7 @@ export const OrderDetailsPage = observer(() => {
       <p>Order ID: {order.id}, Date: {order.orderDate.toDateString()}, Status: {OrderStatus[order.status]}</p>
       <p>Szczegóły zamówienia, w tym tabela produktów z ilościami dla danego zamówienia i jakiś dropdown do zmiany statusu zamówienia</p>
       {order.items.map((item) => (
-        <p>{item.product.name} x {item.quantity}</p>
+        <p key={item.product.id}>{item.product.name} x {item.quantity}</p>
       ))}
     </div>
   )

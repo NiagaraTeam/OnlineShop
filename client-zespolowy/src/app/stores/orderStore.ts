@@ -4,7 +4,6 @@ import { Order } from '../models/onlineshop/Order';
 import { toast } from 'react-toastify';
 import { store } from "./store";
 import { OrderItem } from '../models/onlineshop/OrderItem';
-import { Product } from '../models/onlineshop/Product';
 
 export default class OrderStore {
   ordersRegistry = new Map<number, Order>();
@@ -24,7 +23,7 @@ export default class OrderStore {
 
   private getOrder = (id: number) => {
     return this.ordersRegistry.get(id);
-}
+  }
 
   private initializeDate = (order: Order): Order => {
     order.orderDate = new Date(order.orderDate);
@@ -68,21 +67,13 @@ export default class OrderStore {
     let order = this.getOrder(id);
 
     if (order) {
-        this.selectedOrder = order;
+        runInAction(() => this.selectedOrder = order);
         return order;
     } else {
         store.commonStore.setInitialLoading(true);
         try {
             order = await agent.Orders.getDetails(id);
-
-            const orderItems: OrderItem[] = [];
-            order.items.forEach(async (item) => {
-               item.product = await store.productStore.loadProduct(item.product.id) as Product;
-               orderItems.push(item);
-            })
-            order.items = orderItems;
             this.setOrder(order);
-
             runInAction(() => this.selectedOrder = order)
             return order;
         } catch (error) {

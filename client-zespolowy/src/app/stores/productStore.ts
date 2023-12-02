@@ -109,13 +109,13 @@ export default class ProductStore {
     }
 
     loadProduct = async (id: number) => {
-        store.commonStore.setInitialLoading(true);
         let product = this.getProduct(id);
 
         if (product) {
             this.selectedProduct = product;
             return product;
         } else {
+            store.commonStore.setInitialLoading(true);
             try {
                 product = await agent.Products.getDetails(id);
                 this.setProduct(product);
@@ -128,7 +128,6 @@ export default class ProductStore {
                 runInAction(() => store.commonStore.setInitialLoading(false))
             }
         }
-        store.commonStore.setInitialLoading(false);
     }
 
     loadDeletedProducts = async () => {
