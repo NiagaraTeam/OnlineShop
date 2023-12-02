@@ -1,6 +1,7 @@
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../../app/stores/store';
 import { useEffect } from 'react';
+import { OrderStatus } from "../../../app/models/enums/OrderStatus";
 import Loading from '../../common/Loading';
 
 export const OrdersPage = observer(() => {
@@ -23,7 +24,7 @@ export const OrdersPage = observer(() => {
       <ul className="list-group">
         {orders.map((order) => (
           <li key={order.id} className="list-group-item">
-            Order ID: {order.id}, Date: {order.orderDate.toDateString()}, Status: {order.status}
+            Order ID: {order.id}, Date: {order.orderDate.toDateString()}, Status: {OrderStatus[order.status]}
           </li>
         ))}
       </ul>
