@@ -96,7 +96,6 @@ export default class ProductStore {
                 product => this.setProduct(product)
             );
             this.setPagination(result.pagination);
-            runInAction(() => store.commonStore.setInitialLoading(false))
         } catch (error) {
             console.log(error);
             toast.error('Failed to load products');
@@ -110,6 +109,7 @@ export default class ProductStore {
     }
 
     loadProduct = async (id: number) => {
+        store.commonStore.setInitialLoading(true);
         let product = this.getProduct(id);
 
         if (product) {
@@ -124,8 +124,11 @@ export default class ProductStore {
             } catch (error) {
                 console.log(error);
                 toast.error('Failed to load product');
+            } finally {
+                runInAction(() => store.commonStore.setInitialLoading(false))
             }
         }
+        store.commonStore.setInitialLoading(false);
     }
 
     loadDeletedProducts = async () => {
