@@ -135,7 +135,7 @@ const Products = {
 };
 
 const Orders = {
-    list: () => requests.get<Order[]>("orders"),
+    list: () => requests.get<Order[]>("/orders"),
     create: (order: Order) => requests.post<number>("/orders", order),
     getDetails: (orderId: number) => requests.get<Order>(`/orders/${orderId}`),
     update: (orderId: number, order: Order) => requests.put<void>(`/orders/${orderId}`, order),

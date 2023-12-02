@@ -52,9 +52,13 @@ export default class OrderStore {
     store.commonStore.setInitialLoading(true);
     try {
       const orders = await agent.Orders.list();
-      orders.forEach(
+      console.log(orders);
+      runInAction(()=>{
+        orders.forEach(
           order => this.setOrder(order)
       );
+      })
+      
     } catch (error) {
         console.error("Error loading orders:", error);
         toast.error("failed to load");
