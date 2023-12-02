@@ -60,7 +60,7 @@ export default class ProductStore {
         return this.deletedProductsRegistry.get(id);
     }
 
-    private initializeDate = (product: Product): Product => {
+    initializeDate = (product: Product): Product => {
         product.createdAt = new Date(product.createdAt);
         product.modificationDate = new Date(product.modificationDate);
 

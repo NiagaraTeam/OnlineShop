@@ -3,6 +3,7 @@ import agent from '../api/agent';
 import { Order } from '../models/onlineshop/Order';
 import { toast } from 'react-toastify';
 import { store } from "./store";
+import { OrderItem } from '../models/onlineshop/OrderItem';
 
 export default class OrderStore {
   ordersRegistry = new Map<number, Order>();
@@ -21,7 +22,13 @@ export default class OrderStore {
 
   private initializeDate = (order: Order): Order => {
     order.orderDate = new Date(order.orderDate);
-    //order.items = store.productStore.initializeDates(order.items);
+    const initializedItems: OrderItem[] = [];
+
+    order.items.forEach((item) => {
+      item.product = store.productStore.initializeDate(item.product);
+      initializedItems.push(item);
+    })
+    
     return order;
   }
 
