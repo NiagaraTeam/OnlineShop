@@ -11,7 +11,7 @@ export const ProductsSection = ({products, label}: Props) => {
     if (products.length == 0) return <></>
 
     return (
-        <div className="m-3 p-3">
+        <div>
             <h5>{label}</h5>
             <div className="row row-cols-2 row-cols-md-5 g-2">
             {products.map((product) => (

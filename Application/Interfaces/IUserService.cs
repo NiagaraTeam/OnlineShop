@@ -5,7 +5,8 @@ using Application.Dto.User;
 namespace Application.Interfaces
 {
     public interface IUserService
-    {
+    {   
+        Task<Result<UserDetailsDto>> UserDetails(string userId);
         Task<Result<object>> DeleteAccount(string userId);
         Task<Result<object>> UpdateUserAddress(string userId, AddressDto address);
         Task<Result<object>> AddFavouriteProduct(string userId, int productId);

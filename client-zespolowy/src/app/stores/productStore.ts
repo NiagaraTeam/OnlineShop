@@ -15,7 +15,6 @@ export default class ProductStore {
     discoutedProducts: Product[] = [];
     newProducts: Product[] = [];
     favouriteProducts: Product[] = [];
-    homePageLoaded = false;
 
     pagination: Pagination | null = null;
     pagingParams = new PagingParams();
@@ -72,7 +71,7 @@ export default class ProductStore {
         return product;
     }
 
-    private initializeDates = (products: Product[]): Product[] => {
+    initializeDates = (products: Product[]): Product[] => {
         const initializedProducts: Product[] = [];
 
         products.forEach((product) => {
@@ -80,6 +79,10 @@ export default class ProductStore {
         })
 
         return initializedProducts;
+    }
+
+    clearUserRelatedData = () => {
+        this.favouriteProducts = [];
     }
 
     //zmienić jak będzie zrobiony endpoint pobierający liste produktów 
@@ -148,20 +151,12 @@ export default class ProductStore {
             const topSold = await agent.Products.getTopPurchased();
             const discouted = await agent.Products.getDiscounted();
             const newest = await agent.Products.getNewest();
-            let favourites: Product[] = [];
 
-            if (store.userStore.isLoggedIn && !store.userStore.isAdmin)
-                favourites = await agent.Account.getFavouriteProducts();
-
-            runInAction(() => {
-                if (store.userStore.isLoggedIn && !store.userStore.isAdmin)
-                    this.favouriteProducts = this.initializeDates(favourites);
-            
+            runInAction(() => {           
                 this.topSoldProducts = this.initializeDates(topSold);
                 this.discoutedProducts = this.initializeDates(discouted);
                 this.newProducts = this.initializeDates(newest);
                 store.commonStore.setInitialLoading(false);
-                this.homePageLoaded = true;
             });
         } catch (error) {
             console.log(error);
@@ -264,6 +259,44 @@ export default class ProductStore {
             console.log(error);
             toast.error(`Failed to permanently delete all deleted products`);
         }
+    }
+
+    addToFavourites = async (userId: string, productId: number) => {
+        try {
+            await agent.Account.addFavouriteProduct(userId, productId);
+            const product = await this.loadProduct(productId);
+            runInAction(() => {
+                this.favouriteProducts.push(product as Product);
+            });
+            toast.success(`Product added to favourites`);
+        } catch (error) {
+            console.log(error);
+            toast.error(`Failed adding product to favourites`);
+        }
+    }
+
+    removeFromFavourites = async (userId: string, productId: number) => {
+        try {
+            await agent.Account.removeFavouriteProduct(userId, productId);
+            runInAction(() => {
+                const index = this.favouriteProducts.findIndex(product => product.id === productId);
+
+                if (index > -1) {
+                    this.favouriteProducts.splice(index, 1);
+                    toast.success(`Product removed from favourites`);
+                } else {
+                    toast.warning(`Product not found in favourites`);
+                }       
+            });
+        } catch (error) {
+            console.log(error);
+            toast.error(`Failed removing product from favourites`);
+        }
+    }
+
+    isProductInFavorites = (productId: number): boolean  => {
+        const isFavorite = this.favouriteProducts.some(product => product.id === productId);
+        return isFavorite;
     }
 
     private moveProductBetweenRegistries = (id: number, newStatus: ProductStatus) => {

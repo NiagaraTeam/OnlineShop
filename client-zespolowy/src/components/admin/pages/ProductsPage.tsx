@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite"
 import { useStore } from "../../../app/stores/store";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Loading from "../../common/Loading";
 import EditDeleteButtons from "../../common/EditDeleteButtons";
 import { LoadingState } from "../../../app/models/common/LoadingState";
@@ -11,26 +11,15 @@ import RestoreDeleteButtons from "../../common/RestoreDeleteButtons";
 
 export const ProductsPage = observer(() => {
     const {productStore, commonStore} = useStore();
-    const {products, deletedProducts, selectedProduct, 
-        loadProducts, loadDeletedProducts, deleteProduct, 
+    const {products, deletedProducts, selectedProduct, deleteProduct, 
         createProduct, loadProduct, updateProduct,
         deleteAll, deletePermanently, restoreProduct} = productStore;
     const {initialLoading} = commonStore;
 
     // view logic
     const [showEditForm, setShowEditForm] = useState(false);
-    const [showCreateForm, setShowCreateForm] = useState(true);
+    const [showCreateForm, setShowCreateForm] = useState(false);
     const [showDeletedProducts, setShowDeletedProducts] = useState(false);
-
-    // on load
-    useEffect(() => {
-        if (products.length == 0)
-        {
-            loadProducts();
-            loadDeletedProducts();
-        }          
-
-    }, [loadProducts, loadDeletedProducts, products]);
 
     // delete
     const [loadingDelete, setLoadingDelete] = useState<LoadingState>({});
