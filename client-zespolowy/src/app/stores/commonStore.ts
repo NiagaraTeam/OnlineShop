@@ -1,4 +1,4 @@
-import { makeAutoObservable, reaction } from "mobx";
+import { makeAutoObservable, reaction, runInAction } from "mobx";
 import { ServerError } from "../models/common/ServerError"
 import { Info } from "../models/common/Info";
 import { store } from "./store";
@@ -60,6 +60,7 @@ export default class CommonStore {
     }
 
     loadAppData = async () => {
+        store.commonStore.setInitialLoading(true);
         try {
             await store.productStore.loadHomePageProducts();
             await store.productStore.loadProducts();
@@ -67,10 +68,16 @@ export default class CommonStore {
         } catch (error) {
             console.log(error);
             toast.error(`Failed to load app data`);
+        } finally {
+            runInAction(() => store.commonStore.setInitialLoading(false));
         }
     }
 
     loadAdminAppData = async () => {
+        store.commonStore.setInitialLoading(true);
+        if (!store.userStore.isLoggedIn || !store.userStore.isAdmin)
+                return;
+
         try {
             await store.productStore.loadProducts();
             await store.productStore.loadDeletedProducts();
@@ -82,6 +89,8 @@ export default class CommonStore {
         } catch (error) {
             console.log(error);
             toast.error(`Failed to load admin app data`);
+        } finally {
+            runInAction(() => store.commonStore.setInitialLoading(false));
         }
     }
 }

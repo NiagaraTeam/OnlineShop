@@ -88,7 +88,6 @@ export default class ProductStore {
     //zmienić jak będzie zrobiony endpoint pobierający liste produktów 
     //(z filtrowaniem i paginacją)
     loadProducts = async () => {
-        store.commonStore.setInitialLoading(true);
         try {
             this.productsRegistry.clear();
             const result = await agent.Products.list(this.axiosParams);
@@ -99,8 +98,6 @@ export default class ProductStore {
         } catch (error) {
             console.log(error);
             toast.error('Failed to load products');
-        } finally {
-            runInAction(() => store.commonStore.setInitialLoading(false))
         }
     }
 
@@ -131,7 +128,6 @@ export default class ProductStore {
     }
 
     loadDeletedProducts = async () => {
-        store.commonStore.setInitialLoading(true);
         try {
             this.deletedProductsRegistry.clear();
             const deletedProducts = await agent.Products.getDeleted();
@@ -142,13 +138,10 @@ export default class ProductStore {
         } catch (error) {
             console.log(error);
             toast.error('Failed to load deleted products');
-        } finally {
-            runInAction(() => store.commonStore.setInitialLoading(false))
         }
     }
 
     loadHomePageProducts = async () => {
-        store.commonStore.setInitialLoading(true);
         try {
             const topSold = await agent.Products.getTopPurchased();
             const discouted = await agent.Products.getDiscounted();
@@ -163,8 +156,6 @@ export default class ProductStore {
         } catch (error) {
             console.log(error);
             toast.error('Failed to load home page products');
-        } finally {
-            runInAction(() => store.commonStore.setInitialLoading(false))
         }
     }
 

@@ -30,7 +30,6 @@ export default class ShippingPaymentStore {
     }
 
     loadShippingMethods = async () => {
-        store.commonStore.setInitialLoading(true);
         try {
             const shippingMethods = await agent.ShippingMethods.list();
             shippingMethods.forEach(
@@ -39,13 +38,10 @@ export default class ShippingPaymentStore {
             runInAction(() => store.commonStore.setInitialLoading(false))
         } catch (error) {
             console.log(error);
-        } finally {
-            runInAction(() => store.commonStore.setInitialLoading(false))
         }
     }
 
     loadPaymentMethods = async () => {
-        store.commonStore.setInitialLoading(true)
         try {
             const paymentMethods = await agent.PaymentMethods.list();
             paymentMethods.forEach(
@@ -54,8 +50,6 @@ export default class ShippingPaymentStore {
             runInAction(() => store.commonStore.setInitialLoading(false))
         } catch (error) {
             console.log(error);
-        } finally {
-            runInAction(() => store.commonStore.setInitialLoading(false))
         }
     }
 

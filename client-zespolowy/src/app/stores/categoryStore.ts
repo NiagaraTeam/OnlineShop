@@ -28,7 +28,6 @@ export default class CategoryStore {
     }
 
     loadCategories = async () => {
-        store.commonStore.setInitialLoading(true);
         try {
             this.categoryRegistry.clear();
             const categoryTree = await agent.Categories.getCategoryTree();
@@ -37,8 +36,6 @@ export default class CategoryStore {
         } catch (error) {
             console.log(error);
             toast.error('Failed to load categories');
-        } finally {
-            runInAction(() => store.commonStore.setInitialLoading(false));
         }
     };
 

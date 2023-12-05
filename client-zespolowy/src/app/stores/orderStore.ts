@@ -50,7 +50,6 @@ export default class OrderStore {
   }
 
   loadOrders = async () => {
-    store.commonStore.setInitialLoading(true);
     try {
       const orders = await agent.Orders.list();
       console.log(orders);
@@ -63,8 +62,6 @@ export default class OrderStore {
     } catch (error) {
         console.error("Error loading orders:", error);
         toast.error("failed to load");
-    } finally {
-        runInAction(() => store.commonStore.setInitialLoading(false))
     }
   };
   changeOrderStatus = async (orderId: number, newStatus: OrderStatus) => {

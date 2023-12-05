@@ -28,7 +28,6 @@ export default class ExpertsStore {
     }
 
     loadExperts = async () => {
-        store.commonStore.setInitialLoading(true);
         try {
             this.productExpertsRegistry.clear();
             const experts = await agent.Products.getProductsExperts();
@@ -37,8 +36,6 @@ export default class ExpertsStore {
         } catch (error) {
             console.log(error);
             toast.error('Failed to load products experts');
-        } finally {
-            runInAction(() => store.commonStore.setInitialLoading(false))
         }
     }
     

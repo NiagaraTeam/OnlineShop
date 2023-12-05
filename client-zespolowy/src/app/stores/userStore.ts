@@ -53,6 +53,7 @@ export default class UserStore {
             });
             
         } catch (error) {
+            store.commonStore.setToken(null);
             console.log(error);
             throw error;
         }
@@ -66,9 +67,11 @@ export default class UserStore {
             store.commonStore.clearInfo();
             runInAction(() => {
                 this.user = user;
+                store.commonStore.loadAdminAppData();
             });
             router.navigate('/admin/products/manage');
         } catch (error) {
+            store.commonStore.setToken(null);
             console.log(error);
             throw error;
         }
@@ -109,6 +112,7 @@ export default class UserStore {
     }
 
     loadAccountDetails = async () => {
+        store.commonStore.setInitialLoading(true);
         try {
             if (!this.user || this.isAdmin)
                 return;
@@ -120,8 +124,11 @@ export default class UserStore {
                 store.productStore.favouriteProducts 
                     = store.productStore.initializeDates(favourites);
             });
+            
         } catch (error) {
             console.log(error);
+        } finally {
+            runInAction(() => store.commonStore.setInitialLoading(false));
         }
     }
 

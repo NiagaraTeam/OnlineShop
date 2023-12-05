@@ -16,9 +16,9 @@ export const AdminApp = observer(() => {
   useEffect(() => {
     commonStore.setApploaded(false);
     if (commonStore.token) {
-      commonStore.loadAdminAppData()
-        .then(() => userStore.getUser()
-          .finally(() => commonStore.setAdminApploaded()));
+      userStore.getUser()
+        .then(() => commonStore.loadAdminAppData())
+          .finally(() => commonStore.setAdminApploaded());
     } else {
       commonStore.loadAdminAppData()
         .finally(() => commonStore.setAdminApploaded());
