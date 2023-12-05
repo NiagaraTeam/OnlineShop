@@ -11,3 +11,7 @@ export interface Order {
     shippingMethod: ShippingMethod;
     items: OrderItem[];
 }
+
+export interface CreateOrder {
+    
+}
