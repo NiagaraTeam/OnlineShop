@@ -35,6 +35,7 @@ export default class CartStore {
 
     addItemToCart = (productId: number, quantity: number) => {
         this.cartItems.push({productId, quantity});
+        toast.success("Item added to cart");
     }
 
     deleteItemFromCart = (productId: number) => {

@@ -8,7 +8,7 @@ import { IconContext } from "react-icons";
 import { observer } from "mobx-react-lite";
 
 export const Header = observer(() => {
-    const {userStore} = useStore();
+    const {userStore, cartStore: {cartItems}} = useStore();
     const {isLoggedIn, isAdmin, user, logout} = userStore;
 
     return (
@@ -30,7 +30,7 @@ export const Header = observer(() => {
                 <Link to='/cart' className="btn px-2">
                         <IconContext.Provider value={{ size: "25px" }}>
                             <div>
-                                <FaShoppingCart/> Cart
+                                <FaShoppingCart/> Cart {cartItems.length > 0 && `(${cartItems.length})`}
                             </div>
                         </IconContext.Provider>
                         </Link>
