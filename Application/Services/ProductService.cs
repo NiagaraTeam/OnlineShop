@@ -46,7 +46,13 @@ namespace Application.Services
                 return Result<object>.Failure("New discount period overlaps with existing discounts.");
             }
 
-            var newDiscount = _mapper.Map<ProductDiscount>(discount);
+            var newDiscount = new ProductDiscount{
+                Value = discount.Value,
+                ProductId = productId,
+                Start = discount.Start,
+                End = discount.End
+            };
+
             product.ProductDiscounts.Add(newDiscount);
 
             _context.Update(product);
