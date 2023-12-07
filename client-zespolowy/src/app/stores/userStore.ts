@@ -4,6 +4,7 @@ import agent from "../api/agent";
 import { store } from "./store";
 import { router } from "../router/Routes";
 import { AccountDetails } from "../models/onlineshop/AccountDetails";
+import { Address } from "../models/onlineshop/Address";
 
 export default class UserStore {
     user: User | null = null;
@@ -119,6 +120,59 @@ export default class UserStore {
             
             const details = await agent.Account.details(this.user.id);
             const favourites = await agent.Account.getFavouriteProducts();
+
+            //sprawdzasz czy pola w details są null jak tak to zamieniasz na ''
+            if(details.id == null)
+            {
+                details.id = '';
+            }
+
+            if(details.userName == null)
+            {
+                details.userName = '';
+            }
+
+            if(details.email == null)
+            {
+                details.email = '';
+            }
+
+            if(details.discountValue == null)
+            {
+                details.discountValue = 0;
+            }
+
+            if(details.newsletter == null)
+            {
+                details.newsletter = false;
+            }
+
+            if(details.email == null)
+            {
+                details.email = '';
+            }
+
+            if(details.orders == null)
+            {
+                details.orders = [];
+            }
+
+            if(details.status == null)
+            {
+                details.status = 2;
+            }
+
+            if(details.address == null)
+            {
+                details.address = {
+                    addressLine1: '',
+                    addressLine2: '',
+                    city: '',
+                    zipCode: '',
+                    country: ''
+                };
+            }
+            
             runInAction(() => {
                 this.accountDetails = details;
                 store.productStore.favouriteProducts 
@@ -130,6 +184,17 @@ export default class UserStore {
         } finally {
             runInAction(() => store.commonStore.setInitialLoading(false));
         }
+    }
+
+    updateAddress = async (userId: string, address: Address) => {
+
+        try {
+            await agent.Account.updateAddress(userId, address);
+            runInAction(() => this.accountDetails!.address = address);
+        } catch (error) {
+            console.log(error);
+        }
+
     }
 
 }

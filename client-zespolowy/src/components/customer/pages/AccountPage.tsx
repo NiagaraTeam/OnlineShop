@@ -3,9 +3,19 @@ import { useStore } from "../../../app/stores/store";
 import { LoginPage } from "./LoginPage";
 import { OrderStatus } from "../../../app/models/enums/OrderStatus";
 import Loading from "../../common/Loading";
+import { Address } from "../../../app/models/onlineshop/Address";
+import { AddressForm } from "../forms/AddressForm";
 
 export const AccountPage = observer(() => {
-    const {userStore: {user, isLoggedIn, isAdmin, logout, accountDetails}} = useStore();
+    const {userStore: {user, isLoggedIn, isAdmin, logout, accountDetails, updateAddress}} = useStore();
+
+
+    const handleAddressSubmit = (address: Address) => {
+        if (user) {
+            updateAddress(user.id, address);
+        }
+    };
+
     
     if (!isLoggedIn || isAdmin)
         return <LoginPage/>
@@ -38,6 +48,12 @@ export const AccountPage = observer(() => {
                 <p>Country: {accountDetails?.address.country}</p>
 
             <button className="btn btn-primary mt-4" onClick={logout}>Logout</button>
+
+            <AddressForm 
+                onSubmit={handleAddressSubmit}
+                address={accountDetails.address}
+                buttonText="Update address"
+            />
         </>
     )
 })
