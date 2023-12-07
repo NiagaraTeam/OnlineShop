@@ -120,6 +120,7 @@ export const ProductsPage = observer(() => {
                                 <EditDeleteButtons
                                     loading={loadingDelete[product.id]}
                                     deleteAction={() => handleDelete(product.id)}
+                                    deleteToolTipText="Move to trash"
                                     editAction={() => displayEditForm(product.id)}
                                     size={25}
                                 />

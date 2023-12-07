@@ -7,10 +7,12 @@ interface Props {
 export const CartList = ({items}: Props) => {
 
     return (
-        <div>
+        <ul className="list-group">
         {items.map((item) => 
-            <CartListItem item={item}/>
+            <li className="list-group-item">
+                <CartListItem item={item}/>
+            </li>
         )}
-        </div>
+        </ul>
     );
 };

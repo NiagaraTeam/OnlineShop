@@ -2,11 +2,13 @@ import { makeAutoObservable, reaction } from "mobx";
 import { CartItem } from "../models/onlineshop/Cart";
 import { toast } from "react-toastify";
 import agent from "../api/agent";
+import { CreateOrder } from "../models/onlineshop/Order";
+import { store } from "./store";
 
 export default class CartStore {
     cartItems: CartItem[] = [];
-    shippingMethodId: number | null = null;
-    paymentMethodId: number | null = null;
+    shippingMethodId: number | undefined = undefined;
+    paymentMethodId: number | undefined = undefined;
     
     constructor() {
         makeAutoObservable(this);
@@ -28,31 +30,97 @@ export default class CartStore {
         );
     }
 
-    // raczej się nie przyda
     get productIds(): number[] {
         return this.cartItems.map(item => item.productId);
     }
 
     addItemToCart = (productId: number, quantity: number) => {
-        this.cartItems.push({productId, quantity});
-        toast.success("Item added to cart");
+        const existingItem = this.cartItems.find(item => item.productId === productId);
+    
+        if (existingItem) {
+            existingItem.quantity += quantity;
+            toast.success("Quantity increased in cart");
+            this.saveToLocalStorage();
+        } else {
+            this.cartItems.push({ productId, quantity });
+            toast.success("Item added to cart");
+        }
+
+        if (!this.shippingMethodId)
+            this.shippingMethodId = store.shippingPaymentStore.shippingMethods[0].id;
+
+        if (!this.paymentMethodId)
+            this.paymentMethodId = store.shippingPaymentStore.paymentMethods[0].id;
     }
 
     deleteItemFromCart = (productId: number) => {
         this.cartItems = this.cartItems.filter(item => item.productId !== productId);
     }
 
-    setShippingMethod = (methodId: number | null) => {
+    setShippingMethod = (methodId: number) => {
         this.shippingMethodId = methodId;
     }
 
-    setPaymentMethod = (methodId: number | null) => {
+    setPaymentMethod = (methodId: number) => {
         this.paymentMethodId = methodId;
+    }
+
+    changeQuantity = (productId: number, newQuantity: number) => {
+        const existingItem = this.cartItems.find(item => item.productId === productId);
+
+        if (existingItem) {
+            existingItem.quantity = Math.max(newQuantity, 0);
+            toast.success("Quantity updated");
+            this.saveToLocalStorage();
+        } else {
+            toast.error("Product not found in cart");
+        }
+    }
+
+    get totalValue() {
+        let value = 0;
+        this.cartItems.forEach((item) => {
+            const price = store.productStore.productPrice(item.productId);
+            if (price) 
+                value += price * item.quantity;
+        })
+
+        const shippingPrice = this.getShippingPrice();
+        if (shippingPrice)
+            value += shippingPrice;
+
+        return value;
+    }
+
+    get totalValueWithTax() {
+        let value = 0;
+        this.cartItems.forEach((item) => {
+            const price = store.productStore.productPriceWithTax(item.productId);
+            if (price) 
+                value += price * item.quantity;
+        })
+
+        const shippingPrice = this.getShippingPrice();
+        if (shippingPrice)
+            value += shippingPrice;
+
+        return value;
+    }
+
+    private getShippingPrice(): number {
+        if (this.shippingMethodId)
+        {
+            const shippingPrice = store.shippingPaymentStore.shippingMethodPrice(this.shippingMethodId);
+            if (shippingPrice)
+                return shippingPrice;
+        }
+
+        return 0;
     }
 
     createOrder = async () => {
         try {
-            const orderData = {
+            const orderData: CreateOrder = {
                 paymentMethodId: this.paymentMethodId,
                 shippingMethodId: this.shippingMethodId,
                 items: this.cartItems,
@@ -70,8 +138,8 @@ export default class CartStore {
 
     resetCart = () => {
         this.cartItems = [];
-        this.shippingMethodId = null;
-        this.paymentMethodId = null;
+        this.shippingMethodId = undefined;
+        this.paymentMethodId = undefined;
     }
 
     private loadFromLocalStorage() {
@@ -91,5 +159,9 @@ export default class CartStore {
         if (storedPaymentMethodId) {
             this.paymentMethodId = Number(storedPaymentMethodId);
         }
+    }
+
+    saveToLocalStorage = () => {
+        localStorage.setItem('cartItems', JSON.stringify(this.cartItems));
     }
 }

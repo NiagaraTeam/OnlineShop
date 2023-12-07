@@ -222,7 +222,10 @@ namespace Application.Services
            var favoriteProductsDto = customerDetails.FavouriteProducts
             .Select(fp => _mapper.Map<ProductDto>(fp.Product)).ToList();
 
-            return Result<IEnumerable<ProductDto>>.Success(favoriteProductsDto);
+            return Result<IEnumerable<ProductDto>>.Success(
+                favoriteProductsDto
+                .Where(x => x.Status == ProductStatus.Available || 
+                    x.Status == ProductStatus.Unavailable));
         }
     }
 }
