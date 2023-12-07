@@ -76,8 +76,38 @@ namespace Application.Services
             {
                 return null;
             }
+            if (orderToChangeStatus.Status == OrderStatus.Canceled || orderToChangeStatus.Status == OrderStatus.Completed)
+            {
+                return Result<object>.Failure("Failed to update order status, order is already completed or canceled");
+            }
+            foreach (OrderItem item in orderToChangeStatus.Items)
+            {
+                var productInfo = await _context.ProductInfos.FindAsync(item.ProductId);
+                if (productInfo == null)
+                {
+                    return null;
+                }
+                if (productInfo.CurrentStock < item.Quantity)
+                {
+                    return Result<object>.Failure("Cannot update order status due to lack of current stock");
+                }
+            }
+            if (status == OrderStatus.Completed)
+            {
+                foreach (OrderItem item in orderToChangeStatus.Items)
+                {
+                    var productInfo = await _context.ProductInfos.FindAsync(item.ProductId);
+                    if (productInfo == null)
+                    {
+                        return null;
+                    }
+                    productInfo.CurrentStock = productInfo.CurrentStock - item.Quantity;
+                    _context.ProductInfos.Update(productInfo);
 
+                }
+            }
             orderToChangeStatus.Status = status;
+
             _context.Orders.Update(orderToChangeStatus);
 
             if (await _context.SaveChangesAsync() > 0)
