@@ -19,18 +19,27 @@ export const AddressForm = ({ onSubmit, address, buttonText }: Props) => {
             }
         );
 
-        
+        // Sprawdź, czy wartość jest null i zastąp ją pustym stringiem
+        const initialAddress = address
+        ? {
+            addressLine1: address.addressLine1 || "",
+            addressLine2: address.addressLine2 || "",
+            city: address.city || "",
+            zipCode: address.zipCode || "",
+            country: address.country || "",
+        }
+        : {
+            addressLine1: "",
+            addressLine2: "",
+            city: "",
+            zipCode: "",
+            country: "",
+        };
 
         return (
             <>
                 <Formik
-                    initialValues = { address ? address : {
-                      addressLine1: "",
-                      addressLine2: "",
-                      city: "",
-                      zipCode: "",
-                      country: "",
-                    }}
+                    initialValues={initialAddress}
                     validationSchema={validationSchema}
                     onSubmit={(values, formikHelpers) => onSubmit(values, formikHelpers)}
                 >
