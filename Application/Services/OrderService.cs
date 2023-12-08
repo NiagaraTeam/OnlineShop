@@ -77,13 +77,13 @@ namespace Application.Services
             .FirstOrDefaultAsync(o => o.Id == orderId);
 
             if (orderToChangeStatus == null)
-            {
                 return null;
-            }
+
+
             if (orderToChangeStatus.Status == OrderStatus.Canceled || orderToChangeStatus.Status == OrderStatus.Completed)
-            {
                 return Result<object>.Failure("Failed to update order status, order is already completed or canceled");
-            }
+            
+
             foreach (OrderItem item in orderToChangeStatus.Items)
             {
                 var productInfo = await _context.ProductInfos.FirstOrDefaultAsync(pi => pi.Id == item.ProductId);
@@ -96,19 +96,18 @@ namespace Application.Services
                     return Result<object>.Failure("Cannot update order status due to lack of products");
                 }
             }
+
             if (status == OrderStatus.Completed)
             {
                 foreach (OrderItem item in orderToChangeStatus.Items)
                 {
                     var productInfo = await _context.ProductInfos.FindAsync(item.ProductId);
                     if (productInfo == null)
-                    {
-                        return null;
-                    }
-                    productInfo.CurrentStock = productInfo.CurrentStock - item.Quantity;
-                    productInfo.TotalSold = productInfo.TotalSold + item.Quantity;
+                        return Result<object>.Failure("Product not found");
+                    
+                    productInfo.CurrentStock -= item.Quantity;
+                    productInfo.TotalSold += item.Quantity;
                     _context.ProductInfos.Update(productInfo);
-
                 }
             }
             orderToChangeStatus.Status = status;
