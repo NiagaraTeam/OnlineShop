@@ -89,13 +89,10 @@ namespace Application.Services
             {
                 var productInfo = await _context.ProductInfos.FirstOrDefaultAsync(pi => pi.Id == item.ProductId);
                 if (productInfo == null)
-                {
-                    return null;
-                }
+                    return Result<object>.Failure("Product not found");
+
                 if (productInfo.CurrentStock < item.Quantity)
-                {
                     return Result<object>.Failure("Cannot update order status due to lack of products");
-                }
             }
 
             if (status == OrderStatus.Completed)
