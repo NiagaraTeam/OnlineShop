@@ -15,7 +15,7 @@ interface Props {
 const EditDeleteButtons = ({loading, editAction, deleteAction, 
     size = 20, showEdit = true, showDelete = true, deleteToolTipText = "Delete", editToolTipText = "Edit"}: Props) => {
   return (
-    <div>
+    <div className="d-flex me-2">
         {showEdit &&
         <MyTooltip placement="left" text={editToolTipText}>
             <FaEdit

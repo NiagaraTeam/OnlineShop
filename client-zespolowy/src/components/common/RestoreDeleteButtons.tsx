@@ -17,7 +17,7 @@ const RestoreDeleteButtons = ({ loadingDelete, loadingRestore, restoreAction, de
     size = 20, showRestore = true, showDelete = true}: Props) => {
 
   return (
-    <div>
+    <div className="d-flex me-2">
         {showRestore &&
         (loadingRestore ?
             <FaCircleNotch className="spinner mx-2" size={size}/>
