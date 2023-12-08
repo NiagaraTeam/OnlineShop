@@ -167,7 +167,7 @@ namespace Application.Services
                 .Include(p => p.Category)
                 .Include(p => p.ProductExpert)
                 .Include(p => p.ProductDiscounts)
-                .Where(p => p.Status != ProductStatus.Deleted && p.ProductDiscounts
+                .Where(p => p.Status == ProductStatus.Available && p.ProductDiscounts
                     .Any(d => d.Start <= currentDate && d.End >= currentDate))
                 .ToListAsync();
 
@@ -187,7 +187,7 @@ namespace Application.Services
                 .Include(p => p.Category)
                 .Include(p => p.ProductExpert)
                 .Include(p => p.ProductDiscounts)
-                .Where(p => p.Status != ProductStatus.Deleted)
+                .Where(p => p.Status == ProductStatus.Available)
                 .OrderByDescending(p => p.CreatedAt)
                 .Take(10)
                 .ToListAsync();
@@ -208,7 +208,7 @@ namespace Application.Services
         public async Task<Result<PagedList<ProductDto>>> GetProducts(PagingParams parameters)
         {
             var query = _context.Products
-                .Where(p => p.Status != ProductStatus.Deleted && p.Status != ProductStatus.Hidden)
+                .Where(p => p.Status == ProductStatus.Available)
                 .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
                 .AsQueryable();
 
@@ -231,7 +231,7 @@ namespace Application.Services
                 .Include(p => p.Category)
                 .Include(p => p.ProductExpert)
                 .Include(p => p.ProductDiscounts)
-                .Where(p => p.Status != ProductStatus.Deleted)
+                .Where(p => p.Status == ProductStatus.Available)
                 .OrderByDescending(p => p.ProductInfo.TotalSold)
                 .Take(10)
                 .ToListAsync();

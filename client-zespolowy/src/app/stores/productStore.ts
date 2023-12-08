@@ -158,6 +158,24 @@ export default class ProductStore {
         }
     }
 
+    getProductObject = async (id: number) => {
+        let product = this.getProduct(id);
+
+        if (product) {
+            return product;
+        } else {
+            try {
+                product = await agent.Products.getDetails(id);
+                this.setProduct(product);
+                runInAction(() => this.selectedProduct = product)
+                return product;
+            } catch (error) {
+                console.log(error);
+                toast.error('Failed to load product');
+            }
+        }
+    }
+
     loadDeletedProducts = async () => {
         try {
             this.deletedProductsRegistry.clear();
@@ -288,7 +306,7 @@ export default class ProductStore {
     addToFavourites = async (userId: string, productId: number) => {
         try {
             await agent.Account.addFavouriteProduct(userId, productId);
-            const product = await this.loadProduct(productId);
+            const product = await this.getProductObject(productId);
             runInAction(() => {
                 this.favouriteProducts.push(product as Product);
             });

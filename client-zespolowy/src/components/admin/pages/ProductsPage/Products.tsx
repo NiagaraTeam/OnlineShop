@@ -106,6 +106,7 @@ export const Products = observer(({showCreateButton, setShowCreateForm,
                 {search} {categoryFilter}
             </div>
             
+            {products.length > 0 &&
             <table className="table table-bordered">
                 <thead className="table-light">
                     <tr>
@@ -136,7 +137,7 @@ export const Products = observer(({showCreateButton, setShowCreateForm,
                         </tr>
                     ))}
                 </tbody>
-            </table>
+            </table>}
 
             {filteredProducts.length > 0 &&
             <div className="mt-3">

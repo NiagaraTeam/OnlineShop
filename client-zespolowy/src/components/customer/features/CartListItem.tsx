@@ -12,16 +12,16 @@ interface Props {
 
 export const CartListItem = observer(({ item }: Props) => {
     const {productStore, cartStore} = useStore();
-    const {loadProduct} = productStore;
+    const {getProductObject} = productStore;
     const {deleteItemFromCart, changeQuantity} = cartStore;
     const [product, setProduct] = useState<Product | undefined>(undefined);
     const [editedQuantity, setEditedQuantity] = useState<number>(item.quantity);
   
     useEffect(() => {
-        loadProduct(item.productId)
+        getProductObject(item.productId)
             .then((product) => setProduct(product));
   
-    }, [item, loadProduct]);
+    }, [item, getProductObject]);
 
     if (!product) return <></>
 

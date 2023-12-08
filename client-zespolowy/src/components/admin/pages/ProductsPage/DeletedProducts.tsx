@@ -51,12 +51,15 @@ export const DeletedProducts = observer(({setShowDeletedProducts}: Props) => {
                 Deleted products
                 </h2>
                 <div>
+                    {deletedProducts.length > 0 &&
                     <button className="btn btn-danger mx-2"
-                        onClick={() => deleteAll()}>Delete all</button>
+                        onClick={() => deleteAll()}>Delete all</button>}
                     <button className="btn btn-secondary"
                         onClick={() => setShowDeletedProducts(false)}>Cancel</button>
                 </div>
             </div>
+
+            {deletedProducts.length > 0 &&
             <table className="table table-bordered">
                 <thead className="table-light">
                     <tr>
@@ -84,7 +87,11 @@ export const DeletedProducts = observer(({setShowDeletedProducts}: Props) => {
                         </tr>
                     ))}
                 </tbody>
-            </table>
+            </table>}
+
+            {deletedProducts.length === 0 && 
+                <h5>Trash is empty</h5>
+            }
         </>
     );
 });

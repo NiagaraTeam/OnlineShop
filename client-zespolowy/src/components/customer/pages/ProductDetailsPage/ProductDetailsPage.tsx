@@ -1,11 +1,12 @@
 import { observer } from "mobx-react-lite"
-import { useStore } from "../../../app/stores/store";
+import { useStore } from "../../../../app/stores/store";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import Loading from "../../common/Loading";
-import { Product } from "../../../app/models/onlineshop/Product";
-import { ProductsSection } from "../features/ProductsSection";
-import { FavouriteCheckBox } from "../features/FavouriteCheckBox";
+import Loading from "../../../common/Loading";
+import { Product } from "../../../../app/models/onlineshop/Product";
+import { ProductsSection } from "../../features/ProductsSection";
+import { FavouriteCheckBox } from "../../features/FavouriteCheckBox";
+import { ProductExpert } from "./ProductExpert";
 
 export const ProductDetailsPage = observer(() => {
   const {productStore, commonStore, cartStore} = useStore();
@@ -103,12 +104,7 @@ export const ProductDetailsPage = observer(() => {
           </div>
 
           <div className="border-top mt-5 p-3">
-              <h5>Product Expert:</h5>
-              <div className="mx-3 mt-3">
-                <p>Name: {product.productExpert.firstName} {product.productExpert.lastName}</p>
-                <p>Email: {product.productExpert.email}</p>
-                <p>Phone: {product.productExpert.phoneNumber}</p>
-              </div>
+              <ProductExpert product={product}/>
           </div>
           
           <div className="border-top mt-3 p-3">

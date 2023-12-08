@@ -20,7 +20,7 @@ import { AboutPage } from "../../components/customer/pages/AboutPage";
 import { ContactPage } from "../../components/customer/pages/ContactPage";
 import { CartPage } from "../../components/customer/pages/CartPage/CartPage";
 import { OffertsPage } from "../../components/customer/pages/OffertsPage";
-import { ProductDetailsPage } from "../../components/customer/pages/ProductDetailsPage";
+import { ProductDetailsPage } from "../../components/customer/pages/ProductDetailsPage/ProductDetailsPage";
 import { RegisterPage } from "../../components/customer/pages/RegisterPage";
 import { RequireCustomerAuth } from "./RequireCustomerAuth";
 import { RequireAdminAuth } from "./RequireAdminAuth";
