@@ -39,7 +39,7 @@ export const CartListItem = observer(({ item }: Props) => {
         <div>
           <img 
             className="me-4" 
-            src={product.photo ? product.photo.urlSmall : '/assets/telefon.png'} 
+            src={product.photo ? product.photo.urlSmall : '/assets/product.jpg'} 
             alt={product.name} width={75}
           />
           <Link className="text-decoration-none text-black" to={`/product/${product.id}`}>

@@ -10,7 +10,7 @@ export const ProductListItem = ({ product }: Props) => {
     return (
       <div className="card w-10 m-2">
         <Link className="text-decoration-none text-black" to={`/product/${product.id}`}>
-        <img src={product.photo ? product.photo.urlSmall : '/assets/telefon.png'} className="card-img-top p-3" alt={product.name} />
+        <img src={product.photo ? product.photo.urlSmall : '/assets/product.jpg'} className="card-img-top p-3" alt={product.name} />
             <div className="card-body">
                 <h6 className="card-title">{product.name} </h6>
                 {Product.isOnSale(product) ? 

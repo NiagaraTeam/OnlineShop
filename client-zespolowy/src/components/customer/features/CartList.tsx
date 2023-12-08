@@ -9,7 +9,7 @@ export const CartList = ({items}: Props) => {
     return (
         <ul className="list-group">
         {items.map((item) => 
-            <li className="list-group-item">
+            <li key={item.productId} className="list-group-item">
                 <CartListItem item={item}/>
             </li>
         )}
