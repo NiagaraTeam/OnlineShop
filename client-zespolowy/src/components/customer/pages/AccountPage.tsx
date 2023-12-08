@@ -26,34 +26,44 @@ export const AccountPage = observer(() => {
     
     return (
         <>
-            <h3>Account details</h3>
-                <p>Id: {user.id}</p>
-                <p>Username: {user.userName}</p>
-                <p>Email: {user.email}</p>
-                <p>Discount: -{(accountDetails?.discountValue as number) * 100} %</p>
-                <p>Newsletter: {accountDetails?.newsletter ? "yes" : "no"}</p>
+        < div className="row">
+            <div className="col-md-6">
+                <h3>Account details</h3>
+                <dl className="row list-group flex-column">
+                    {/* <dt className="col-sm-3">Id:</dt>
+                    <dd className="col-sm-9">{user.id}</dd> */}
 
-            <h3>Orders</h3>
-                {accountDetails?.orders.map(order => {
-                    return (
-                        <p key={order.id}>Id: {order.id} status: {OrderStatus[order.status]}</p>
-                    )
-                })}
+                    <dt className="col-sm-3">Username:</dt>
+                    <dd className="col-sm-9 list-group-item">{user.userName}</dd>
 
-            <h3>Address</h3>
-                <p>AddressLine1: {accountDetails?.address.addressLine1}</p>
-                <p>AddressLine2: {accountDetails?.address.addressLine2}</p>
-                <p>City: {accountDetails?.address.city}</p>
-                <p>ZipCode: {accountDetails?.address.zipCode}</p>
-                <p>Country: {accountDetails?.address.country}</p>
+                    <dt className="col-sm-3">Email:</dt>
+                    <dd className="col-sm-9 list-group-item">{user.email}</dd>
 
-            <button className="btn btn-primary mt-4" onClick={logout}>Logout</button>
+                    <dt className="col-sm-3">Discount:</dt>
+                    <dd className="col-sm-9 list-group-item">-{(accountDetails?.discountValue as number) * 100} %</dd>
 
-            <AddressForm 
-                onSubmit={handleAddressSubmit}
-                address={accountDetails.address}
-                buttonText="Update address"
-            />
+                    <dt className="col-sm-3">Newsletter:</dt>
+                    <dd className="col-sm-9 list-group-item">{accountDetails?.newsletter ? "yes" : "no"}</dd>
+                </dl>   
+            </div>
+            <div className="col-md-6">
+                <h3>Adress information</h3>
+                <AddressForm 
+                    onSubmit={handleAddressSubmit}
+                    address={accountDetails.address}
+                    buttonText="Update address"
+                />
+            </div>         
+        </div>
+        <hr/>
+        <h3>Orders</h3>
+                    {accountDetails?.orders.map(order => {
+                        return (
+                            <p key={order.id}>Id: {order.id} status: {OrderStatus[order.status]}</p>
+                        )
+                    })} 
+        <button className="btn btn-primary mt-4" onClick={logout}>Logout</button>
+
         </>
     )
 })
