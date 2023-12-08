@@ -7,7 +7,7 @@ import { LoginPage } from "./LoginPage";
 export const CartPage = observer(() => {
   const {cartStore, shippingPaymentStore, userStore} = useStore();
   const {showLoginForm, setShowLoginForm, cartItems, resetCart, calculateTotalValues,
-    shippingMethodId, paymentMethodId, setPaymentMethod, setShippingMethod} = cartStore;
+    shippingMethodId, paymentMethodId, setPaymentMethod, setShippingMethod, subbmiting, createOrder} = cartStore;
   const {shippingMethodsAsOptions, paymentMethodsAsOptions} = shippingPaymentStore;
   const {accountDetails, hasDiscount, isLoggedIn, isAdmin, userDiscount} = userStore;
 
@@ -81,7 +81,7 @@ export const CartPage = observer(() => {
             </div>
             {(isLoggedIn && !isAdmin) 
             ? 
-              <button className="btn btn-primary">Place order</button>
+              <button className="btn btn-primary" disabled={subbmiting} onClick={() => createOrder()}>Place order</button>
             :
               <button className="btn btn-primary" onClick={() => setShowLoginForm(true)}>Login to place order</button>
             }

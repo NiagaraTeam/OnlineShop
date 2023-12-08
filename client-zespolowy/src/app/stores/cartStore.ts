@@ -1,4 +1,4 @@
-import { makeAutoObservable, reaction } from "mobx";
+import { makeAutoObservable, reaction, runInAction } from "mobx";
 import { CartItem } from "../models/onlineshop/Cart";
 import { toast } from "react-toastify";
 import agent from "../api/agent";
@@ -11,6 +11,7 @@ export default class CartStore {
     paymentMethodId: number | undefined = undefined;
 
     showLoginForm: boolean = false;
+    subbmiting: boolean = false;
     
     constructor() {
         makeAutoObservable(this);
@@ -137,6 +138,7 @@ export default class CartStore {
     }
 
     createOrder = async () => {
+        this.subbmiting = true;
         try {
             const orderData: CreateOrder = {
                 paymentMethodId: this.paymentMethodId,
@@ -145,12 +147,14 @@ export default class CartStore {
             };
 
             const orderId = await agent.Orders.create(orderData);
-
             toast.success(`Order created successfully. Order ID: ${orderId}`);
             this.resetCart();
+            runInAction(async() => store.userStore.accountDetails?.orders.push(await agent.Orders.getDetails(orderId)));
         } catch (error) {
             console.error('Error creating order:', error);
             toast.error("Failed to crate order.");
+        } finally {
+            runInAction(() => this.subbmiting = false);
         }
     }
 
