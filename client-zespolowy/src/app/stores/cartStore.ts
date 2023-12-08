@@ -9,6 +9,8 @@ export default class CartStore {
     cartItems: CartItem[] = [];
     shippingMethodId: number | undefined = undefined;
     paymentMethodId: number | undefined = undefined;
+
+    showLoginForm: boolean = false;
     
     constructor() {
         makeAutoObservable(this);
@@ -28,6 +30,10 @@ export default class CartStore {
                 localStorage.setItem('paymentMethodId', String(data.paymentMethodId));
             }
         );
+    }
+
+    setShowLoginForm = (state: boolean) => {
+        this.showLoginForm = state;
     }
 
     get productIds(): number[] {
@@ -106,6 +112,18 @@ export default class CartStore {
 
         return value;
     }
+
+    calculateTotalValues = (discount: number) => {
+        const discountedTotal = this.totalValue * (1 - discount);
+        const discountedTotalWithTax = this.totalValueWithTax * (1 - discount);
+    
+        return {
+          total: Math.floor(this.totalValue * 100) / 100,
+          discountedTotal: Math.floor(discountedTotal * 100) / 100,
+          totalWithTax: Math.floor(this.totalValueWithTax * 100) / 100,
+          discountedTotalWithTax: Math.floor(discountedTotalWithTax * 100) / 100
+        };
+      };
 
     private getShippingPrice(): number {
         if (this.shippingMethodId)

@@ -2,12 +2,19 @@ import { observer } from "mobx-react-lite"
 import { CartList } from "../features/CartList"
 import { useStore } from "../../../app/stores/store";
 import SelectOptions from "../../common/SelectOptions";
+import { LoginPage } from "./LoginPage";
 
 export const CartPage = observer(() => {
-  const {cartStore, shippingPaymentStore} = useStore();
-  const {cartItems, resetCart, totalValue, totalValueWithTax,
+  const {cartStore, shippingPaymentStore, userStore} = useStore();
+  const {showLoginForm, setShowLoginForm, cartItems, resetCart, calculateTotalValues,
     shippingMethodId, paymentMethodId, setPaymentMethod, setShippingMethod} = cartStore;
   const {shippingMethodsAsOptions, paymentMethodsAsOptions} = shippingPaymentStore;
+  const {accountDetails, hasDiscount, isLoggedIn, isAdmin, userDiscount} = userStore;
+
+  const { total, discountedTotal, 
+    totalWithTax, discountedTotalWithTax } = calculateTotalValues(userDiscount);
+
+  if (showLoginForm) return <LoginPage redirectTo="/cart"/>
 
   return (
     <div className="container">
@@ -42,13 +49,45 @@ export const CartPage = observer(() => {
               onChange={setPaymentMethod}/>
           </div>
           <div className="mt-5">
+            {hasDiscount && 
+            <div className="text-success my-4">
+                ({Math.floor(
+                  accountDetails!.discountValue * 100
+                )} % discount applied)
+            </div>}
             <div className="mb-4">
-              <h4>Total: {Math.floor(totalValue * 100) / 100} zł</h4>
-              <h5 className="text-muted">Total with Tax: {Math.floor(totalValueWithTax * 100) / 100} zł</h5>
+              <h4>
+                Total:{" "}
+                {hasDiscount ? (
+                  <>
+                    <del>{total} zł</del>{" "}
+                    {discountedTotal} zł
+                  </>
+                ) : (
+                  <>{total} zł</>
+                )}
+              </h4>
+              <h5 className="text-muted">
+                Total with Tax:{" "}
+                {hasDiscount ? (
+                  <>
+                    <del>{totalWithTax} zł</del>{" "}
+                    {discountedTotalWithTax} zł
+                  </>
+                ) : (
+                  <>{totalWithTax} zł</>
+                )}
+                </h5>
             </div>
-            <button className="btn btn-primary">Place order</button>
+            {(isLoggedIn && !isAdmin) 
+            ? 
+              <button className="btn btn-primary">Place order</button>
+            :
+              <button className="btn btn-primary" onClick={() => setShowLoginForm(true)}>Login to place order</button>
+            }
+            
           </div>
-        </div>}
+        </div>} 
 
       </div>
     </div>

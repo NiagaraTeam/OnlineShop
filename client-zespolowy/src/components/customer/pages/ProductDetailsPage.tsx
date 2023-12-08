@@ -34,7 +34,7 @@ export const ProductDetailsPage = observer(() => {
           <div className="row">
 
             <div className="col">
-                <img className="rounded  mx-5" 
+                <img className="rounded m-5" 
                   src={product.photo ? product.photo.urlLarge : '/assets/product.jpg'}
                   ></img>
             </div>
