@@ -141,8 +141,8 @@ export default class CartStore {
         this.subbmiting = true;
         try {
             const orderData: CreateOrder = {
-                paymentMethodId: this.paymentMethodId,
-                shippingMethodId: this.shippingMethodId,
+                paymentMethodId: this.paymentMethodId!,
+                shippingMethodId: this.shippingMethodId!,
                 items: this.cartItems,
             };
 

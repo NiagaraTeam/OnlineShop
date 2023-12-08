@@ -26,6 +26,11 @@ export const ProductsPage = observer(() => {
         });
     }
 
+    function toggleEditForm(state: boolean) {
+        setShowCreateForm(!state);
+        setShowEditForm(state);
+    }
+
     // create
     function handleCreate(product: ProductFormValues, formikHelpers: FormikHelpers<ProductFormValues>): void {
         createProduct(product).then(() => {
@@ -44,9 +49,9 @@ export const ProductsPage = observer(() => {
 
                     {!showDeletedProducts &&
                         <Products 
-                            showCreateForm={showCreateForm} 
+                            showCreateButton={!showCreateForm && !showEditForm} 
                             setShowCreateForm={setShowCreateForm} 
-                            setShowEditForm={setShowEditForm} 
+                            setShowEditForm={toggleEditForm} 
                             setShowDeletedProducts={setShowDeletedProducts}/>}
     
                     {showDeletedProducts &&
