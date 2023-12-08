@@ -4,6 +4,8 @@ import agent from "../api/agent";
 import { store } from "./store";
 import { router } from "../router/Routes";
 import { AccountDetails } from "../models/onlineshop/AccountDetails";
+import { Address } from "../models/onlineshop/Address";
+import { toast } from "react-toastify";
 
 export default class UserStore {
     user: User | null = null;
@@ -119,6 +121,8 @@ export default class UserStore {
             
             const details = await agent.Account.details(this.user.id);
             const favourites = await agent.Account.getFavouriteProducts();
+
+            
             runInAction(() => {
                 this.accountDetails = details;
                 store.productStore.favouriteProducts 
@@ -129,6 +133,17 @@ export default class UserStore {
             console.log(error);
         } finally {
             runInAction(() => store.commonStore.setInitialLoading(false));
+        }
+    }
+
+    updateAddress = async (userId: string, address: Address) => {
+        try {
+            await agent.Account.updateAddress(userId, address);
+            runInAction(() => this.accountDetails!.address = address);
+            toast.success('Address updated');
+        } catch (error) {
+            console.log(error);
+            toast.error('Failed to update address');
         }
     }
 
