@@ -4,13 +4,17 @@ import { OrderStatus } from "../../../app/models/enums/OrderStatus";
 import Loading from "../../common/Loading";
 import { Address } from "../../../app/models/onlineshop/Address";
 import { AddressForm } from "../forms/AddressForm";
+import { FormikHelpers } from "formik";
 
 export const AccountPage = observer(() => {
     const {userStore: {user, logout, accountDetails, updateAddress}} = useStore();
 
-    const handleAddressSubmit = (address: Address) => {
+    const handleAddressSubmit = (address: Address, formikHelpers: FormikHelpers<Address>) => {
         if (user) {
-            updateAddress(user.id, address);
+            updateAddress(user.id, address)
+                .then(() => {
+                    formikHelpers.resetForm({values: {...address}});
+                });
         }
     };
     

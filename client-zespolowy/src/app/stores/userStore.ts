@@ -5,6 +5,7 @@ import { store } from "./store";
 import { router } from "../router/Routes";
 import { AccountDetails } from "../models/onlineshop/AccountDetails";
 import { Address } from "../models/onlineshop/Address";
+import { toast } from "react-toastify";
 
 export default class UserStore {
     user: User | null = null;
@@ -136,14 +137,14 @@ export default class UserStore {
     }
 
     updateAddress = async (userId: string, address: Address) => {
-
         try {
             await agent.Account.updateAddress(userId, address);
             runInAction(() => this.accountDetails!.address = address);
+            toast.success('Address updated');
         } catch (error) {
             console.log(error);
+            toast.error('Failed to update address');
         }
-
     }
 
 }
