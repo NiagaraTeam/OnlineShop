@@ -44,6 +44,37 @@ export default class ProductStore {
         return Array.from(this.deletedProductsRegistry.values());
     }
 
+    productPrice = (productId: number): number | undefined => {
+        const product = this.getProduct(productId);
+
+        if (product) {
+            return Product.isOnSale(product)
+            ?
+                Product.getDiscountedPrice(product)
+            :
+                product.price;
+        } else {
+            return undefined;
+        }
+    }
+
+    productPriceWithTax = (productId: number): number | undefined => {
+        const product = this.getProduct(productId);
+
+        if (product) {
+            if (product.taxRate === -1 || product.taxRate === 0)
+                return this.productPrice(productId);
+            
+            return Product.isOnSale(product)
+            ?
+                Product.getDiscountedPrice(product) * (1 + (product.taxRate / 100))
+            :
+                product.price * (1 + (product.taxRate / 100));
+        } else {
+            return undefined;
+        }
+    }
+
     private setProduct = (product: Product) => {
         this.productsRegistry.set(product.id, this.initializeDate(product));
     }

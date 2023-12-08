@@ -64,6 +64,8 @@ export default class CommonStore {
         try {
             await store.productStore.loadHomePageProducts();
             await store.productStore.loadProducts();
+            await store.shippingPaymentStore.loadPaymentMethods();
+            await store.shippingPaymentStore.loadShippingMethods();
             await store.categoryStore.loadCategories();
         } catch (error) {
             console.log(error);

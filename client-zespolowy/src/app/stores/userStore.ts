@@ -27,6 +27,14 @@ export default class UserStore {
         return this.user?.isAdmin
     }
 
+    get hasDiscount() {
+        return this.accountDetails ? this.accountDetails?.discountValue !== 0 : false;
+    }
+
+    get userDiscount() {
+        return this.accountDetails ? this.accountDetails.discountValue : 0;
+    }
+
     register = async (creds: UserFormValues) => {
         try {
             const user = await agent.Account.register(creds);
@@ -51,7 +59,7 @@ export default class UserStore {
             runInAction(() => {
                 this.user = user;
                 this.loadAccountDetails();
-                router.navigate('/account');
+                store.cartStore.setShowLoginForm(false);
             });
             
         } catch (error) {
@@ -71,7 +79,6 @@ export default class UserStore {
                 this.user = user;
                 store.commonStore.loadAdminAppData();
             });
-            router.navigate('/admin/products/manage');
         } catch (error) {
             store.commonStore.setToken(null);
             console.log(error);

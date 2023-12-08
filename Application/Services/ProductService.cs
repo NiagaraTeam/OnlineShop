@@ -208,7 +208,7 @@ namespace Application.Services
         public async Task<Result<PagedList<ProductDto>>> GetProducts(PagingParams parameters)
         {
             var query = _context.Products
-                .Where(p => p.Status != ProductStatus.Deleted)
+                .Where(p => p.Status != ProductStatus.Deleted && p.Status != ProductStatus.Hidden)
                 .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
                 .AsQueryable();
 

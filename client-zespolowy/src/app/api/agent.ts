@@ -6,7 +6,7 @@ import { CategoryStatus } from "../models/enums/CategoryStatus";
 import { ProductStatus } from "../models/enums/ProductStatus";
 import { UserDiscount } from "../models/onlineshop/UserDiscount";
 import { Address } from "../models/onlineshop/Address";
-import { Order } from "../models/onlineshop/Order";
+import { CreateOrder, Order } from "../models/onlineshop/Order";
 import { OrderItem, OrderItemNewQuantity } from "../models/onlineshop/OrderItem";
 import { OrderStatus } from "../models/enums/OrderStatus";
 import { ShippingMethod } from "../models/onlineshop/ShippingMethod";
@@ -136,7 +136,7 @@ const Products = {
 
 const Orders = {
     list: () => requests.get<Order[]>("getOrders"),
-    create: (order: Order) => requests.post<number>("/orders", order),
+    create: (order: CreateOrder) => requests.post<number>("/orders", order),
     getDetails: (orderId: number) => requests.get<Order>(`/orders/${orderId}`),
     update: (orderId: number, order: Order) => requests.put<void>(`/orders/${orderId}`, order),
     addOrderItem: (orderId: number, item: OrderItem) => requests.post<void>(`/orders/${orderId}/items`, item),
