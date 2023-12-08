@@ -18,7 +18,7 @@ import { ProductCreatePage } from "../../components/admin/pages/ProductCreatePag
 import { ProductUpdatePage } from "../../components/admin/pages/ProductUpdatePage";
 import { AboutPage } from "../../components/customer/pages/AboutPage";
 import { ContactPage } from "../../components/customer/pages/ContactPage";
-import { CartPage } from "../../components/customer/pages/CartPage";
+import { CartPage } from "../../components/customer/pages/CartPage/CartPage";
 import { OffertsPage } from "../../components/customer/pages/OffertsPage";
 import { ProductDetailsPage } from "../../components/customer/pages/ProductDetailsPage";
 import { RegisterPage } from "../../components/customer/pages/RegisterPage";
