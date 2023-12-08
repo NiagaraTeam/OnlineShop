@@ -7,7 +7,7 @@ import { LoginPage as AdminLogin }  from "../../components/admin/pages/LoginPage
 import { AdminApp } from "../layout/AdminApp";
 import { ProductsPage as CustomerProductsPage } from "../../components/customer/pages/ProductsPage";
 import { AccountPage } from "../../components/customer/pages/AccountPage";
-import { ProductsPage as AdminProductsPage } from "../../components/admin/pages/ProductsPage";
+import { ProductsPage as AdminProductsPage } from "../../components/admin/pages/ProductsPage/ProductsPage";
 import { OrdersPage } from "../../components/admin/pages/OrdersPage";
 import { OrderDetailsPage } from "../../components/admin/pages/OrderDetailsPage";
 import { ShippingMethodsPage } from "../../components/admin/pages/ShippingMethodsPage";

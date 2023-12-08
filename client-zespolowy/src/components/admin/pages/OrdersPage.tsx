@@ -42,11 +42,14 @@ export const OrdersPage = observer(() => {
       </div>
       <div className="mb-3"></div>
       <div className="col-md-10 order-md-10">
+        
+        {filteredOrders.length !== 0 &&
         <table className="table">
           <thead>
             <tr>
               <th>Order ID</th>
               <th>Date</th>
+              <th>Customer</th>
               <th>Status</th>
               <th></th>
             </tr>
@@ -56,6 +59,7 @@ export const OrdersPage = observer(() => {
               <tr key={order.id}>
                 <td>{order.id}</td>
                 <td>{order.orderDate.toDateString()}</td>
+                <td>{order.userDetails.email}</td>
                 <td>{OrderStatus[order.status]}</td>
                 <td>
                   <Link to={`/admin/order/${order.id}`} className="btn btn-primary btn-sm">
@@ -89,7 +93,12 @@ export const OrdersPage = observer(() => {
               </tr>
             ))}
           </tbody>
-        </table>
+        </table>}
+        
+        {(filteredOrders.length === 0 && orders.length > 0) &&
+        <div className="mt-5">
+          <h5>There are no {OrderStatus[selectedStatus].toLowerCase()} orders</h5>
+        </div>}
       </div>
     </div>
   );

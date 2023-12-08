@@ -1,5 +1,6 @@
 using Application.Core;
 using Application.Dto.Order;
+using Application.Dto.User;
 using Application.Interfaces;
 using AutoMapper;
 using Domain;
@@ -88,6 +89,10 @@ namespace Application.Services
         public async Task<Result<IEnumerable<OrderDto>>> GetAllOrders()
         {
             var orders = await _context.Orders
+                .Include(o => o.CustomerDetails)
+                    .ThenInclude(cd => cd.User)
+                .Include(o => o.CustomerDetails)
+                    .ThenInclude(cd => cd.Address)
                 .Include(o => o.PaymentMethod)
                 .Include(o => o.ShippingMethod)
                 .Include(o => o.Items)
@@ -95,6 +100,23 @@ namespace Application.Services
                 .ToListAsync();
 
             var ordersDto = _mapper.Map<IEnumerable<OrderDto>>(orders);
+
+            int index = -1;
+            foreach (var orderdto in ordersDto)
+            {
+                index++;
+                orderdto.UserDetails = new UserDetailsDto{
+                    Id = orders[index].CustomerDetails.UserId,
+                    UserName = orders[index].CustomerDetails.User.UserName,
+                    Email = orders[index].CustomerDetails.User.Email,
+                    Status = orders[index].CustomerDetails.User.CustomerDetails.Status,
+                    DiscountValue = orders[index].CustomerDetails.DiscountValue,
+                    Newsletter = orders[index].CustomerDetails.Newsletter,
+                    Orders = null,
+                    Address = _mapper.Map<AddressDto>(orders[index].CustomerDetails.Address)
+                };
+            }
+            
 
             return Result<IEnumerable<OrderDto>>.Success(ordersDto);
         }
@@ -125,15 +147,31 @@ namespace Application.Services
         public async Task<Result<OrderDto>> Details(int orderId)
         {
             var order = await _context.Orders
-            .Include(o => o.PaymentMethod)
-            .Include(o => o.ShippingMethod)
-            .Include(o => o.Items)
-                .ThenInclude(o => o.Product)
-            .FirstOrDefaultAsync(o => o.Id == orderId);
+                .Include(o => o.CustomerDetails)
+                        .ThenInclude(cd => cd.User)
+                .Include(o => o.CustomerDetails)
+                    .ThenInclude(cd => cd.Address)
+                .Include(o => o.PaymentMethod)
+                .Include(o => o.ShippingMethod)
+                .Include(o => o.Items)
+                    .ThenInclude(o => o.Product)
+                .FirstOrDefaultAsync(o => o.Id == orderId);
+
             if (order == null)
                 return null;
 
             var orderdto = _mapper.Map<OrderDto>(order);
+
+            orderdto.UserDetails = new UserDetailsDto{
+                Id = order.CustomerDetails.UserId,
+                UserName = order.CustomerDetails.User.UserName,
+                Email = order.CustomerDetails.User.Email,
+                Status = order.CustomerDetails.User.CustomerDetails.Status,
+                DiscountValue = order.CustomerDetails.DiscountValue,
+                Newsletter = order.CustomerDetails.Newsletter,
+                Orders = null,
+                Address = _mapper.Map<AddressDto>(order.CustomerDetails.Address)
+            };
 
             return Result<OrderDto>.Success(orderdto);
         }
