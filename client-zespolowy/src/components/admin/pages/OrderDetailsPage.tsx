@@ -34,6 +34,39 @@ export const OrderDetailsPage = observer(() => {
   return (
     <div>
       <h2>Order Details</h2>
+      <br />
+      <table className="table">
+        <thead>
+        <tr>
+          <th>Customer's address details</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <th>Address Line:</th>
+          <td>{order.userDetails.address.addressLine1}</td>
+        </tr>
+        {order.userDetails.address.addressLine2 && (
+          <tr>
+            <th>Address Line 2:</th>
+            <td>{order.userDetails.address.addressLine2}</td>
+          </tr>
+        )}
+        <tr>
+          <th>City:</th>
+          <td>{order.userDetails.address.city}</td>
+        </tr>
+        <tr>
+          <th>Country:</th>
+          <td>{order.userDetails.address.country}</td>
+        </tr>
+        <tr>
+          <th>Zip Code:</th>
+          <td>{order.userDetails.address.zipCode}</td>
+        </tr>
+      </tbody>
+     </table>
+      <br />
       <table className="table">
         <thead>
           <tr>
@@ -54,7 +87,7 @@ export const OrderDetailsPage = observer(() => {
           ))}
         </tbody>
       </table>
-  
+      <br />
       <table className="table">
         <thead>
           <tr>
@@ -82,6 +115,7 @@ export const OrderDetailsPage = observer(() => {
           </tr>
         </tbody>
       </table>
+      <br />
       <h3>Total Order Amount: {calculateTotalOrderAmount(order)}</h3>
     </div>
   );
