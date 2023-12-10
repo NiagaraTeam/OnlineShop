@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 export default class UserStore {
     user: User | null = null;
     accountDetails: AccountDetails | null = null;
-    users: User[] = []
+    users: AccountDetails[] = []
 
     constructor() {
         makeAutoObservable(this);
@@ -121,11 +121,11 @@ export default class UserStore {
         }
     }
 
-    getUsers = async() => {
+    loadUsers = async() => {
         try {
-            const users = await agent.Account.GetUsersAsync()
+            const users = await agent.Account.getUsersAsync()
             runInAction( () => {
-                this.users = users.slice()
+                this.users = users;
             })
             console.log("Tutaj", users);
         }
@@ -133,6 +133,7 @@ export default class UserStore {
             console.log(error)
         }
     }
+
     loadAccountDetails = async () => {
         store.commonStore.setInitialLoading(true);
         try {

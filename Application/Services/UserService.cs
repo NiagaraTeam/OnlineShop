@@ -227,5 +227,10 @@ namespace Application.Services
                 .Where(x => x.Status == ProductStatus.Available || 
                     x.Status == ProductStatus.Unavailable));
         }
+
+        public Task<Result<IEnumerable<UserDetailsDto>>> GetAllUsers()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
