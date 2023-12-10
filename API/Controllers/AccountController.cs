@@ -190,6 +190,19 @@ namespace API.Controllers
             return HandleResult(await _userService.SetUserDiscount(userId, discountValue));
         }
 
+        [HttpGet("customers")] //api/customers
+        [Authorize(Roles = StaticUserRoles.ADMIN)]
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetUsersAsync() 
+        {
+            var users = await _userManager.Users.ToArrayAsync();
+            var userDtos = new List<UserDto>();
+            foreach (var user in users) {
+                bool isAdmin = await HasRole(user, StaticUserRoles.ADMIN);
+                var userDto = await CreateUserObject(user, isAdmin);
+                userDtos.Add(userDto);
+            }
+            return Ok(userDtos.ToArray()); 
+        }
         private async Task<UserDto> CreateUserObject(AppUser user, bool isAdmin)
         {
             return new UserDto

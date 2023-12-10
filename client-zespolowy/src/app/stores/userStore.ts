@@ -8,6 +8,7 @@ import { AccountDetails } from "../models/onlineshop/AccountDetails";
 export default class UserStore {
     user: User | null = null;
     accountDetails: AccountDetails | null = null;
+    users: User[] = []
 
     constructor() {
         makeAutoObservable(this);
@@ -111,6 +112,18 @@ export default class UserStore {
         }
     }
 
+    getUsers = async() => {
+        try {
+            const users = await agent.Account.GetUsersAsync()
+            runInAction( () => {
+                this.users = users.slice()
+            })
+            console.log("Tutaj", users);
+        }
+        catch(error) {
+            console.log(error)
+        }
+    }
     loadAccountDetails = async () => {
         store.commonStore.setInitialLoading(true);
         try {

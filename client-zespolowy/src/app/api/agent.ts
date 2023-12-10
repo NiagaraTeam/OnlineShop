@@ -106,7 +106,8 @@ const Account = {
     removeFavouriteProduct: (userId: string, productId: number) => requests.del<void>(`/accounts/${userId}/favourites/${productId}`),
     //resetPasswordRequest: (userId: string) => requests.post(`/accounts/${userId}/reset-password`, {}),
     getUserDiscount: (userId: string) => requests.get<number>(`/accounts/${userId}/discount`),
-    setUserDiscount: (userId: string, userDiscount: UserDiscount) => requests.put(`/accounts/${userId}/discount`, userDiscount), 
+    setUserDiscount: (userId: string, userDiscount: UserDiscount) => requests.put(`/accounts/${userId}/discount`, userDiscount),
+    GetUsersAsync: () => requests.get<User[]>('/customers')
 }
 
 const Categories = {

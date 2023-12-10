@@ -1,6 +1,7 @@
 using Application.Core;
 using Application.Dto.Product;
 using Application.Dto.User;
+using Microsoft.AspNetCore.Identity;
 
 namespace Application.Interfaces
 {
