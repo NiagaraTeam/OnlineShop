@@ -44,6 +44,37 @@ export default class ProductStore {
         return Array.from(this.deletedProductsRegistry.values());
     }
 
+    productPrice = (productId: number): number | undefined => {
+        const product = this.getProduct(productId);
+
+        if (product) {
+            return Product.isOnSale(product)
+            ?
+                Product.getDiscountedPrice(product)
+            :
+                product.price;
+        } else {
+            return undefined;
+        }
+    }
+
+    productPriceWithTax = (productId: number): number | undefined => {
+        const product = this.getProduct(productId);
+
+        if (product) {
+            if (product.taxRate === -1 || product.taxRate === 0)
+                return this.productPrice(productId);
+            
+            return Product.isOnSale(product)
+            ?
+                Product.getDiscountedPrice(product) * (1 + (product.taxRate / 100))
+            :
+                product.price * (1 + (product.taxRate / 100));
+        } else {
+            return undefined;
+        }
+    }
+
     private setProduct = (product: Product) => {
         this.productsRegistry.set(product.id, this.initializeDate(product));
     }
@@ -123,6 +154,24 @@ export default class ProductStore {
                 toast.error('Failed to load product');
             } finally {
                 runInAction(() => store.commonStore.setInitialLoading(false))
+            }
+        }
+    }
+
+    getProductObject = async (id: number) => {
+        let product = this.getProduct(id);
+
+        if (product) {
+            return product;
+        } else {
+            try {
+                product = await agent.Products.getDetails(id);
+                this.setProduct(product);
+                runInAction(() => this.selectedProduct = product)
+                return product;
+            } catch (error) {
+                console.log(error);
+                toast.error('Failed to load product');
             }
         }
     }
@@ -257,7 +306,7 @@ export default class ProductStore {
     addToFavourites = async (userId: string, productId: number) => {
         try {
             await agent.Account.addFavouriteProduct(userId, productId);
-            const product = await this.loadProduct(productId);
+            const product = await this.getProductObject(productId);
             runInAction(() => {
                 this.favouriteProducts.push(product as Product);
             });

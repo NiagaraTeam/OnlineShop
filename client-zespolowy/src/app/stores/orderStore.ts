@@ -52,7 +52,6 @@ export default class OrderStore {
   loadOrders = async () => {
     try {
       const orders = await agent.Orders.list();
-      console.log(orders);
       runInAction(()=>{
         orders.forEach(
           order => this.setOrder(order)

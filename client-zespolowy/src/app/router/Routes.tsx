@@ -7,7 +7,7 @@ import { LoginPage as AdminLogin }  from "../../components/admin/pages/LoginPage
 import { AdminApp } from "../layout/AdminApp";
 import { ProductsPage as CustomerProductsPage } from "../../components/customer/pages/ProductsPage";
 import { AccountPage } from "../../components/customer/pages/AccountPage";
-import { ProductsPage as AdminProductsPage } from "../../components/admin/pages/ProductsPage";
+import { ProductsPage as AdminProductsPage } from "../../components/admin/pages/ProductsPage/ProductsPage";
 import { OrdersPage } from "../../components/admin/pages/OrdersPage";
 import { OrderDetailsPage } from "../../components/admin/pages/OrderDetailsPage";
 import { ShippingMethodsPage } from "../../components/admin/pages/ShippingMethodsPage";
@@ -18,9 +18,9 @@ import { ProductCreatePage } from "../../components/admin/pages/ProductCreatePag
 import { ProductUpdatePage } from "../../components/admin/pages/ProductUpdatePage";
 import { AboutPage } from "../../components/customer/pages/AboutPage";
 import { ContactPage } from "../../components/customer/pages/ContactPage";
-import { CartPage } from "../../components/customer/pages/CartPage";
+import { CartPage } from "../../components/customer/pages/CartPage/CartPage";
 import { OffertsPage } from "../../components/customer/pages/OffertsPage";
-import { ProductDetailsPage } from "../../components/customer/pages/ProductDetailsPage";
+import { ProductDetailsPage } from "../../components/customer/pages/ProductDetailsPage/ProductDetailsPage";
 import { RegisterPage } from "../../components/customer/pages/RegisterPage";
 import { RequireCustomerAuth } from "./RequireCustomerAuth";
 import { RequireAdminAuth } from "./RequireAdminAuth";

@@ -1,14 +1,22 @@
 import { observer } from "mobx-react-lite";
 import { useStore } from "../../../app/stores/store";
-import { LoginPage } from "./LoginPage";
 import { OrderStatus } from "../../../app/models/enums/OrderStatus";
 import Loading from "../../common/Loading";
+import { Address } from "../../../app/models/onlineshop/Address";
+import { AddressForm } from "../forms/AddressForm";
+import { FormikHelpers } from "formik";
 
 export const AccountPage = observer(() => {
-    const {userStore: {user, isLoggedIn, isAdmin, logout, accountDetails}} = useStore();
-    
-    if (!isLoggedIn || isAdmin)
-        return <LoginPage/>
+    const {userStore: {user, logout, accountDetails, updateAddress}} = useStore();
+
+    const handleAddressSubmit = (address: Address, formikHelpers: FormikHelpers<Address>) => {
+        if (user) {
+            updateAddress(user.id, address)
+                .then(() => {
+                    formikHelpers.resetForm({values: {...address}});
+                });
+        }
+    };
     
     if (!user) return <></>
 
@@ -16,28 +24,41 @@ export const AccountPage = observer(() => {
     
     return (
         <>
-            <h3>Account details</h3>
-                <p>Id: {user.id}</p>
-                <p>Username: {user.userName}</p>
-                <p>Email: {user.email}</p>
-                <p>Discount: -{(accountDetails?.discountValue as number) * 100} %</p>
-                <p>Newsletter: {accountDetails?.newsletter ? "yes" : "no"}</p>
+        <div className="row border-bottom pb-5 mb-5">
+            <div className="col-md-6 mt-4">
+                <h3>Account details</h3>
+                <dl className="row list-group px-1">
+                    <dt className="col-sm-3">Username:</dt>
+                    <dd className="col-sm-9 list-group-item mx-2">{user.userName}</dd>
 
-            <h3>Orders</h3>
-                {accountDetails?.orders.map(order => {
-                    return (
-                        <p key={order.id}>Id: {order.id} status: {OrderStatus[order.status]}</p>
-                    )
-                })}
+                    <dt className="col-sm-3">Email:</dt>
+                    <dd className="col-sm-9 list-group-item mx-2">{user.email}</dd>
 
-            <h3>Address</h3>
-                <p>AddressLine1: {accountDetails?.address.addressLine1}</p>
-                <p>AddressLine2: {accountDetails?.address.addressLine2}</p>
-                <p>City: {accountDetails?.address.city}</p>
-                <p>ZipCode: {accountDetails?.address.zipCode}</p>
-                <p>Country: {accountDetails?.address.country}</p>
+                    <dt className="col-sm-3">Discount:</dt>
+                    <dd className="col-sm-9 list-group-item mx-2">-{(accountDetails?.discountValue as number) * 100} %</dd>
 
-            <button className="btn btn-primary mt-4" onClick={logout}>Logout</button>
+                    <dt className="col-sm-3">Newsletter:</dt>
+                    <dd className="col-sm-9 list-group-item mx-2">{accountDetails?.newsletter ? "yes" : "no"}</dd>
+                </dl>
+            </div>
+            <div className="col-md-6 mt-4">
+                <h3>Address information</h3>
+                <AddressForm 
+                    onSubmit={handleAddressSubmit}
+                    address={accountDetails.address}
+                    buttonText="Update address"
+                />
+            </div>         
+        </div>
+
+        <h3>Orders</h3>
+                    {accountDetails?.orders.map(order => {
+                        return (
+                            <p key={order.id}>Id: {order.id} status: {OrderStatus[order.status]}</p>
+                        )
+                    })} 
+        <button className="btn btn-primary mt-4" onClick={logout}>Logout</button>
+
         </>
     )
 })

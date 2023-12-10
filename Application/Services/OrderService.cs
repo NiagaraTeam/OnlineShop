@@ -1,5 +1,7 @@
+using System.Runtime.InteropServices;
 using Application.Core;
 using Application.Dto.Order;
+using Application.Dto.User;
 using Application.Interfaces;
 using AutoMapper;
 using Domain;
@@ -71,13 +73,43 @@ namespace Application.Services
 
         public async Task<Result<object>> ChangeOrderStatus(int orderId, OrderStatus status)
         {
-            var orderToChangeStatus = await _context.Orders.FindAsync(orderId);
+            var orderToChangeStatus = await _context.Orders
+            .Include(i => i.Items)
+            .FirstOrDefaultAsync(o => o.Id == orderId);
+
             if (orderToChangeStatus == null)
-            {
                 return null;
+
+
+            if (orderToChangeStatus.Status == OrderStatus.Canceled || orderToChangeStatus.Status == OrderStatus.Completed)
+                return Result<object>.Failure("Failed to update order status, order is already completed or canceled");
+            
+
+            foreach (OrderItem item in orderToChangeStatus.Items)
+            {
+                var productInfo = await _context.ProductInfos.FirstOrDefaultAsync(pi => pi.Id == item.ProductId);
+                if (productInfo == null)
+                    return Result<object>.Failure("Product not found");
+
+                if (productInfo.CurrentStock < item.Quantity)
+                    return Result<object>.Failure("Cannot update order status due to lack of products");
             }
 
+            if (status == OrderStatus.Completed)
+            {
+                foreach (OrderItem item in orderToChangeStatus.Items)
+                {
+                    var productInfo = await _context.ProductInfos.FindAsync(item.ProductId);
+                    if (productInfo == null)
+                        return Result<object>.Failure("Product not found");
+                    
+                    productInfo.CurrentStock -= item.Quantity;
+                    productInfo.TotalSold += item.Quantity;
+                    _context.ProductInfos.Update(productInfo);
+                }
+            }
             orderToChangeStatus.Status = status;
+
             _context.Orders.Update(orderToChangeStatus);
 
             if (await _context.SaveChangesAsync() > 0)
@@ -88,6 +120,10 @@ namespace Application.Services
         public async Task<Result<IEnumerable<OrderDto>>> GetAllOrders()
         {
             var orders = await _context.Orders
+                .Include(o => o.CustomerDetails)
+                    .ThenInclude(cd => cd.User)
+                .Include(o => o.CustomerDetails)
+                    .ThenInclude(cd => cd.Address)
                 .Include(o => o.PaymentMethod)
                 .Include(o => o.ShippingMethod)
                 .Include(o => o.Items)
@@ -95,6 +131,23 @@ namespace Application.Services
                 .ToListAsync();
 
             var ordersDto = _mapper.Map<IEnumerable<OrderDto>>(orders);
+
+            int index = -1;
+            foreach (var orderdto in ordersDto)
+            {
+                index++;
+                orderdto.UserDetails = new UserDetailsDto{
+                    Id = orders[index].CustomerDetails.UserId,
+                    UserName = orders[index].CustomerDetails.User.UserName,
+                    Email = orders[index].CustomerDetails.User.Email,
+                    Status = orders[index].CustomerDetails.User.CustomerDetails.Status,
+                    DiscountValue = orders[index].CustomerDetails.DiscountValue,
+                    Newsletter = orders[index].CustomerDetails.Newsletter,
+                    Orders = null,
+                    Address = _mapper.Map<AddressDto>(orders[index].CustomerDetails.Address)
+                };
+            }
+            
 
             return Result<IEnumerable<OrderDto>>.Success(ordersDto);
         }
@@ -125,15 +178,31 @@ namespace Application.Services
         public async Task<Result<OrderDto>> Details(int orderId)
         {
             var order = await _context.Orders
-            .Include(o => o.PaymentMethod)
-            .Include(o => o.ShippingMethod)
-            .Include(o => o.Items)
-                .ThenInclude(o => o.Product)
-            .FirstOrDefaultAsync(o => o.Id == orderId);
+                .Include(o => o.CustomerDetails)
+                        .ThenInclude(cd => cd.User)
+                .Include(o => o.CustomerDetails)
+                    .ThenInclude(cd => cd.Address)
+                .Include(o => o.PaymentMethod)
+                .Include(o => o.ShippingMethod)
+                .Include(o => o.Items)
+                    .ThenInclude(o => o.Product)
+                .FirstOrDefaultAsync(o => o.Id == orderId);
+
             if (order == null)
                 return null;
 
             var orderdto = _mapper.Map<OrderDto>(order);
+
+            orderdto.UserDetails = new UserDetailsDto{
+                Id = order.CustomerDetails.UserId,
+                UserName = order.CustomerDetails.User.UserName,
+                Email = order.CustomerDetails.User.Email,
+                Status = order.CustomerDetails.User.CustomerDetails.Status,
+                DiscountValue = order.CustomerDetails.DiscountValue,
+                Newsletter = order.CustomerDetails.Newsletter,
+                Orders = null,
+                Address = _mapper.Map<AddressDto>(order.CustomerDetails.Address)
+            };
 
             return Result<OrderDto>.Success(orderdto);
         }

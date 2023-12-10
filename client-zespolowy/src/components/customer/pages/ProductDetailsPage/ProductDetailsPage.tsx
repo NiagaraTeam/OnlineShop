@@ -1,17 +1,26 @@
 import { observer } from "mobx-react-lite"
-import { useStore } from "../../../app/stores/store";
-import { useEffect } from "react";
+import { useStore } from "../../../../app/stores/store";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import Loading from "../../common/Loading";
-import { Product } from "../../../app/models/onlineshop/Product";
-import { ProductsSection } from "../features/ProductsSection";
-import { FavouriteCheckBox } from "../features/FavouriteCheckBox";
+import Loading from "../../../common/Loading";
+import { Product } from "../../../../app/models/onlineshop/Product";
+import { ProductsSection } from "../../features/ProductsSection";
+import { FavouriteCheckBox } from "../../features/FavouriteCheckBox";
+import { ProductExpert } from "./ProductExpert";
 
 export const ProductDetailsPage = observer(() => {
-  const {productStore, commonStore} = useStore();
+  const {productStore, commonStore, cartStore} = useStore();
   const {initialLoading} = commonStore;
+  const {addItemToCart} = cartStore;
   const {loadProduct, selectedProduct: product, discoutedProducts} = productStore;
   const {id} = useParams();
+
+  const [quantity, setQuantity] = useState<number | undefined>(undefined);
+
+  const handleAddToCart = () => {
+    addItemToCart(product!.id, quantity!);
+    setQuantity(undefined);
+  }
 
   useEffect(() => {
       if (id)
@@ -26,8 +35,8 @@ export const ProductDetailsPage = observer(() => {
           <div className="row">
 
             <div className="col">
-                <img className="rounded  mx-5" 
-                  src={product.photo ? product.photo.urlLarge : '/assets/telefon.png'}
+                <img className="rounded m-5" 
+                  src={product.photo ? product.photo.urlLarge : '/assets/product.jpg'}
                   ></img>
             </div>
 
@@ -71,8 +80,16 @@ export const ProductDetailsPage = observer(() => {
                 <div className="row align-items-center">
                     <div className="col-5">
                         <div className="input-group mb-3">
-                            <input type="number" min={1} max={product.productInfo.currentStock} className="form-control" aria-describedby="basic-addon2" placeholder="Enter quantity"/>
-                            <button className="btn btn-primary" type="button">Add to cart</button>
+                            <input type="number" min={1} max={product.productInfo.currentStock} 
+                                className="form-control" aria-describedby="basic-addon2" placeholder="Enter quantity"
+                                value={quantity !== undefined ? quantity : ''}
+                                onChange={(e) => {
+                                    const inputQuantity = Number(e.target.value);
+                                    setQuantity(isNaN(inputQuantity) || inputQuantity <= 0 ? undefined : inputQuantity);
+                                  }}
+                            />
+                            <button className="btn btn-primary" type="button" disabled={!quantity}
+                                onClick={() => handleAddToCart()}>Add to cart</button>
                         </div>                        
                     </div>
                 </div>
@@ -87,12 +104,7 @@ export const ProductDetailsPage = observer(() => {
           </div>
 
           <div className="border-top mt-5 p-3">
-              <h5>Product Expert:</h5>
-              <div className="mx-3 mt-3">
-                <p>Name: {product.productExpert.firstName} {product.productExpert.lastName}</p>
-                <p>Email: {product.productExpert.email}</p>
-                <p>Phone: {product.productExpert.phoneNumber}</p>
-              </div>
+              <ProductExpert product={product}/>
           </div>
           
           <div className="border-top mt-3 p-3">
