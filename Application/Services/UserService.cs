@@ -194,6 +194,23 @@ namespace Application.Services
             return Result<object>.Failure("Failed updating the address");
         }
 
+        public async Task<Result<object>> UpdateUserDiscount(string userId, DiscountValueDto discount) {
+            var user = await _context.Users
+                .Include(u => u.CustomerDetails)
+                .ThenInclude(cd => cd.DiscountValue)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+            if (user == null)
+                return null;
+            _mapper.Map(discount, user.CustomerDetails.DiscountValue);
+
+            _context.Users.Update(user);
+
+            if (await _context.SaveChangesAsync() > 0)
+                return Result<object>.Success(null);
+
+            return Result<object>.Failure("Failed updating the address");
+        }
+
         public async Task<Result<IEnumerable<ProductDto>>> GetFavouriteProducts()
         {
            var userEmail = _userAccessor.GetUserEmail();
@@ -228,9 +245,44 @@ namespace Application.Services
                     x.Status == ProductStatus.Unavailable));
         }
 
-        public Task<Result<IEnumerable<UserDetailsDto>>> GetAllUsers()
+        public async Task<Result<IEnumerable<UserDetailsDto>>> GetAllUsers()
         {
-            throw new NotImplementedException();
+            var users = await _context.Users
+                .Include(u => u.CustomerDetails)
+                .ThenInclude(cd => cd.Address)
+                .Include(u => u.CustomerDetails.Orders)
+                .ToListAsync();
+            if (users == null) {
+                return null;
+            }
+
+            var allUsers = new List<UserDetailsDto>();
+            foreach (var user in users) 
+            {
+                if (user.CustomerDetails == null) 
+                {
+                    continue;
+                }
+                var userDetailsDto = new UserDetailsDto 
+                {
+                    Id = user.CustomerDetails.UserId,
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    Status = user.CustomerDetails.Status,
+                    DiscountValue = user.CustomerDetails.DiscountValue,
+                    Newsletter = user.CustomerDetails.Newsletter,
+                    Orders = user.CustomerDetails.Orders
+                        ?.Select(o => _mapper.Map<OrderDto>(o))
+                        .ToList(),
+                    Address = _mapper.Map<AddressDto>(user.CustomerDetails.Address)
+                };
+
+                allUsers.Add(userDetailsDto);
+            }
+            if(allUsers == null) {
+                return Result<IEnumerable<UserDetailsDto>>.Failure("Error in loading clients");
+            }
+            return Result<IEnumerable<UserDetailsDto>>.Success(allUsers);
         }
     }
 }

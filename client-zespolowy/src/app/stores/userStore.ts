@@ -6,11 +6,15 @@ import { router } from "../router/Routes";
 import { AccountDetails } from "../models/onlineshop/AccountDetails";
 import { Address } from "../models/onlineshop/Address";
 import { toast } from "react-toastify";
+import { UserDiscount } from "../models/onlineshop/UserDiscount";
+import { update } from "react-spring";
 
 export default class UserStore {
     user: User | null = null;
     accountDetails: AccountDetails | null = null;
     users: AccountDetails[] = []
+    selectedUser: AccountDetails | undefined = undefined;
+    updatedDiscount: UserDiscount | undefined = undefined;
 
     constructor() {
         makeAutoObservable(this);
@@ -122,18 +126,57 @@ export default class UserStore {
     }
 
     loadUsers = async() => {
+        store.commonStore.setInitialLoading(true);
         try {
             const users = await agent.Account.getUsersAsync()
             runInAction( () => {
                 this.users = users;
             })
-            console.log("Tutaj", users);
         }
         catch(error) {
-            console.log(error)
+            console.log(error);
+            toast.error('Failed to update users');
+        } finally {
+            runInAction(() => store.commonStore.setInitialLoading(false))
         }
     }
+    /*
+    deleteUser = async() => {
 
+    }
+    */
+    getSelectedUser = async (userId: string) => {
+        store.commonStore.setInitialLoading(true);
+        try {
+            const users = await agent.Account.getUsersAsync()
+            const selectedUser = users.find(user => user.id === userId)
+                
+            runInAction(() => {
+                this.selectedUser = selectedUser
+            })
+        } catch(error) {
+            console.log(error);
+            toast.error('Failed to update users');
+        } finally {
+            runInAction(() => store.commonStore.setInitialLoading(false))
+        }
+    }
+    
+    updateDiscount = async (userId : string, discountToUpdate: UserDiscount) => {
+        store.commonStore.setInitialLoading(true);
+        try {
+            await agent.Account.updateDiscountUser(userId, discountToUpdate);
+            runInAction(() => {
+                this.updatedDiscount = discountToUpdate
+            })
+        } catch(error) {
+            console.log(error);
+            toast.error('Failed to update users');
+        } finally {
+            runInAction(() => store.commonStore.setInitialLoading(false))
+        }
+    }
+    
     loadAccountDetails = async () => {
         store.commonStore.setInitialLoading(true);
         try {
@@ -142,8 +185,8 @@ export default class UserStore {
             
             const details = await agent.Account.details(this.user.id);
             const favourites = await agent.Account.getFavouriteProducts();
-
             
+            console.log("faworyt"+ favourites[0])
             runInAction(() => {
                 this.accountDetails = details;
                 store.productStore.favouriteProducts 

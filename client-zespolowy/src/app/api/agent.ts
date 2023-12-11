@@ -107,7 +107,8 @@ const Account = {
     //resetPasswordRequest: (userId: string) => requests.post(`/accounts/${userId}/reset-password`, {}),
     getUserDiscount: (userId: string) => requests.get<number>(`/accounts/${userId}/discount`),
     setUserDiscount: (userId: string, userDiscount: UserDiscount) => requests.put(`/accounts/${userId}/discount`, userDiscount),
-    getUsersAsync: () => requests.get<AccountDetails[]>('/customers')
+    getUsersAsync: () => requests.get<AccountDetails[]>('/customers/'),
+    updateDiscountUser: (userId: string,  discountUser: UserDiscount) => requests.patch<void>(`/customers/${userId}/`, discountUser)
 }
 
 const Categories = {

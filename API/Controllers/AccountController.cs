@@ -195,16 +195,13 @@ namespace API.Controllers
         public async Task<IActionResult> GetUsersAsync() 
         {
             return HandleResult(await _userService.GetAllUsers());
-            // var users = await _userManager.Users.ToArrayAsync();
-            // var userDtos = new List<UserDto>();
-            // foreach (var user in users) {
-            //     bool isAdmin = await HasRole(user, StaticUserRoles.ADMIN);
-            //     var userDto = await CreateUserObject(user, isAdmin);
-            //     userDtos.Add(userDto);
-            // }
-            // return Ok(userDtos.ToArray()); 
         }
 
+        [HttpPatch("accounts/{userId}")] //api/accounts/userId/discount
+        [Authorize(Roles = StaticUserRoles.ADMIN)]
+        public async Task<IActionResult> UpdateUserDiscount(string userId, DiscountValueDto discount) {
+            return HandleResult(await _userService.UpdateUserDiscount(userId, discount));
+        }
         private async Task<UserDto> CreateUserObject(AppUser user, bool isAdmin)
         {
             return new UserDto
