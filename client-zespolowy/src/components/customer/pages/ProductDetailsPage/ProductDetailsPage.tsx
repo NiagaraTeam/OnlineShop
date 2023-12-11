@@ -7,6 +7,8 @@ import { Product } from "../../../../app/models/onlineshop/Product";
 import { ProductsSection } from "../../features/ProductsSection";
 import { FavouriteCheckBox } from "../../features/FavouriteCheckBox";
 import { ProductExpert } from "./ProductExpert";
+import { ProductStatus } from "../../../../app/models/enums/ProductStatus";
+import { router } from "../../../../app/router/Routes";
 
 export const ProductDetailsPage = observer(() => {
   const {productStore, commonStore, cartStore} = useStore();
@@ -24,7 +26,11 @@ export const ProductDetailsPage = observer(() => {
 
   useEffect(() => {
       if (id)
-        loadProduct(parseInt(id));
+        loadProduct(parseInt(id))
+            .then((product) => {
+                if (product?.status === ProductStatus.Hidden)
+                    router.navigate("not-found");
+            });
 
   }, [id, loadProduct]);
 
@@ -53,14 +59,13 @@ export const ProductDetailsPage = observer(() => {
                   <h2>{product.name}</h2>
                 </div>
                 
-                <p>Availability: 
-                    {product.productInfo.currentStock >= 10 ? (
-                        <> High Availability</>
-                    ) : product.productInfo.currentStock < 10 && product.productInfo.currentStock > 0 ? (
-                        <> Last Few Pieces</>
-                    ) : (
-                        <> Product Unavailable</>
-                    )}
+                
+                <p>Availability:
+                    {product.status === ProductStatus.Available  ?
+                        <> {product.productInfo.currentStock} psc</>
+                    :
+                        <> Unavailable</>
+                    }
                 </p>
 
                 {Product.isOnSale(product) ?  (
@@ -77,6 +82,7 @@ export const ProductDetailsPage = observer(() => {
                     </>
                 )}
 
+                {product.status === ProductStatus.Available &&
                 <div className="row align-items-center">
                     <div className="col-5">
                         <div className="input-group mb-3">
@@ -85,14 +91,16 @@ export const ProductDetailsPage = observer(() => {
                                 value={quantity !== undefined ? quantity : ''}
                                 onChange={(e) => {
                                     const inputQuantity = Number(e.target.value);
-                                    setQuantity(isNaN(inputQuantity) || inputQuantity <= 0 ? undefined : inputQuantity);
-                                  }}
+                                    const maxQuantity = product.productInfo.currentStock;
+                                
+                                    setQuantity(isNaN(inputQuantity) || inputQuantity <= 0 ? undefined : Math.min(inputQuantity, maxQuantity));
+                                }}
                             />
                             <button className="btn btn-primary" type="button" disabled={!quantity}
                                 onClick={() => handleAddToCart()}>Add to cart</button>
                         </div>                        
                     </div>
-                </div>
+                </div>}
 
                 <div className="mt-4">
                   <h5>Product details:</h5>

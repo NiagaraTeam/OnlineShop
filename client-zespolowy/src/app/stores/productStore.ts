@@ -5,6 +5,7 @@ import agent from "../api/agent";
 import { toast } from "react-toastify";
 import { ProductStatus } from "../models/enums/ProductStatus";
 import { Pagination, PagingParams } from "../models/common/Pagination";
+import { router } from "../router/Routes";
 
 export default class ProductStore {
     productsRegistry = new Map<number,Product>();
@@ -37,6 +38,10 @@ export default class ProductStore {
     }
 
     get products() {
+        return Array.from(this.productsRegistry.values()).filter((p) => p.status === ProductStatus.Available);
+    }
+
+    get productsAdmin() {
         return Array.from(this.productsRegistry.values());
     }
 
@@ -48,20 +53,24 @@ export default class ProductStore {
         const product = this.getProduct(productId);
 
         if (product) {
-            return Product.isOnSale(product)
-            ?
-                Product.getDiscountedPrice(product)
-            :
-                product.price;
-        } else {
-            return undefined;
-        }
+            if (product.status === ProductStatus.Available)
+                return Product.isOnSale(product)
+                ?
+                    Product.getDiscountedPrice(product)
+                :
+                    product.price;
+        } 
+
+        return undefined;
     }
 
     productPriceWithTax = (productId: number): number | undefined => {
         const product = this.getProduct(productId);
 
         if (product) {
+            if (product.status !== ProductStatus.Available)
+                return undefined;
+
             if (product.taxRate === -1 || product.taxRate === 0)
                 return this.productPrice(productId);
             
@@ -70,16 +79,16 @@ export default class ProductStore {
                 Product.getDiscountedPrice(product) * (1 + (product.taxRate / 100))
             :
                 product.price * (1 + (product.taxRate / 100));
-        } else {
-            return undefined;
         }
+
+        return undefined;
     }
 
     private setProduct = (product: Product) => {
         this.productsRegistry.set(product.id, this.initializeDate(product));
     }
 
-    private getProduct = (id: number) => {
+    getProduct = (id: number) => {
         return this.productsRegistry.get(id);
     }
 
@@ -146,19 +155,24 @@ export default class ProductStore {
             store.commonStore.setInitialLoading(true);
             try {
                 product = await agent.Products.getDetails(id);
+                if (!product)
+                {
+                    router.navigate('not-found');
+                    return null;
+                }
+
                 this.setProduct(product);
                 runInAction(() => this.selectedProduct = product)
                 return product;
             } catch (error) {
                 console.log(error);
-                toast.error('Failed to load product');
             } finally {
                 runInAction(() => store.commonStore.setInitialLoading(false))
             }
         }
     }
 
-    getProductObject = async (id: number) => {
+    getProductObject = async (id: number): Promise<Product | null> => {
         let product = this.getProduct(id);
 
         if (product) {
@@ -171,7 +185,7 @@ export default class ProductStore {
                 return product;
             } catch (error) {
                 console.log(error);
-                toast.error('Failed to load product');
+                return null;
             }
         }
     }
