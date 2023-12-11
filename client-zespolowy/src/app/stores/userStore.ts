@@ -7,14 +7,12 @@ import { AccountDetails } from "../models/onlineshop/AccountDetails";
 import { Address } from "../models/onlineshop/Address";
 import { toast } from "react-toastify";
 import { UserDiscount } from "../models/onlineshop/UserDiscount";
-import { update } from "react-spring";
 
 export default class UserStore {
     user: User | null = null;
     accountDetails: AccountDetails | null = null;
     users: AccountDetails[] = []
     selectedUser: AccountDetails | undefined = undefined;
-    updatedDiscount: UserDiscount | undefined = undefined;
 
     constructor() {
         makeAutoObservable(this);
@@ -140,26 +138,16 @@ export default class UserStore {
             runInAction(() => store.commonStore.setInitialLoading(false))
         }
     }
-    /*
-    deleteUser = async() => {
-
+    
+    
+    deleteUser = async(userId: string) => {
+        //tu zrobić request 
+        //agent.Account.delete(userId)
     }
-    */
-    getSelectedUser = async (userId: string) => {
-        store.commonStore.setInitialLoading(true);
-        try {
-            const users = await agent.Account.getUsersAsync()
-            const selectedUser = users.find(user => user.id === userId)
-                
-            runInAction(() => {
-                this.selectedUser = selectedUser
-            })
-        } catch(error) {
-            console.log(error);
-            toast.error('Failed to update users');
-        } finally {
-            runInAction(() => store.commonStore.setInitialLoading(false))
-        }
+    
+
+    selectUser = (userId: string) => {
+        this.selectedUser = this.users.find((u) => u.id === userId);
     }
     
     updateDiscount = async (userId : string, discountToUpdate: UserDiscount) => {
@@ -167,7 +155,7 @@ export default class UserStore {
         try {
             await agent.Account.updateDiscountUser(userId, discountToUpdate);
             runInAction(() => {
-                this.updatedDiscount = discountToUpdate
+                //tu zmienić pole w odpowiednim user z users
             })
         } catch(error) {
             console.log(error);
