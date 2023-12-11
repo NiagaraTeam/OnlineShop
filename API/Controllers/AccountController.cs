@@ -136,7 +136,7 @@ namespace API.Controllers
             return HandleResult(await _userService.UserDetails(userId));
         }
 
-        [HttpDelete("accounts/{userId}")] //api/accounts/userId
+        [HttpDelete("customers/{userId}")] //api/accounts/userId
         [Authorize(Roles = StaticUserRoles.ADMIN)]
         public async Task<IActionResult> DeleteAccount(string userId)
         {
@@ -197,11 +197,6 @@ namespace API.Controllers
             return HandleResult(await _userService.GetAllUsers());
         }
 
-        [HttpPatch("accounts/{userId}")] //api/accounts/userId/discount
-        [Authorize(Roles = StaticUserRoles.ADMIN)]
-        public async Task<IActionResult> UpdateUserDiscount(string userId, DiscountValueDto discount) {
-            return HandleResult(await _userService.UpdateUserDiscount(userId, discount));
-        }
         private async Task<UserDto> CreateUserObject(AppUser user, bool isAdmin)
         {
             return new UserDto

@@ -194,23 +194,6 @@ namespace Application.Services
             return Result<object>.Failure("Failed updating the address");
         }
 
-        public async Task<Result<object>> UpdateUserDiscount(string userId, DiscountValueDto discount) {
-            var user = await _context.Users
-                .Include(u => u.CustomerDetails)
-                .ThenInclude(cd => cd.DiscountValue)
-                .FirstOrDefaultAsync(u => u.Id == userId);
-            if (user == null)
-                return null;
-            _mapper.Map(discount, user.CustomerDetails.DiscountValue);
-
-            _context.Users.Update(user);
-
-            if (await _context.SaveChangesAsync() > 0)
-                return Result<object>.Success(null);
-
-            return Result<object>.Failure("Failed updating the address");
-        }
-
         public async Task<Result<IEnumerable<ProductDto>>> GetFavouriteProducts()
         {
            var userEmail = _userAccessor.GetUserEmail();

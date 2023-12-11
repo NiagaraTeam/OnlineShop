@@ -7,11 +7,14 @@ import { AccountDetails } from "../models/onlineshop/AccountDetails";
 import { Address } from "../models/onlineshop/Address";
 import { toast } from "react-toastify";
 import { UserDiscount } from "../models/onlineshop/UserDiscount";
+import { AccountStatus } from "../models/enums/AccountStatus";
 
 export default class UserStore {
     user: User | null = null;
     accountDetails: AccountDetails | null = null;
+    findUser: AccountDetails | null = null;
     users: AccountDetails[] = []
+
     selectedUser: AccountDetails | undefined = undefined;
 
     constructor() {
@@ -141,8 +144,16 @@ export default class UserStore {
     
     
     deleteUser = async(userId: string) => {
-        //tu zrobić request 
-        //agent.Account.delete(userId)
+        try {
+            await agent.Account.delete(userId)
+            runInAction(() => {
+                    this.users = this.users.filter((user) => user.id !== userId);
+              });
+
+        } catch(error) {
+            console.log(error);
+            toast.error('Failed to update users');
+        } 
     }
     
 
@@ -151,18 +162,17 @@ export default class UserStore {
     }
     
     updateDiscount = async (userId : string, discountToUpdate: UserDiscount) => {
-        store.commonStore.setInitialLoading(true);
         try {
             await agent.Account.updateDiscountUser(userId, discountToUpdate);
             runInAction(() => {
-                //tu zmienić pole w odpowiednim user z users
+                const user = this.users.find(user => user.id === userId)
+                if(user != null)
+                    user.discountValue = discountToUpdate.value
             })
         } catch(error) {
             console.log(error);
             toast.error('Failed to update users');
-        } finally {
-            runInAction(() => store.commonStore.setInitialLoading(false))
-        }
+        } 
     }
     
     loadAccountDetails = async () => {

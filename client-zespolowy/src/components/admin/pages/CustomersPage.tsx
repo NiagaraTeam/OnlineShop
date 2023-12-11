@@ -31,7 +31,7 @@ export const CustomersPage = observer(() => {
   return (
     <div className="m-3">
       <div className="row">
-          <div className="col-lg-6 mt-4">
+          <div className="col-lg-6 my-4">
             <h2 className="pb-3">Customers</h2>
             {users.length > 0 && (
               <table className="table table-bordered">
@@ -69,12 +69,13 @@ export const CustomersPage = observer(() => {
             </div>
 
             {showEditForm &&
-            <div className="col-lg-5 offset-lg-1">
-              <h2 className="my-4 d-flex justify-content-between align-items-center">
+            <div className="col-lg-5 offset-lg-1 mt-5">
+              <h2 className="pb-4 d-flex justify-content-between align-items-center">
                   <span>Set user discount</span>
                   <button className="btn btn-close" onClick={() => setShowEditForm(false)}></button>
               </h2>
-              <EditDiscountForm 
+              <EditDiscountForm
+                  key={selectedUser?.id}
                   onSubmit={handleEdit} buttonText="Save" editMode={true}
                   discount={{value: selectedUser?.discountValue as number}}
               />

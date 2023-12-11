@@ -17,7 +17,11 @@ export const EditDiscountForm = observer(
 {
 
 const validationSchema = Yup.object({
-    value: Yup.number().required('Discount is required').min(0, 'Discount must be at least 0')
+    value: Yup.number()
+      .typeError('Discount must be a number')
+      .required('Discount is required')
+      .max(100, 'Discount must be at least 100')
+      .positive('Discount must be a positive number'),
 });
 
   return (

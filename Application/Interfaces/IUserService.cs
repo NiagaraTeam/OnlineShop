@@ -15,7 +15,6 @@ namespace Application.Interfaces
         Task<Result<object>> ResetPasswordRequest(string userId);
         Task<Result<decimal>> GetUserDiscount(string userId);
         Task<Result<object>> SetUserDiscount(string userId, DiscountValueDto discountValue);
-        Task<Result<object>> UpdateUserDiscount(string userId, DiscountValueDto discount);
         Task<Result<IEnumerable<ProductDto>>> GetFavouriteProducts();
         Task<Result<IEnumerable<UserDetailsDto>>> GetAllUsers();
     }
