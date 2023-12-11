@@ -1,10 +1,10 @@
 import { observer } from "mobx-react-lite";
-import { CartItem } from "../../../app/models/onlineshop/Cart";
-import { useStore } from "../../../app/stores/store";
+import { CartItem } from "../../../../app/models/onlineshop/Cart";
+import { useStore } from "../../../../app/stores/store";
 import { useEffect, useState } from "react";
-import { Product } from "../../../app/models/onlineshop/Product";
+import { Product } from "../../../../app/models/onlineshop/Product";
 import { Link } from "react-router-dom";
-import EditDeleteButtons from "../../common/EditDeleteButtons";
+import EditDeleteButtons from "../../../common/EditDeleteButtons";
 
 interface Props {
     item: CartItem;
