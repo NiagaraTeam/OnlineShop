@@ -45,7 +45,13 @@ namespace Application.Services
                 Id = photoUploadResult.PublicId
             };
 
-            // dodanie zdjęcia do produktu
+            // usunięcie starego zdjęcia
+            var deleteResult = await DeletePhoto(product.Photo.Id);
+
+            if (!deleteResult.IsSucess)
+                return Result<PhotoDto>.Failure(deleteResult.Error);
+
+            // dodanie nowego zdjęcia do produktu
             product.Photo = photo;
 
             // zapisanie zmian
