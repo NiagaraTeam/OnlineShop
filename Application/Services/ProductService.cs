@@ -130,8 +130,12 @@ namespace Application.Services
                 .Include(p => p.ProductDiscounts)
                 .FirstOrDefaultAsync(p => p.Id == productId);
 
-            if (product == null || product.Status == ProductStatus.Deleted)
+            if (product == null) 
                 return null;
+
+            if (product.Status == ProductStatus.Deleted || 
+                product.Status == ProductStatus.Hidden)
+                return Result<ProductDto>.Success(null);
 
             var productDto = _mapper.Map<ProductDto>(product);
 
@@ -208,7 +212,7 @@ namespace Application.Services
         public async Task<Result<PagedList<ProductDto>>> GetProducts(PagingParams parameters)
         {
             var query = _context.Products
-                .Where(p => p.Status == ProductStatus.Available)
+                .Where(p => p.Status != ProductStatus.Deleted)
                 .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
                 .AsQueryable();
 

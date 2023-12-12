@@ -101,6 +101,8 @@ namespace Application.Services
             if (user == null)
                 return null;
 
+            //_context.Users.Remove(user);
+
             user.CustomerDetails.Status = AccountStatus.Deleted;
 
             if (await _context.SaveChangesAsync() > 0)
@@ -226,6 +228,47 @@ namespace Application.Services
                 favoriteProductsDto
                 .Where(x => x.Status == ProductStatus.Available || 
                     x.Status == ProductStatus.Unavailable));
+        }
+
+        public async Task<Result<IEnumerable<UserDetailsDto>>> GetAllUsers()
+        {
+            var users = await _context.Users
+                .Include(u => u.CustomerDetails)
+                .ThenInclude(cd => cd.Address)
+                .Include(u => u.CustomerDetails.Orders)
+                .Where(u => u.CustomerDetails.Status == AccountStatus.Active)
+                .ToListAsync();
+            if (users == null) {
+                return null;
+            }
+
+            var allUsers = new List<UserDetailsDto>();
+            foreach (var user in users) 
+            {
+                if (user.CustomerDetails == null) 
+                {
+                    continue;
+                }
+                var userDetailsDto = new UserDetailsDto 
+                {
+                    Id = user.CustomerDetails.UserId,
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    Status = user.CustomerDetails.Status,
+                    DiscountValue = user.CustomerDetails.DiscountValue,
+                    Newsletter = user.CustomerDetails.Newsletter,
+                    Orders = user.CustomerDetails.Orders
+                        ?.Select(o => _mapper.Map<OrderDto>(o))
+                        .ToList(),
+                    Address = _mapper.Map<AddressDto>(user.CustomerDetails.Address)
+                };
+
+                allUsers.Add(userDetailsDto);
+            }
+            if(allUsers == null) {
+                return Result<IEnumerable<UserDetailsDto>>.Failure("Error in loading clients");
+            }
+            return Result<IEnumerable<UserDetailsDto>>.Success(allUsers);
         }
     }
 }

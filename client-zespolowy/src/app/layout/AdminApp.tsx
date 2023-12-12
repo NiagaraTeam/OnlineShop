@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import './App.css'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '../stores/store';
-import { Outlet, ScrollRestoration, useLocation } from 'react-router-dom';
+import { Link, Outlet, ScrollRestoration, useLocation } from 'react-router-dom';
 import { Header } from '../../components/admin/common/Header';
 import { Footer } from '../../components/common/Footer';
 import Loading from '../../components/common/Loading';
@@ -33,15 +33,24 @@ export const AdminApp = observer(() => {
       <div className='container'>
         <ScrollRestoration/>
         <ToastContainer position='bottom-right' hideProgressBar theme='colored' />
-        <Header/>
-        <div className='my-5'>
-          {location.pathname === '/admin' 
-          ? 
-            <h1>Welcome to admin page</h1>
-            //sprawdzenie czy jest zalogowany i wyświetlenie opcji w zależności od tego
-          : 
-            <Outlet />
-          }
+        <div className='wrapper'>
+          <Header/>
+            <div className='my-5'>
+              {location.pathname === '/admin' 
+              ? 
+                <div className='text-center '>
+                  <h1 className='mb-4'>Welcome to admin page</h1>
+                  {(!userStore.isLoggedIn || !userStore.isAdmin) 
+                  ?
+                    <Link to={'/admin/login'} className='btn btn-primary' >Login</Link>
+                  :
+                    <Link to={'/admin/orders'} className='btn btn-primary' >Go to orders</Link>
+                  }
+                </div>
+              : 
+                <Outlet />
+              }
+            </div>
         </div>
         <Footer/>
       </div>

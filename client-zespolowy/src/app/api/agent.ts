@@ -99,14 +99,15 @@ const Account = {
     changePassword: (values: ChangePasswordFormValues) => requests.post<void>('/account/changepassword/', values),
 
     details: (userId: string) => requests.get<AccountDetails>(`/account/${userId}/details`),
-    delete: (userId: string) => requests.del<void>(`/accounts/${userId}`),
+    delete: (userId: string) => requests.del<void>(`/customers/${userId}`),
     updateAddress: (userId: string, address: Address) => requests.patch<void>(`/accounts/${userId}/address`, address),
     getFavouriteProducts: () => requests.get<Product[]>(`/account/favourites`),
     addFavouriteProduct: (userId: string, productId: number) => requests.post<void>(`/accounts/${userId}/favourites/${productId}`, {}),
     removeFavouriteProduct: (userId: string, productId: number) => requests.del<void>(`/accounts/${userId}/favourites/${productId}`),
-    //resetPasswordRequest: (userId: string) => requests.post(`/accounts/${userId}/reset-password`, {}),
+    resetPasswordRequest: (userId: string) => requests.post(`/accounts/${userId}/reset-password`, {}),
     getUserDiscount: (userId: string) => requests.get<number>(`/accounts/${userId}/discount`),
-    setUserDiscount: (userId: string, userDiscount: UserDiscount) => requests.put(`/accounts/${userId}/discount`, userDiscount), 
+    setUserDiscount: (userId: string, userDiscount: UserDiscount) => requests.put(`/accounts/${userId}/discount`, userDiscount),
+    getUsersAsync: () => requests.get<AccountDetails[]>('/customers/'),
 }
 
 const Categories = {

@@ -1,6 +1,7 @@
 using Application.Core;
 using Application.Dto.Product;
 using Application.Dto.User;
+using Microsoft.AspNetCore.Identity;
 
 namespace Application.Interfaces
 {
@@ -15,5 +16,6 @@ namespace Application.Interfaces
         Task<Result<decimal>> GetUserDiscount(string userId);
         Task<Result<object>> SetUserDiscount(string userId, DiscountValueDto discountValue);
         Task<Result<IEnumerable<ProductDto>>> GetFavouriteProducts();
+        Task<Result<IEnumerable<UserDetailsDto>>> GetAllUsers();
     }
 }
