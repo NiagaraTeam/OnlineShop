@@ -36,7 +36,7 @@ namespace Application.Services
                 return null;
 
             // utworzenie zdjęcia
-            var photoUploadResult = await _photoAccessor.AddPhoto(file);
+            var photoUploadResult = await _photoAccessor.AddPhoto(file, 400, 400);
 
             var photo = new Photo
             {
