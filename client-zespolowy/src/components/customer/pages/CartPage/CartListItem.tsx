@@ -1,10 +1,10 @@
 import { observer } from "mobx-react-lite";
-import { CartItem } from "../../../app/models/onlineshop/Cart";
-import { useStore } from "../../../app/stores/store";
+import { CartItem } from "../../../../app/models/onlineshop/Cart";
+import { useStore } from "../../../../app/stores/store";
 import { useEffect, useState } from "react";
-import { Product } from "../../../app/models/onlineshop/Product";
+import { Product } from "../../../../app/models/onlineshop/Product";
 import { Link } from "react-router-dom";
-import EditDeleteButtons from "../../common/EditDeleteButtons";
+import EditDeleteButtons from "../../../common/EditDeleteButtons";
 
 interface Props {
     item: CartItem;
@@ -14,7 +14,7 @@ export const CartListItem = observer(({ item }: Props) => {
     const {productStore, cartStore} = useStore();
     const {getProductObject} = productStore;
     const {deleteItemFromCart, changeQuantity} = cartStore;
-    const [product, setProduct] = useState<Product | undefined>(undefined);
+    const [product, setProduct] = useState<Product | null>(null);
     const [editedQuantity, setEditedQuantity] = useState<number>(item.quantity);
   
     useEffect(() => {
@@ -27,8 +27,11 @@ export const CartListItem = observer(({ item }: Props) => {
 
     const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const newQuantity = parseInt(event.target.value, 10) || 0;
-      setEditedQuantity(newQuantity);
-    };
+      const maxQuantity = product.productInfo.currentStock;
+  
+      // Jeżeli wprowadzona ilość jest większa niż dostępny stan magazynowy, ustaw ilość na maksymalny dostępny stan magazynowy
+      setEditedQuantity(Math.min(newQuantity, maxQuantity));
+  };
   
     const handleConfirmQuantity = () => {
       changeQuantity(product.id, editedQuantity);
@@ -55,7 +58,7 @@ export const CartListItem = observer(({ item }: Props) => {
               <span className="mt-2">{product.price} zł</span>
             }
           </div>
-          <div style={{width: "60px", marginRight: "50px"}}>
+          <div style={{width: "75px", marginRight: "50px"}}>
             <input 
               type="number" 
               value={editedQuantity} 

@@ -7,10 +7,11 @@ import { FormikHelpers } from "formik";
 import { ProductFormValues } from "../../../../app/models/onlineshop/Product";
 import { DeletedProducts } from "./DeletedProducts";
 import { Products } from "./Products";
+import { PhotoUploadWidget } from "../../../common/imageUpload/PhtoUploadWidget";
 
 export const ProductsPage = observer(() => {
     const {productStore, commonStore} = useStore();
-    const {selectedProduct, createProduct, updateProduct} = productStore;
+    const {selectedProduct, createProduct, updateProduct, uploadPhoto, uploading} = productStore;
     const {initialLoading} = commonStore;
 
     // view logic
@@ -36,6 +37,10 @@ export const ProductsPage = observer(() => {
         createProduct(product).then(() => {
             formikHelpers.resetForm();
         });
+    }
+
+    function handlePhotoUpload(file: Blob): Promise<void> {
+        return uploadPhoto(selectedProduct!.id, file);
     }
 
     // render component
@@ -76,12 +81,18 @@ export const ProductsPage = observer(() => {
                             <span>Edit Product</span>
                             <button className="btn btn-close" onClick={() => setShowEditForm(false)}></button>
                         </h2>
-                        <ProductForm 
-                            key={selectedProduct!.id} 
-                            onSubmit={handleEdit} buttonText="Save" editMode={true}
-                            product={ProductFormValues.createFromProduct(selectedProduct!)}
-                        />
+                        <div key={selectedProduct!.id} >
+                            <ProductForm 
+                                onSubmit={handleEdit} buttonText="Save" editMode={true}
+                                product={ProductFormValues.createFromProduct(selectedProduct!)}
+                            />
+                            <div className="my-2">
+                               <PhotoUploadWidget product={selectedProduct!} uploadPhoto={handlePhotoUpload} loading={uploading}/>
+                            </div>
+                        </div>
                     </>}
+
+                    
                     
                 </div>
             

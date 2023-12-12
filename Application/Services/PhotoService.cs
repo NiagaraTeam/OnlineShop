@@ -36,7 +36,7 @@ namespace Application.Services
                 return null;
 
             // utworzenie zdjęcia
-            var photoUploadResult = await _photoAccessor.AddPhoto(file);
+            var photoUploadResult = await _photoAccessor.AddPhoto(file, 400, 400);
 
             var photo = new Photo
             {
@@ -45,7 +45,13 @@ namespace Application.Services
                 Id = photoUploadResult.PublicId
             };
 
-            // dodanie zdjęcia do produktu
+            // usunięcie starego zdjęcia
+            var deleteResult = await DeletePhoto(product.Photo.Id);
+
+            if (!deleteResult.IsSucess)
+                return Result<PhotoDto>.Failure(deleteResult.Error);
+
+            // dodanie nowego zdjęcia do produktu
             product.Photo = photo;
 
             // zapisanie zmian

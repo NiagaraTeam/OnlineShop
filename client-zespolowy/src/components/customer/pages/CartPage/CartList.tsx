@@ -1,5 +1,5 @@
 import { CartListItem } from "./CartListItem";
-import { CartItem } from "../../../app/models/onlineshop/Cart";
+import { CartItem } from "../../../../app/models/onlineshop/Cart";
 
 interface Props {
     items: CartItem[];
