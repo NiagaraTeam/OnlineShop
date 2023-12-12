@@ -55,18 +55,16 @@ export const AccountPage = observer(() => {
         </div>
 
         <h3>Orders</h3>
-                    {accountDetails?.orders.map(order => {
-                        return (
-                            <table className="table">
-          <thead>
-          
-
-            <tr>
-              <th>Order ID</th>
-              <th>Status</th>
-              <th></th>
-            </tr>
-          </thead>
+        <table className="table">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        {accountDetails?.orders.map(order => {
+        return (
           <tbody>
           <tr key={order.id}>
                 <td>{order.id}</td>
@@ -77,14 +75,8 @@ export const AccountPage = observer(() => {
                   </Link>
                   </td>
                 </tr>
-          </tbody>
-          </table>
-                           
-                            
-                        )
-                    })} 
-
-
+          </tbody>)})} 
+        </table>
         <button className="btn btn-primary mt-4" onClick={logout}>Logout</button>
 
         </>
