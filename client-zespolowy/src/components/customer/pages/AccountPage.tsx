@@ -5,6 +5,7 @@ import Loading from "../../common/Loading";
 import { Address } from "../../../app/models/onlineshop/Address";
 import { AddressForm } from "../forms/AddressForm";
 import { FormikHelpers } from "formik";
+import { Link } from "react-router-dom";
 
 export const AccountPage = observer(() => {
     const {userStore: {user, logout, accountDetails, updateAddress}} = useStore();
@@ -23,7 +24,9 @@ export const AccountPage = observer(() => {
     if (!accountDetails) return <div className="text-center m-5"><Loading/></div>
     
     return (
+        
         <>
+        
         <div className="row border-bottom pb-5 mb-5">
             <div className="col-md-6 mt-4">
                 <h3>Account details</h3>
@@ -54,9 +57,34 @@ export const AccountPage = observer(() => {
         <h3>Orders</h3>
                     {accountDetails?.orders.map(order => {
                         return (
-                            <p key={order.id}>Id: {order.id} status: {OrderStatus[order.status]}</p>
+                            <table className="table">
+          <thead>
+          
+
+            <tr>
+              <th>Order ID</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+          <tr key={order.id}>
+                <td>{order.id}</td>
+                <td>{OrderStatus[order.status]}</td>
+                <td>
+                  <Link to={`/order/${order.id}`} className="btn btn-primary btn-sm">
+                   Details
+                  </Link>
+                  </td>
+                </tr>
+          </tbody>
+          </table>
+                           
+                            
                         )
                     })} 
+
+
         <button className="btn btn-primary mt-4" onClick={logout}>Logout</button>
 
         </>

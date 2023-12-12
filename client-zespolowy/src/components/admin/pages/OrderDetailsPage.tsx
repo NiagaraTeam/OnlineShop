@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useStore } from "../../../app/stores/store";
 import Loading from "../../common/Loading";
-import { Order } from "../../../app/models/onlineshop/Order";
+import { OrderDetails } from "../../common/OrderDetails";
 
 export const OrderDetailsPage = observer(() => {
   const {orderStore, commonStore} = useStore();
@@ -18,18 +18,6 @@ export const OrderDetailsPage = observer(() => {
   }, [id, loadOrder]);
 
   if (initialLoading || !order) return <div className="text-center m-5"><Loading /></div>;
-  
-  function calculateTotalOrderAmount(order: Order) {
-    const totalProductAmount = order.items.reduce(
-      (total, item) => total + item.product.price * item.quantity,
-      0
-    );
-    if(order.shippingMethod.cost == null)
-    {
-      order.shippingMethod.cost = 0;
-    }
-    return Math.floor((totalProductAmount + order.shippingMethod.cost) * 100) / 100;
-  }
   
   return (
     <div>
@@ -67,56 +55,7 @@ export const OrderDetailsPage = observer(() => {
       </tbody>
      </table>
       <br />
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Product Name</th>
-            <th>Quantity</th>
-            <th>Price</th>
-            <th>Value</th>
-          </tr>
-        </thead>
-        <tbody>
-          {order.items.map((item) => (
-            <tr key={item.product.id}>
-              <td>{item.product.name}</td>
-              <td>{item.quantity}</td>
-              <td>{item.product.price}</td>
-              <td>{Math.floor(item.product.price*item.quantity * 100) / 100}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <br />
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Payment Method</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>{order.paymentMethod.name}</td>
-          </tr>
-        </tbody>
-      </table>
-  
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Shipping Method</th>
-            <th>Cost</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>{order.shippingMethod.name}</td>
-            <td>{order.shippingMethod.cost}</td>
-          </tr>
-        </tbody>
-      </table>
-      <br />
-      <h3>Total Order Amount: {calculateTotalOrderAmount(order)}</h3>
+      <OrderDetails></OrderDetails>
     </div>
   );
   
