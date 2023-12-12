@@ -59,15 +59,17 @@ export const AccountPage = observer(() => {
         <thead>
           <tr>
             <th>Order ID</th>
+            <th>Date</th>
             <th>Status</th>
-            <th></th>
           </tr>
         </thead>
         {accountDetails?.orders.map(order => {
+            const orderDate = new Date(order.orderDate);
         return (
           <tbody>
           <tr key={order.id}>
                 <td>{order.id}</td>
+                <td>{orderDate.toDateString()}</td>
                 <td>{OrderStatus[order.status]}</td>
                 <td>
                   <Link to={`/order/${order.id}`} className="btn btn-primary btn-sm">
