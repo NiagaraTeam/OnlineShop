@@ -78,7 +78,7 @@ export const ProductDetailsPage = observer(() => {
                 ) : (
                     <>
                         <h5>Price: {product.price} zł</h5>
-                        <p>Price with Tax: {Math.floor(product.price * (100 + product.taxRate)) / 100} zł</p>
+                        <p>Price with Tax: {Math.floor(product.price * (product.taxRate === -1 ? 100 : 100 + product.taxRate)) / 100} zł</p>
                     </>
                 )}
 
