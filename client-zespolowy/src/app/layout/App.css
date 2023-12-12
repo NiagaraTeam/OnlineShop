@@ -38,3 +38,7 @@
 .cursor-pointer {
   cursor: pointer;
 }
+
+.wrapper{
+  min-height: calc(100vh - 56px);
+}

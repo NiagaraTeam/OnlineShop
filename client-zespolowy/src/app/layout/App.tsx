@@ -36,14 +36,16 @@ export const App = observer(() => {
       <div className='container'>
         <ScrollRestoration/>
         <ToastContainer position='bottom-right' hideProgressBar theme='colored' />
-        <Header/>
-        <div className='my-5'>
-          {location.pathname === '/' 
-          ? 
-            <HomePage/>
-          : 
-            <Outlet />
-          }
+        <div className="wrapper">
+          <Header/>
+          <div className='my-5'>
+            {location.pathname === '/' 
+            ? 
+              <HomePage/>
+            : 
+              <Outlet />
+            }
+          </div>
         </div>
         <Footer/>
         </div>

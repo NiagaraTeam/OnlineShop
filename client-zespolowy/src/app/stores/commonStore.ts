@@ -88,6 +88,7 @@ export default class CommonStore {
             await store.shippingPaymentStore.loadShippingMethods();
             await store.categoryStore.loadCategories();
             await store.expertsStore.loadExperts();
+            await store.userStore.loadUsers();
         } catch (error) {
             console.log(error);
             toast.error(`Failed to load admin app data`);
