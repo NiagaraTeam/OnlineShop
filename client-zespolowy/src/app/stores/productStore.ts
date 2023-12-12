@@ -19,6 +19,8 @@ export default class ProductStore {
 
     pagination: Pagination | null = null;
     pagingParams = new PagingParams();
+
+    uploading = false;
     
     constructor() {
         makeAutoObservable(this);
@@ -353,6 +355,23 @@ export default class ProductStore {
     isProductInFavorites = (productId: number): boolean  => {
         const isFavorite = this.favouriteProducts.some(product => product.id === productId);
         return isFavorite;
+    }
+
+    uploadPhoto = async (productId: number, file: Blob) => {
+        this.uploading = true;
+        try {
+            const response = await agent.Photos.uploadPhoto(productId, file);
+            const photo = response.data;
+            runInAction(() => {
+                const product = this.getProduct(productId);
+                if (product)
+                    product.photo = photo;
+            })
+        } catch (error) {
+            console.log(error);
+        } finally {
+            runInAction(() => this.uploading = false);
+        }
     }
 
     private moveProductBetweenRegistries = (id: number, newStatus: ProductStatus) => {
