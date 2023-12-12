@@ -1,8 +1,8 @@
 import { Form, Formik, FormikHelpers } from "formik";
 import { observer } from "mobx-react-lite"
 import * as Yup from "yup";
-import TextInput from "../../common/formInputs/TextInput";
 import { UserDiscount } from "../../../app/models/onlineshop/UserDiscount";
+import NumberInput from "../../common/formInputs/NumberInput";
 
 
 interface Props {
@@ -16,13 +16,12 @@ export const EditDiscountForm = observer(
     ({onSubmit, discount, buttonText}: Props) => 
 {
 
-const validationSchema = Yup.object({
+  const validationSchema = Yup.object({
     value: Yup.number()
-      .typeError('Discount must be a number')
       .required('Discount is required')
-      .max(100, 'Discount must be at least 100')
-      .positive('Discount must be a positive number'),
-});
+      .min(0, 'Discount must be at least 0')
+      .max(1, 'Discount must be at most 1'),
+  });
 
   return (
     <>
@@ -38,7 +37,7 @@ const validationSchema = Yup.object({
           <Form >
             {/* value */}
             <div className="my-2">
-                <TextInput placeholder="Enter shipping name" name="value" label="Discount"/>
+                <NumberInput placeholder="Enter shipping name" name="value" label="Discount"/>
             </div>
             
 

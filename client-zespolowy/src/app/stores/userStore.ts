@@ -7,12 +7,10 @@ import { AccountDetails } from "../models/onlineshop/AccountDetails";
 import { Address } from "../models/onlineshop/Address";
 import { toast } from "react-toastify";
 import { UserDiscount } from "../models/onlineshop/UserDiscount";
-import { AccountStatus } from "../models/enums/AccountStatus";
 
 export default class UserStore {
     user: User | null = null;
     accountDetails: AccountDetails | null = null;
-    findUser: AccountDetails | null = null;
     users: AccountDetails[] = []
 
     selectedUser: AccountDetails | undefined = undefined;
@@ -47,6 +45,7 @@ export default class UserStore {
             store.commonStore.setToken(user.token);
             runInAction(() => {
                 this.user = user;
+                this.loadAccountDetails();
             });
             router.navigate('/products');
         } catch (error) {
@@ -127,7 +126,6 @@ export default class UserStore {
     }
 
     loadUsers = async() => {
-        store.commonStore.setInitialLoading(true);
         try {
             const users = await agent.Account.getUsersAsync()
             runInAction( () => {
@@ -137,9 +135,7 @@ export default class UserStore {
         catch(error) {
             console.log(error);
             toast.error('Failed to update users');
-        } finally {
-            runInAction(() => store.commonStore.setInitialLoading(false))
-        }
+        } 
     }
     
     
@@ -163,7 +159,7 @@ export default class UserStore {
     
     updateDiscount = async (userId : string, discountToUpdate: UserDiscount) => {
         try {
-            await agent.Account.updateDiscountUser(userId, discountToUpdate);
+            await agent.Account.setUserDiscount(userId, discountToUpdate);
             runInAction(() => {
                 const user = this.users.find(user => user.id === userId)
                 if(user != null)

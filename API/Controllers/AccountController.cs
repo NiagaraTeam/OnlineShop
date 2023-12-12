@@ -1,9 +1,11 @@
+using System.Runtime.InteropServices;
 using System.Security.Claims;
 using API.Dto;
 using API.Interfaces;
 using Application.Dto.User;
 using Application.Interfaces;
 using Domain;
+using Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -38,6 +40,11 @@ namespace API.Controllers
             var user = await _userManager.FindByEmailAsync(loginDto.Email);
 
             if (user == null) return Unauthorized();
+
+            var userDetails = await _userService.UserDetails(user.Id);
+
+            if (userDetails.Value.Status == AccountStatus.Deleted)
+                return Unauthorized();
 
             if (!await HasRole(user, StaticUserRoles.CUSTOMER))
                 return Unauthorized();
@@ -88,7 +95,21 @@ namespace API.Controllers
             var user = new AppUser
             {
                 Email = registerDto.Email,
-                UserName = registerDto.UserName
+                UserName = registerDto.UserName,
+                CustomerDetails = new CustomerDetails
+                    {
+                        Status = AccountStatus.Active,
+                        FavouriteProducts = new List<CustomerDetailsProduct>(),
+                        Orders = new List<Order>(),
+                        Address = new Address
+                        {
+                            AddressLine1 = "",
+                            AddressLine2 = "",
+                            City = "",
+                            ZipCode = "",
+                            Country = ""
+                        }
+                    }
             };
 
             var result = await _userManager.CreateAsync(user, registerDto.Password);
@@ -136,7 +157,7 @@ namespace API.Controllers
             return HandleResult(await _userService.UserDetails(userId));
         }
 
-        [HttpDelete("customers/{userId}")] //api/accounts/userId
+        [HttpDelete("customers/{userId}")] //api/customers/userId
         [Authorize(Roles = StaticUserRoles.ADMIN)]
         public async Task<IActionResult> DeleteAccount(string userId)
         {

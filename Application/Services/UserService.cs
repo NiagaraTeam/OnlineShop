@@ -101,6 +101,8 @@ namespace Application.Services
             if (user == null)
                 return null;
 
+            //_context.Users.Remove(user);
+
             user.CustomerDetails.Status = AccountStatus.Deleted;
 
             if (await _context.SaveChangesAsync() > 0)
@@ -234,6 +236,7 @@ namespace Application.Services
                 .Include(u => u.CustomerDetails)
                 .ThenInclude(cd => cd.Address)
                 .Include(u => u.CustomerDetails.Orders)
+                .Where(u => u.CustomerDetails.Status == AccountStatus.Active)
                 .ToListAsync();
             if (users == null) {
                 return null;
