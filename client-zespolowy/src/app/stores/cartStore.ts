@@ -45,8 +45,10 @@ export default class CartStore {
         const existingItem = this.cartItems.find(item => item.productId === productId);
     
         if (existingItem) {
-            existingItem.quantity += quantity;
-            toast.success("Quantity increased in cart");
+            this.changeQuantity(
+                productId, 
+                existingItem.quantity += quantity,
+            )
             this.saveToLocalStorage();
         } else {
             this.cartItems.push({ productId, quantity });
@@ -75,21 +77,31 @@ export default class CartStore {
     changeQuantity = (productId: number, newQuantity: number) => {
         const existingItem = this.cartItems.find(item => item.productId === productId);
 
-        if (existingItem) {
+        if (!existingItem){
+            toast.error("Product not found in cart");
+            return;
+        }
+
+        const product = store.productStore.getProduct(productId);
+
+        if (product) {
             existingItem.quantity = Math.max(newQuantity, 0);
-            toast.success("Quantity updated");
+            existingItem.quantity = Math.min(newQuantity, product?.productInfo.currentStock);
+            toast.success("Quantity changed");
             this.saveToLocalStorage();
         } else {
             toast.error("Product not found in cart");
         }
     }
 
-    get totalValue() {
+    get totalValue()  {
         let value = 0;
         this.cartItems.forEach((item) => {
             const price = store.productStore.productPrice(item.productId);
             if (price) 
                 value += price * item.quantity;
+            else
+                this.deleteItemFromCart(item.productId);
         })
 
         const shippingPrice = this.getShippingPrice();
@@ -105,6 +117,8 @@ export default class CartStore {
             const price = store.productStore.productPriceWithTax(item.productId);
             if (price) 
                 value += price * item.quantity;
+            else 
+                this.deleteItemFromCart(item.productId);
         })
 
         const shippingPrice = this.getShippingPrice();

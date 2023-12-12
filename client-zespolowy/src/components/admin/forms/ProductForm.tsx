@@ -95,16 +95,14 @@ export const ProductForm = observer(
                 <SelectInput label="Status" name="status" options={enumToOptions(ProductStatus)}/>
             </div>
 
-            
             {/* CurrentStock */}
             {!editMode &&
             <div className="my-2">
                 <NumberInput placeholder="Enter current stock" name="currentStock" label="Stock"/>
             </div>}
-            
-            
+
             {/* Button */}
-            <div className="text-center my-4">
+            <div className="text-center my-5">
               <button
                 type="submit"
                 className="btn btn-success"

@@ -18,13 +18,13 @@ export const Products = observer(({showCreateButton, setShowCreateForm,
     setShowEditForm, setShowDeletedProducts}: Props) => {
     
     const {productStore} = useStore();
-    const {products, deleteProduct, loadProduct} = productStore;
+    const {productsAdmin, deleteProduct, loadProduct} = productStore;
 
     // filter parameters
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("");
 
-    const filteredProducts = products
+    const filteredProducts = productsAdmin
         .filter((product) => 
           product.name.toLowerCase().includes(searchQuery.toLowerCase()) && 
             (selectedCategory == "" || product.category.id.toString() == selectedCategory)
@@ -106,7 +106,7 @@ export const Products = observer(({showCreateButton, setShowCreateForm,
                 {search} {categoryFilter}
             </div>
             
-            {products.length > 0 &&
+            {productsAdmin.length > 0 &&
             <table className="table table-bordered">
                 <thead className="table-light">
                     <tr>
