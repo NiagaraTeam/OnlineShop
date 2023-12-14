@@ -11,6 +11,7 @@ import Loading from "../../common/Loading";
 import { useEffect } from "react";
 import { enumToOptions } from "../../../app/models/options/Option";
 import { ProductStatus } from "../../../app/models/enums/ProductStatus";
+import TextAreaInput from "../../common/formInputs/TextAreaInput";
 
 interface Props {
     onSubmit: (product: ProductFormValues, formikHelpers: FormikHelpers<ProductFormValues>) => void;
@@ -67,7 +68,7 @@ export const ProductForm = observer(
 
             {/* Description */}
             <div className="my-2">
-                <TextInput placeholder="Enter description" name="description" label="Description"/>
+                <TextAreaInput placeholder="Enter description" name="description" label="Description" rows={3}/>
             </div>
 
             {/* Price */}
