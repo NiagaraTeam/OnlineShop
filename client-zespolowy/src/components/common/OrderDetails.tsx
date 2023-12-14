@@ -1,51 +1,60 @@
+import { Link } from "react-router-dom";
 import { OrderStatus } from "../../app/models/enums/OrderStatus";
 import { Order } from "../../app/models/onlineshop/Order";
+import { OrderItem } from "../../app/models/onlineshop/OrderItem";
+import { roundValue } from "../../app/utils/RoundValue";
 
 interface Props {
   order: Order;
 }
 
 export const OrderDetails = ({order}: Props) => {
-  
-  function calculateTotalOrderAmount(order: Order) {
-    const totalProductAmount = order.items.reduce(
-      (total, item) => total + item.product.price * item.quantity,
-      0
-    );
-    if(order.shippingMethod.cost == null)
-    {
-      order.shippingMethod.cost = 0;
-    }
-    return Math.floor((totalProductAmount + order.shippingMethod.cost) * 100) / 100;
+  const hasDiscount = order.userDetails.discountValue !== 0;
+  const userDiscount = order.userDetails.discountValue;
+
+  function calculateNetValue(item: OrderItem) {
+    const taxRate = 1 + item.product.taxRate / 100;
+    return roundValue(((item.product.price * item.quantity) * taxRate), 2)
   }
   
   return (
     <div>
-      <p className="fs-3 row">
-          <div>Order no. <b className="fs-2">{order.id}</b></div>
-          <div className="fs-6">Date: {order.orderDate.toLocaleDateString()}</div>
-          <div className="fs-6">Status: {OrderStatus[order.status]}</div>
-      </p>
+      
       <div className="row">
 
         <div className="col-8 pe-5">
-          <h5 className="mb-4 mt-2">Items</h5>
-          <table className="table table-bordered">
+          <p className="fs-3 row">
+            <div>Order no. <b className="fs-2">{order.id}</b></div>
+            <div className="fs-6">Date: {order.orderDate.toLocaleDateString()}</div>
+            <div className="fs-6">Status: {OrderStatus[order.status]}</div>
+          </p>
+          <table className="table table-bordered mt-4">
             <thead className="table-light">
               <tr>
                 <th>Product Name</th>
                 <th>Quantity</th>
                 <th>Price</th>
-                <th>Value</th>
+                <th>Tax</th>
+                <th>Gross Value</th>
+                <th>Net Value</th>
               </tr>
             </thead>
             <tbody>
               {order.items.map((item) => (
                 <tr key={item.product.id}>
-                  <td>{item.product.name}</td>
+                  <td>
+                    <Link 
+                      to={`/product/${item.product.id}`}
+                      className="text-decoration-none text-black"
+                    >
+                      {item.product.name}
+                    </Link>
+                  </td>
                   <td>{item.quantity}</td>
-                  <td>{item.product.price}</td>
-                  <td>{Math.floor(item.product.price*item.quantity * 100) / 100}</td>
+                  <td>{item.product.price} zł</td>
+                  <td>{item.product.taxRate === -1 ? "Tax free" : `${item.product.taxRate} %`}</td>
+                  <td>{roundValue(item.product.price * item.quantity, 2)} zł</td>
+                  <td>{calculateNetValue(item)} zł</td>
                 </tr>
               ))}
             </tbody>
@@ -84,7 +93,21 @@ export const OrderDetails = ({order}: Props) => {
             </dl>
           </div>
 
-          <div className="fs-5 mt-5">Total: <b>{calculateTotalOrderAmount(order)} zł</b></div>
+          {hasDiscount && 
+            <div className="my-4">
+                {roundValue(userDiscount * 100, 2)} % discount applied
+            </div>}
+
+          <div className="fs-5 ">
+            Total:&nbsp;
+            {hasDiscount && <del className="text-muted">{roundValue(order.totalValue / (1 -userDiscount), 2)} zł</del>}
+            <b>&nbsp;{roundValue(order.totalValue, 2)} zł</b>
+          </div>
+          <div className="fs-5 ">
+            Total with Tax:&nbsp;
+            {hasDiscount && <del className="text-muted">{roundValue(order.totalValueWithTax / (1 -userDiscount), 2)} zł</del>}
+            <b>&nbsp;{roundValue(order.totalValueWithTax, 2)} zł</b>
+          </div>
         </div>
 
         

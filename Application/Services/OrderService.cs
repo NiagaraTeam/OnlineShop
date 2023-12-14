@@ -146,6 +146,8 @@ namespace Application.Services
                     Orders = null,
                     Address = _mapper.Map<AddressDto>(orders[index].CustomerDetails.Address)
                 };
+                orderdto.TotalValue = CalculateOrderValue(orderdto, false);
+                orderdto.TotalValueWithTax = CalculateOrderValue(orderdto, true);
             }
             
 
@@ -204,6 +206,9 @@ namespace Application.Services
                 Address = _mapper.Map<AddressDto>(order.CustomerDetails.Address)
             };
 
+            orderdto.TotalValue = CalculateOrderValue(orderdto, false);
+            orderdto.TotalValueWithTax = CalculateOrderValue(orderdto, true);
+
             return Result<OrderDto>.Success(orderdto);
         }
 
@@ -240,6 +245,34 @@ namespace Application.Services
                 return Result<object>.Success(null);
 
             return Result<object>.Failure("Failed to save updateorder");
+        }
+    
+        private decimal CalculateOrderValue(OrderDto order, bool withTax)
+        {
+            decimal totalValue = 0;
+
+            // items
+            foreach (var item in order.Items){
+                var itemValue = item.Product.Price * item.Quantity;
+
+                if (withTax)
+                {
+                    var taxRate = item.Product.TaxRate;
+                    if (taxRate != -1 && taxRate != 0)
+                        itemValue *= 1.0m + (decimal)(taxRate / 100.0);
+                }
+
+                totalValue += itemValue;
+            }
+
+            // shipping cost
+            totalValue += order.ShippingMethod.Cost;
+
+            // user discount
+            var userDiscount = 1 - order.UserDetails.DiscountValue;
+            totalValue *= userDiscount;
+            
+            return totalValue;
         }
     }
 }

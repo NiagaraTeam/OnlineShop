@@ -9,6 +9,7 @@ import { FavouriteCheckBox } from "../../features/FavouriteCheckBox";
 import { ProductExpert } from "./ProductExpert";
 import { ProductStatus } from "../../../../app/models/enums/ProductStatus";
 import { router } from "../../../../app/router/Routes";
+import { roundValue } from "../../../../app/utils/RoundValue";
 
 export const ProductDetailsPage = observer(() => {
   const {productStore, commonStore, cartStore} = useStore();
@@ -67,18 +68,19 @@ export const ProductDetailsPage = observer(() => {
                         <> Unavailable</>
                     }
                 </p>
+                <p>Tax rate: {product.taxRate === -1 ? "Tax free" : `${product.taxRate} %`}</p>
 
                 {Product.isOnSale(product) ?  (
                     <>
                         <h5 className="text-decoration-line-through">Price: {product.price} zł</h5>
-                        <h5>Discouted price: {Product.getDiscountedPrice(product)} zł </h5>
-                        <p>Discouted price with Tax: {Math.floor(Product.getDiscountedPrice(product) * (100 + product.taxRate)) / 100} zł </p>
+                        <h5>Discounted price: {Product.getDiscountedPrice(product)} zł </h5>
+                        <p>Discounted price with Tax: {roundValue(Product.getDiscountedPrice(product) * (1 + product.taxRate/100), 2)} zł </p>
 
                     </>
                 ) : (
                     <>
                         <h5>Price: {product.price} zł</h5>
-                        <p>Price with Tax: {Math.floor(product.price * (product.taxRate === -1 ? 100 : 100 + product.taxRate)) / 100} zł</p>
+                        <p>Price with Tax: {roundValue(product.price * (product.taxRate === -1 ? 1 : 1 + product.taxRate/100), 2)} zł</p>
                     </>
                 )}
 

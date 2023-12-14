@@ -1,5 +1,6 @@
 import { observer } from "mobx-react-lite";
 import { useStore } from "../../../../app/stores/store";
+import { roundValue } from "../../../../app/utils/RoundValue";
 
 
 export const CartPageTotalValue = observer(() => {
@@ -14,9 +15,7 @@ export const CartPageTotalValue = observer(() => {
         <>
             {hasDiscount && 
             <div className="text-success">
-                ({Math.floor(
-                accountDetails!.discountValue * 100
-                )} % discount applied)
+                ({roundValue(accountDetails!.discountValue * 100, 2)} % discount applied)
             </div>}
             <div className="my-4">
                 <h4>
