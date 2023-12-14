@@ -76,9 +76,11 @@ export const AccountPage = observer(() => {
                                     <td>{orderDate.toDateString()}</td>
                                     <td>{OrderStatus[order.status]}</td>
                                     <td>
-                                    <Link to={`/order/${order.id}`} className="btn btn-primary btn-sm">
-                                    Details
-                                    </Link>
+                                        <div className="d-flex">
+                                            <Link to={`/order/${order.id}`} className="btn btn-primary btn-sm mx-2">
+                                                Details
+                                            </Link>
+                                        </div>
                                     </td>
                                     </tr>
                             )})}

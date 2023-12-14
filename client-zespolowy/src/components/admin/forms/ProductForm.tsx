@@ -11,6 +11,7 @@ import Loading from "../../common/Loading";
 import { useEffect } from "react";
 import { enumToOptions } from "../../../app/models/options/Option";
 import { ProductStatus } from "../../../app/models/enums/ProductStatus";
+import TextAreaInput from "../../common/formInputs/TextAreaInput";
 
 interface Props {
     onSubmit: (product: ProductFormValues, formikHelpers: FormikHelpers<ProductFormValues>) => void;
@@ -20,7 +21,7 @@ interface Props {
 }
 
 export const ProductForm = observer(
-    ({onSubmit, product, buttonText, editMode = false}: Props) => {
+    ({onSubmit, product, buttonText}: Props) => {
 
     const {categoryStore, expertsStore, commonStore} = useStore();
     const {loadCategories, categories, categoriesAsOptions} = categoryStore;
@@ -67,7 +68,7 @@ export const ProductForm = observer(
 
             {/* Description */}
             <div className="my-2">
-                <TextInput placeholder="Enter description" name="description" label="Description"/>
+                <TextAreaInput placeholder="Enter description" name="description" label="Description" rows={3}/>
             </div>
 
             {/* Price */}
@@ -96,10 +97,9 @@ export const ProductForm = observer(
             </div>
 
             {/* CurrentStock */}
-            {!editMode &&
             <div className="my-2">
                 <NumberInput placeholder="Enter current stock" name="currentStock" label="Stock"/>
-            </div>}
+            </div>
 
             {/* Button */}
             <div className="text-center my-5">

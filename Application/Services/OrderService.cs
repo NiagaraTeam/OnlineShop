@@ -84,28 +84,27 @@ namespace Application.Services
             if (orderToChangeStatus.Status == OrderStatus.Canceled || orderToChangeStatus.Status == OrderStatus.Completed)
                 return Result<object>.Failure("Failed to update order status, order is already completed or canceled");
             
-
-            foreach (OrderItem item in orderToChangeStatus.Items)
-            {
-                var productInfo = await _context.ProductInfos.FirstOrDefaultAsync(pi => pi.Id == item.ProductId);
-                if (productInfo == null)
-                    return Result<object>.Failure("Product not found");
-
-                if (productInfo.CurrentStock < item.Quantity)
-                    return Result<object>.Failure("Cannot update order status due to lack of products");
-            }
-
             if (status == OrderStatus.Completed)
             {
                 foreach (OrderItem item in orderToChangeStatus.Items)
                 {
-                    var productInfo = await _context.ProductInfos.FindAsync(item.ProductId);
-                    if (productInfo == null)
-                        return Result<object>.Failure("Product not found");
+                    var product = await _context.Products
+                        .Include(p => p.ProductInfo)
+                        .FirstOrDefaultAsync(p => p.Id ==item.ProductId);
                     
-                    productInfo.CurrentStock -= item.Quantity;
-                    productInfo.TotalSold += item.Quantity;
-                    _context.ProductInfos.Update(productInfo);
+                    if (product == null)
+                        return Result<object>.Failure("Product not found");
+
+                    if (product.ProductInfo.CurrentStock < item.Quantity)
+                        return Result<object>.Failure("Cannot update order status due to lack of products");
+                    
+                    product.ProductInfo.CurrentStock -= item.Quantity;
+                    product.ProductInfo.TotalSold += item.Quantity;
+
+                    if (product.ProductInfo.CurrentStock <= 0)
+                        product.Status = ProductStatus.Unavailable;
+                    
+                    _context.Products.Update(product);
                 }
             }
             orderToChangeStatus.Status = status;

@@ -62,11 +62,11 @@ export const OrdersPage = observer(() => {
                 <td>{order.userDetails.email}</td>
                 <td>{OrderStatus[order.status]}</td>
                 <td>
-                  <div className='d-flex m'>
-                    <Link to={`/admin/order/${order.id}`} className="btn btn-primary btn-sm">
+                  <div className='d-flex me-2'>
+                    <Link to={`/admin/order/${order.id}`} className="btn btn-primary btn-sm mx-2">
                     Details
                     </Link>
-                    <span className="mx-1"></span>
+                    {order.status !== OrderStatus.Completed && order.status !== OrderStatus.Canceled &&
                     <div className="dropdown d-inline-block">
                       <button
                         className="btn btn-secondary btn-sm dropdown-toggle"
@@ -89,7 +89,7 @@ export const OrdersPage = observer(() => {
                           </button>
                         ))}
                       </div>
-                    </div>
+                    </div>}
                   </div>
                 </td>
               </tr>

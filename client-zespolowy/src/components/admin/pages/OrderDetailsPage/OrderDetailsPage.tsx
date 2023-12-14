@@ -21,7 +21,7 @@ export const OrderDetailsPage = observer(() => {
   
   return (
     <div>
-      <OrderDetails order={order} ></OrderDetails>
+      <OrderDetails order={order} adminView={true} ></OrderDetails>
     </div>
   );
   

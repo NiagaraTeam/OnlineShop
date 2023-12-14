@@ -6,9 +6,11 @@ import { roundValue } from "../../app/utils/RoundValue";
 
 interface Props {
   order: Order;
+  adminView?: boolean
+  addItemsFromOrder?: (order: Order) => void;
 }
 
-export const OrderDetails = ({order}: Props) => {
+export const OrderDetails = ({order, adminView = false, addItemsFromOrder}: Props) => {
   const hasDiscount = order.userDetails.discountValue !== 0;
   const userDiscount = order.userDetails.discountValue;
 
@@ -23,11 +25,11 @@ export const OrderDetails = ({order}: Props) => {
       <div className="row">
 
         <div className="col-8 pe-5">
-          <p className="fs-3 row">
+          <div className="fs-3 row">
             <div>Order no. <b className="fs-2">{order.id}</b></div>
             <div className="fs-6">Date: {order.orderDate.toLocaleDateString()}</div>
             <div className="fs-6">Status: {OrderStatus[order.status]}</div>
-          </p>
+          </div>
           <table className="table table-bordered mt-4">
             <thead className="table-light">
               <tr>
@@ -59,6 +61,14 @@ export const OrderDetails = ({order}: Props) => {
               ))}
             </tbody>
           </table>
+          {!adminView && 
+          <div className="d-flex justify-content-end">
+            <button 
+              className="btn btn-secondary mt-3" 
+              onClick={() => addItemsFromOrder!(order)}>
+                Add products to cart
+              </button>
+          </div>}
         </div>
 
         <div className="col-4 border rounded px-4 py-4">

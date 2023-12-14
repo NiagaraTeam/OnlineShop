@@ -251,12 +251,16 @@ namespace Application.Services
         public async Task<Result<ProductDto>> Update(int productId, ProductUpdateDto product)
         {
             var updateProduct = await _context.Products
+                .Include(p => p.ProductInfo)
                 .FirstOrDefaultAsync(p => p.Id == productId);
 
             if (updateProduct == null)
                 return null;
                 
             _mapper.Map(product, updateProduct);
+
+            updateProduct.ProductInfo.CurrentStock = product.CurrentStock;
+
             _context.Products.Update(updateProduct);
 
             if (await _context.SaveChangesAsync() == 0) {
