@@ -1,11 +1,11 @@
 import { observer } from "mobx-react-lite"
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useStore } from "../../../app/stores/store";
-import Loading from "../../common/Loading";
-import { OrderDetails } from "../../common/OrderDetails";
+import { useStore } from "../../../../app/stores/store";
+import Loading from "../../../common/Loading";
+import { OrderDetails } from "../../../common/OrderDetails";
 
-export const DetailsPage = observer(() => {
+export const OrderDetailsPage = observer(() => {
   const {orderStore, commonStore} = useStore();
   const {initialLoading} = commonStore;
   const {loadOrder, selectedOrder: order} = orderStore;
@@ -21,8 +21,7 @@ export const DetailsPage = observer(() => {
   
   return (
     <div>
-      
-      <OrderDetails order={order}></OrderDetails>
+      <OrderDetails order={order} ></OrderDetails>
     </div>
   );
   

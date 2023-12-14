@@ -44,14 +44,14 @@ export const OrdersPage = observer(() => {
       <div className="col-md-10 order-md-10">
         
         {filteredOrders.length !== 0 &&
-        <table className="table">
-          <thead>
+        <table className="table table-bordered">
+          <thead className='table-light'>
             <tr>
               <th>Order ID</th>
               <th>Date</th>
               <th>Customer</th>
               <th>Status</th>
-              <th></th>
+              <th style={{ width: "0", whiteSpace: "nowrap" }} className="text-center"></th>
             </tr>
           </thead>
           <tbody>
@@ -62,31 +62,33 @@ export const OrdersPage = observer(() => {
                 <td>{order.userDetails.email}</td>
                 <td>{OrderStatus[order.status]}</td>
                 <td>
-                  <Link to={`/admin/order/${order.id}`} className="btn btn-primary btn-sm">
-                   Details
-                  </Link>
-                  <span className="mx-2"></span>
-                  <div className="dropdown d-inline-block">
-                    <button
-                      className="btn btn-secondary btn-sm dropdown-toggle"
-                      type="button"
-                      id={`statusDropdown${order.id}`}
-                      data-bs-toggle="dropdown"
-                      aria-haspopup="true"
-                      aria-expanded="false"
-                    >
-                      Status
-                    </button>
-                    <div className="dropdown-menu" aria-labelledby={`statusDropdown${order.id}`}>
-                      {orderStatusOptions.map((option) => (
-                        <button
-                          key={option.value}
-                          className="dropdown-item"
-                          onClick={() => handleStatusChange(order.id, option.value as OrderStatus)}
-                        >
-                          {option.text}
-                        </button>
-                      ))}
+                  <div className='d-flex m'>
+                    <Link to={`/admin/order/${order.id}`} className="btn btn-primary btn-sm">
+                    Details
+                    </Link>
+                    <span className="mx-1"></span>
+                    <div className="dropdown d-inline-block">
+                      <button
+                        className="btn btn-secondary btn-sm dropdown-toggle"
+                        type="button"
+                        id={`statusDropdown${order.id}`}
+                        data-bs-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        Status
+                      </button>
+                      <div className="dropdown-menu" aria-labelledby={`statusDropdown${order.id}`}>
+                        {orderStatusOptions.map((option) => (
+                          <button
+                            key={option.value}
+                            className="dropdown-item"
+                            onClick={() => handleStatusChange(order.id, option.value as OrderStatus)}
+                          >
+                            {option.text}
+                          </button>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </td>

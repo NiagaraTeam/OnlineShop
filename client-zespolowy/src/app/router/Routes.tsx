@@ -9,7 +9,7 @@ import { ProductsPage as CustomerProductsPage } from "../../components/customer/
 import { AccountPage } from "../../components/customer/pages/AccountPage";
 import { ProductsPage as AdminProductsPage } from "../../components/admin/pages/ProductsPage/ProductsPage";
 import { OrdersPage } from "../../components/admin/pages/OrdersPage";
-import { OrderDetailsPage } from "../../components/admin/pages/OrderDetailsPage";
+import { OrderDetailsPage } from "../../components/admin/pages/OrderDetailsPage/OrderDetailsPage";
 import { ShippingMethodsPage } from "../../components/admin/pages/ShippingMethodsPage";
 import { PaymentMethodsPage } from "../../components/admin/pages/PaymentMethodsPage";
 import { CustomersPage } from "../../components/admin/pages/CustomersPage";
