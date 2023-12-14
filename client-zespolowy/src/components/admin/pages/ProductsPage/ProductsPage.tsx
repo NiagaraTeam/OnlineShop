@@ -83,7 +83,7 @@ export const ProductsPage = observer(() => {
                         </h2>
                         <div key={selectedProduct!.id} >
                             <ProductForm 
-                                onSubmit={handleEdit} buttonText="Save" editMode={true}
+                                onSubmit={handleEdit} buttonText="Save"
                                 product={ProductFormValues.createFromProduct(selectedProduct!)}
                             />
                             <div className="my-2">

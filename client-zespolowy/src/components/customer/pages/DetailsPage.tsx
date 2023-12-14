@@ -6,7 +6,7 @@ import Loading from "../../common/Loading";
 import { OrderDetails } from "../../common/OrderDetails";
 
 export const DetailsPage = observer(() => {
-  const {orderStore, commonStore} = useStore();
+  const {orderStore, commonStore, cartStore: {addItemsFromOrder}} = useStore();
   const {initialLoading} = commonStore;
   const {loadOrder, selectedOrder: order} = orderStore;
   const {id} = useParams();
@@ -22,7 +22,7 @@ export const DetailsPage = observer(() => {
   return (
     <div>
       
-      <OrderDetails order={order}></OrderDetails>
+      <OrderDetails order={order} addItemsFromOrder={addItemsFromOrder}></OrderDetails>
     </div>
   );
   

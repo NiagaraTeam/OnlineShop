@@ -69,9 +69,11 @@ export default class OrderStore {
       await agent.Orders.changeOrderStatus(orderId, newStatus);
 
       const orderToUpdate = this.orders.find((order) => order.id === orderId);
-      if (orderToUpdate) {
-        orderToUpdate.status = newStatus;
-      }
+      runInAction(() => {
+        if (orderToUpdate) 
+          orderToUpdate.status = newStatus;
+      });
+      
     } catch (error) {
       console.error('Error changing order status:', error);
     }

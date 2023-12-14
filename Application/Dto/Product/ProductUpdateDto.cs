@@ -23,5 +23,7 @@ namespace Application.Dto.Product
         public int ProductExpertId { get; set; }
         [Required]
         public ProductStatus Status { get; set; }
+        [Required]
+        public decimal CurrentStock { get; set; }
     }
 }

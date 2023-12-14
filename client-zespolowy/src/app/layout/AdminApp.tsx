@@ -32,7 +32,7 @@ export const AdminApp = observer(() => {
     <>  
       <div className='container'>
         <ScrollRestoration/>
-        <ToastContainer position='bottom-right' hideProgressBar theme='colored' />
+        <ToastContainer position='bottom-right' hideProgressBar theme='colored' style={{ width: '500px' }}/>
         <div className='wrapper'>
           <Header/>
             <div className='my-5'>

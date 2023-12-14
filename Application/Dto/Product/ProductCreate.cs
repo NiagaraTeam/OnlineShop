@@ -24,7 +24,7 @@ namespace Application.Dto.Product
         [Required]
         public ProductStatus Status { get; set; }
         [Required]
-        [GraterThanZero(ErrorMessage = "Field {0} must be positive number")]
+        [Range(0, double.MaxValue, ErrorMessage = "Current stock must be equal to or greater than 0")]
         public decimal CurrentStock { get; set; }
     }
 }

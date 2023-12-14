@@ -21,7 +21,7 @@ interface Props {
 }
 
 export const ProductForm = observer(
-    ({onSubmit, product, buttonText, editMode = false}: Props) => {
+    ({onSubmit, product, buttonText}: Props) => {
 
     const {categoryStore, expertsStore, commonStore} = useStore();
     const {loadCategories, categories, categoriesAsOptions} = categoryStore;
@@ -97,10 +97,9 @@ export const ProductForm = observer(
             </div>
 
             {/* CurrentStock */}
-            {!editMode &&
             <div className="my-2">
                 <NumberInput placeholder="Enter current stock" name="currentStock" label="Stock"/>
-            </div>}
+            </div>
 
             {/* Button */}
             <div className="text-center my-5">

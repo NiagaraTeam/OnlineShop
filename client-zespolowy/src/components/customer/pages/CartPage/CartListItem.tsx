@@ -61,7 +61,7 @@ export const CartListItem = observer(({ item }: Props) => {
           <div style={{width: "75px", marginRight: "50px"}}>
             <input 
               type="number" 
-              value={editedQuantity} 
+              value={editedQuantity ? editedQuantity : ''} 
               className="form-control mx-4"
               onChange={handleQuantityChange}/>
           </div>

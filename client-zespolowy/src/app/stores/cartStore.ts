@@ -2,7 +2,7 @@ import { makeAutoObservable, reaction, runInAction } from "mobx";
 import { CartItem } from "../models/onlineshop/Cart";
 import { toast } from "react-toastify";
 import agent from "../api/agent";
-import { CreateOrder } from "../models/onlineshop/Order";
+import { CreateOrder, Order } from "../models/onlineshop/Order";
 import { store } from "./store";
 import { roundValue } from "../utils/RoundValue";
 
@@ -42,13 +42,26 @@ export default class CartStore {
         return this.cartItems.map(item => item.productId);
     }
 
+    addItemsFromOrder = (order: Order) => {
+        order.items.forEach(
+            (item) => this.addItemToCart(item.product.id, item.quantity)
+        );
+    }
+
     addItemToCart = (productId: number, quantity: number) => {
+        const price = store.productStore.productPrice(productId);
+
+        if (!price) {
+            toast.info(`Product Unavailable ID: ${productId}`);
+            return;
+        }
+
         const existingItem = this.cartItems.find(item => item.productId === productId);
     
         if (existingItem) {
             this.changeQuantity(
                 productId, 
-                existingItem.quantity += quantity,
+                existingItem.quantity + quantity,
             )
             this.saveToLocalStorage();
         } else {
@@ -86,8 +99,16 @@ export default class CartStore {
         const product = store.productStore.getProduct(productId);
 
         if (product) {
+            const maxStock = product.productInfo.currentStock;
+
+            if (newQuantity > maxStock) {
+                toast.info(`Quantity not increased. Maximum available quantity for product ID:${productId} is ${maxStock}.`);
+                return;
+            }
+
             existingItem.quantity = Math.max(newQuantity, 0);
-            existingItem.quantity = Math.min(newQuantity, product?.productInfo.currentStock);
+            existingItem.quantity = Math.min(newQuantity, maxStock);
+            
             toast.success("Quantity changed");
             this.saveToLocalStorage();
         } else {
@@ -102,7 +123,11 @@ export default class CartStore {
             if (price) 
                 value += price * item.quantity;
             else
+            {
                 this.deleteItemFromCart(item.productId);
+                toast.info(`Product with id: ${item.productId} is Unavailable. Removed from cart.`);
+            }
+                
         })
 
         const shippingPrice = this.getShippingPrice();
@@ -119,7 +144,11 @@ export default class CartStore {
             if (price) 
                 value += price * item.quantity;
             else 
+            {
                 this.deleteItemFromCart(item.productId);
+                toast.info(`Product with id: ${item.productId} is Unavailable. Removed from cart.`);
+            }
+                
         })
 
         const shippingPrice = this.getShippingPrice();
