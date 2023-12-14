@@ -9,6 +9,8 @@ export interface Order {
     id: number;
     orderDate: Date;
     status: OrderStatus;
+    totalValue: number;
+    totalValueWithTax: number;
     paymentMethod: PaymentMethod;
     shippingMethod: ShippingMethod;
     userDetails: AccountDetails;

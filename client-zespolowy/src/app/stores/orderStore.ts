@@ -63,6 +63,7 @@ export default class OrderStore {
         toast.error("failed to load");
     }
   };
+  
   changeOrderStatus = async (orderId: number, newStatus: OrderStatus) => {
     try {
       await agent.Orders.changeOrderStatus(orderId, newStatus);
@@ -75,6 +76,7 @@ export default class OrderStore {
       console.error('Error changing order status:', error);
     }
   };
+
   loadOrder = async (id: number) => {
     let order = this.getOrder(id);
 
@@ -85,8 +87,10 @@ export default class OrderStore {
         store.commonStore.setInitialLoading(true);
         try {
             order = await agent.Orders.getDetails(id);
-            this.setOrder(order);
-            runInAction(() => this.selectedOrder = order)
+            runInAction(() => {
+              this.setOrder(order!);
+              this.selectedOrder = order;
+            })
             return order;
         } catch (error) {
             console.log(error);

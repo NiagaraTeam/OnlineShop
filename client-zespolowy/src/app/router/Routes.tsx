@@ -9,7 +9,7 @@ import { ProductsPage as CustomerProductsPage } from "../../components/customer/
 import { AccountPage } from "../../components/customer/pages/AccountPage";
 import { ProductsPage as AdminProductsPage } from "../../components/admin/pages/ProductsPage/ProductsPage";
 import { OrdersPage } from "../../components/admin/pages/OrdersPage";
-import { OrderDetailsPage } from "../../components/admin/pages/OrderDetailsPage";
+import { OrderDetailsPage } from "../../components/admin/pages/OrderDetailsPage/OrderDetailsPage";
 import { ShippingMethodsPage } from "../../components/admin/pages/ShippingMethodsPage";
 import { PaymentMethodsPage } from "../../components/admin/pages/PaymentMethodsPage";
 import { CustomersPage } from "../../components/admin/pages/CustomersPage";
@@ -25,7 +25,7 @@ import { RegisterPage } from "../../components/customer/pages/RegisterPage";
 import { RequireCustomerAuth } from "./RequireCustomerAuth";
 import { RequireAdminAuth } from "./RequireAdminAuth";
 import { ManageCategoriesPage } from "../../components/admin/pages/ManageCategoriesPage";
-
+import { DetailsPage } from "../../components/customer/pages/DetailsPage";
 export const routes: RouteObject[] = [
     {
         path: '/',
@@ -34,6 +34,7 @@ export const routes: RouteObject[] = [
             //login required as customer
             {element: <RequireCustomerAuth/>, children: [
                 {path: 'account', element: <AccountPage />},
+                {path: 'order/:id', element:<DetailsPage/>}
             ]},
             //no login required
             {path: 'products', element: <CustomerProductsPage />},
@@ -48,7 +49,8 @@ export const routes: RouteObject[] = [
 
             {path: 'server-error', element: <ServerError />},
             {path: 'not-found', element: <NotFound />},
-            {path: '*', element: <NotFound />}
+            {path: '*', element: <NotFound />},
+            
         ],
     },
     {

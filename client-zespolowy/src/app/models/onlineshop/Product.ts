@@ -4,6 +4,7 @@ import { Photo } from "./Photo";
 import { ProductInfo } from "./ProductInfo";
 import { ProductDiscount } from "./ProductDiscount";
 import { ProductExpert } from "./ProductExpert";
+import { roundValue } from "../../utils/RoundValue";
 
 export class Product {
     constructor(
@@ -40,7 +41,7 @@ export class Product {
             });
 
             if (currentDiscount) {
-                return Math.floor((product.price * (1 - currentDiscount.value)) * 100) / 100;
+                return roundValue((product.price * (1 - currentDiscount.value)), 2);
             }
         }
 

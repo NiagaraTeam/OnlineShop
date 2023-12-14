@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import agent from "../api/agent";
 import { CreateOrder } from "../models/onlineshop/Order";
 import { store } from "./store";
+import { roundValue } from "../utils/RoundValue";
 
 export default class CartStore {
     cartItems: CartItem[] = [];
@@ -133,10 +134,10 @@ export default class CartStore {
         const discountedTotalWithTax = this.totalValueWithTax * (1 - discount);
     
         return {
-          total: Math.floor(this.totalValue * 100) / 100,
-          discountedTotal: Math.floor(discountedTotal * 100) / 100,
-          totalWithTax: Math.floor(this.totalValueWithTax * 100) / 100,
-          discountedTotalWithTax: Math.floor(discountedTotalWithTax * 100) / 100
+          total: roundValue(this.totalValue, 2),
+          discountedTotal: roundValue(discountedTotal, 2),
+          totalWithTax: roundValue(this.totalValueWithTax, 2),
+          discountedTotalWithTax: roundValue(discountedTotalWithTax, 2),
         };
       };
 
