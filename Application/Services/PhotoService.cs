@@ -46,10 +46,14 @@ namespace Application.Services
             };
 
             // usunięcie starego zdjęcia
-            var deleteResult = await DeletePhoto(product.Photo.Id);
+            if (product.Photo != null)
+            {
+                var deleteResult = await DeletePhoto(product.Photo.Id);
 
-            if (!deleteResult.IsSucess)
-                return Result<PhotoDto>.Failure(deleteResult.Error);
+                if (!deleteResult.IsSucess)
+                    return Result<PhotoDto>.Failure(deleteResult.Error);
+            }
+                
 
             // dodanie nowego zdjęcia do produktu
             product.Photo = photo;

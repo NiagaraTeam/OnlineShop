@@ -18,6 +18,7 @@ export const ProductsPage = observer(() => {
     const [showEditForm, setShowEditForm] = useState(false);
     const [showCreateForm, setShowCreateForm] = useState(false);
     const [showDeletedProducts, setShowDeletedProducts] = useState(false);
+    const [activeTab, setActiveTab] = useState("details");
 
     // edit
     function handleEdit(product: ProductFormValues, formikHelpers: FormikHelpers<ProductFormValues>): void {
@@ -79,17 +80,37 @@ export const ProductsPage = observer(() => {
                     <>
                         <h2 className="my-4 d-flex justify-content-between align-items-center">
                             <span>Edit Product</span>
-                            <button className="btn btn-close" onClick={() => setShowEditForm(false)}></button>
+                            <button className="btn btn-close" onClick={() => {setShowEditForm(false); setActiveTab('details')}}></button>
                         </h2>
-                        <div key={selectedProduct!.id} >
+                        <div className="btn-group d-flex mb-4">
+                            <input type="radio" className="btn-check" name="btnradio" id="btnradio1" autoComplete="off" checked={activeTab === 'details'} onChange={() => setActiveTab('details')} />
+                            <label className={`btn btn-outline-secondary ${activeTab === 'details' ? 'active' : ''}`} htmlFor="btnradio1">
+                                Details
+                            </label>
+
+                            <input type="radio" className="btn-check" name="btnradio" id="btnradio2" autoComplete="off" checked={activeTab === 'photo'} onChange={() => setActiveTab('photo')} />
+                            <label className={`btn btn-outline-secondary ${activeTab === 'photo' ? 'active' : ''}`} htmlFor="btnradio2">
+                                Photo
+                            </label>
+
+                            <input type="radio" className="btn-check" name="btnradio" id="btnradio3" autoComplete="off" checked={activeTab === 'discount'} onChange={() => setActiveTab('discount')} />
+                            <label className={`btn btn-outline-secondary ${activeTab === 'discount' ? 'active' : ''}`} htmlFor="btnradio3">
+                                Discount
+                            </label>
+                        </div>
+
+                        {activeTab === 'details' && 
+                        <div key={selectedProduct!.id}>
                             <ProductForm 
                                 onSubmit={handleEdit} buttonText="Save"
                                 product={ProductFormValues.createFromProduct(selectedProduct!)}
                             />
-                            <div className="my-2">
-                               <PhotoUploadWidget product={selectedProduct!} uploadPhoto={handlePhotoUpload} loading={uploading}/>
-                            </div>
-                        </div>
+                        </div>}
+
+                        {activeTab === 'photo' && 
+                        <div key={selectedProduct!.id} >
+                            <PhotoUploadWidget product={selectedProduct!} uploadPhoto={handlePhotoUpload} loading={uploading}/>
+                        </div>}
                     </>}
 
                     
