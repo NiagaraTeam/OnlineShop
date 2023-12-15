@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { ProductStatus } from "../models/enums/ProductStatus";
 import { Pagination, PagingParams } from "../models/common/Pagination";
 import { router } from "../router/Routes";
+import { ProductDiscount } from "../models/onlineshop/ProductDiscount";
 
 export default class ProductStore {
     productsRegistry = new Map<number,Product>();
@@ -107,8 +108,8 @@ export default class ProductStore {
         product.modificationDate = new Date(product.modificationDate);
 
         product.productDiscounts.forEach((discout) => {
-            discout.start = new Date(discout.start);
-            discout.end = new Date(discout.end);
+            discout.start = new Date(discout.start!);
+            discout.end = new Date(discout.end!);
         })
         return product;
     }
@@ -285,6 +286,23 @@ export default class ProductStore {
         } catch (error) {
             console.log(error);
             toast.error('Failed to update product');
+        }
+    }
+
+    addProductDiscount = async (productId: number, productDiscount: ProductDiscount) => {
+        try {
+            await agent.Products.addDiscount(productId, productDiscount);
+            const product = this.getProduct(productId);
+            if(product)
+            {
+                product.productDiscounts.push(productDiscount);
+                this.setProduct(product);
+            }
+
+            toast.success('Discount added');
+        } catch (error) {
+            console.log(error);
+            throw error;
         }
     }
 

@@ -42,3 +42,7 @@
 .wrapper{
   min-height: calc(100vh - 56px);
 }
+
+.date-picker-control {
+  width: 100% !important;
+}

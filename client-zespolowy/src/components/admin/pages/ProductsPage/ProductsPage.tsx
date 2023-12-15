@@ -8,10 +8,13 @@ import { ProductFormValues } from "../../../../app/models/onlineshop/Product";
 import { DeletedProducts } from "./DeletedProducts";
 import { Products } from "./Products";
 import { PhotoUploadWidget } from "../../../common/imageUpload/PhtoUploadWidget";
+import { ProductDiscountForm } from "../../forms/ProductDiscountForm";
+import { format } from 'date-fns';
+import { ProductDiscount } from "../../../../app/models/onlineshop/ProductDiscount";
 
 export const ProductsPage = observer(() => {
     const {productStore, commonStore} = useStore();
-    const {selectedProduct, createProduct, updateProduct, uploadPhoto, uploading} = productStore;
+    const {selectedProduct, createProduct, updateProduct, uploadPhoto, uploading, addProductDiscount} = productStore;
     const {initialLoading} = commonStore;
 
     // view logic
@@ -42,6 +45,17 @@ export const ProductsPage = observer(() => {
 
     function handlePhotoUpload(file: Blob): Promise<void> {
         return uploadPhoto(selectedProduct!.id, file);
+    }
+
+    // add product discount
+    function handleAddProductDiscount (discount: ProductDiscount , formikHelpers: FormikHelpers<ProductDiscount>) {
+        addProductDiscount(selectedProduct!.id, discount)
+            .then(() => {
+                formikHelpers.resetForm();
+            })
+            .catch((error) => {
+                console.error(error);
+            });
     }
 
     // render component
@@ -83,17 +97,20 @@ export const ProductsPage = observer(() => {
                             <button className="btn btn-close" onClick={() => {setShowEditForm(false); setActiveTab('details')}}></button>
                         </h2>
                         <div className="btn-group d-flex mb-4">
-                            <input type="radio" className="btn-check" name="btnradio" id="btnradio1" autoComplete="off" checked={activeTab === 'details'} onChange={() => setActiveTab('details')} />
+                            <input type="radio" className="btn-check" name="btnradio" id="btnradio1" autoComplete="off" 
+                                checked={activeTab === 'details'} onChange={() => setActiveTab('details')} />
                             <label className={`btn btn-outline-secondary ${activeTab === 'details' ? 'active' : ''}`} htmlFor="btnradio1">
                                 Details
                             </label>
 
-                            <input type="radio" className="btn-check" name="btnradio" id="btnradio2" autoComplete="off" checked={activeTab === 'photo'} onChange={() => setActiveTab('photo')} />
+                            <input type="radio" className="btn-check" name="btnradio" id="btnradio2" autoComplete="off" 
+                                checked={activeTab === 'photo'} onChange={() => setActiveTab('photo')} />
                             <label className={`btn btn-outline-secondary ${activeTab === 'photo' ? 'active' : ''}`} htmlFor="btnradio2">
                                 Photo
                             </label>
 
-                            <input type="radio" className="btn-check" name="btnradio" id="btnradio3" autoComplete="off" checked={activeTab === 'discount'} onChange={() => setActiveTab('discount')} />
+                            <input type="radio" className="btn-check" name="btnradio" id="btnradio3" autoComplete="off" 
+                                checked={activeTab === 'discount'} onChange={() => setActiveTab('discount')} />
                             <label className={`btn btn-outline-secondary ${activeTab === 'discount' ? 'active' : ''}`} htmlFor="btnradio3">
                                 Discount
                             </label>
@@ -111,6 +128,35 @@ export const ProductsPage = observer(() => {
                         <div key={selectedProduct!.id} >
                             <PhotoUploadWidget product={selectedProduct!} uploadPhoto={handlePhotoUpload} loading={uploading}/>
                         </div>}
+
+                        {activeTab === 'discount' && 
+                        <>
+                            <div key={selectedProduct!.id} >
+                                <ProductDiscountForm onSubmit={handleAddProductDiscount} buttonText="Add" editMode={false}/>
+                                {selectedProduct!.productDiscounts.length > 0 &&
+                                <>
+                                    <h5>Discounts</h5>
+                                    <table className="table table-bordered">
+                                        <thead className="table-light">
+                                            <tr>
+                                                <th scope="col">Discount Value</th>
+                                                <th scope="col">Start Date</th>
+                                                <th scope="col">End Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {selectedProduct?.productDiscounts.map((discount) => (
+                                                <tr key={`${discount.value} ${discount.start} ${discount.end}`}>
+                                                <td>{discount.value}</td>
+                                                <td>{format(discount.start!, 'dd/MM/yyyy')}</td>
+                                                <td>{format(discount.end!, 'dd/MM/yyyy')}</td>
+                                            </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </>}
+                            </div>
+                        </>}
                     </>}
 
                     
