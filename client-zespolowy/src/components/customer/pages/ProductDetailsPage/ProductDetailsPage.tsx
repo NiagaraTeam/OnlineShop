@@ -118,7 +118,7 @@ export const ProductDetailsPage = observer(() => {
           </div>
           
           <div className="border-top mt-3 p-3">
-            <ProductsSection products={discoutedProducts.slice(0, 5)} label={"Discouted Products"}/>
+            <ProductsSection products={discoutedProducts.slice(0, 5)} label={"Discounted products"}/>
           </div>
 
       </div>
