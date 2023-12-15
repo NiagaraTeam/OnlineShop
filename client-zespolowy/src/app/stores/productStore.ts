@@ -7,6 +7,7 @@ import { ProductStatus } from "../models/enums/ProductStatus";
 import { Pagination, PagingParams } from "../models/common/Pagination";
 import { router } from "../router/Routes";
 import { ProductDiscount } from "../models/onlineshop/ProductDiscount";
+import { OrderItem } from "../models/onlineshop/OrderItem";
 
 export default class ProductStore {
     productsRegistry = new Map<number,Product>();
@@ -177,6 +178,21 @@ export default class ProductStore {
                 runInAction(() => store.commonStore.setInitialLoading(false))
             }
         }
+    }
+
+    refreshProducts = async (items: OrderItem[]) => {
+        items.forEach(async (item) => {
+            const product = await this.getProductObject(item.product.id);
+            runInAction(() => {
+                if (product)
+                {
+                    product.productInfo.currentStock -= item.quantity;
+                    product.productInfo.totalSold += item.quantity;
+    
+                    this.setProduct(product);
+                }
+            });
+        });
     }
 
     getProductObject = async (id: number): Promise<Product | null> => {

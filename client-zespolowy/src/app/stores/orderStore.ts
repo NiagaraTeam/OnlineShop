@@ -70,10 +70,15 @@ export default class OrderStore {
 
       const orderToUpdate = this.orders.find((order) => order.id === orderId);
       runInAction(() => {
-        if (orderToUpdate) 
+        if (orderToUpdate)
+        {
           orderToUpdate.status = newStatus;
+
+          if (newStatus === OrderStatus.Completed)
+            store.productStore.refreshProducts(orderToUpdate!.items);
+        }
       });
-      
+      toast.success("Order status changed.")
     } catch (error) {
       console.error('Error changing order status:', error);
     }
