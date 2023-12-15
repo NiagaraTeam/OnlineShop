@@ -14,7 +14,7 @@ export const AddressForm = ({ onSubmit, address, buttonText }: Props) => {
             {
                 addressLine1: Yup.string().required("Address is required."),
                 addressLine2: Yup.string(),
-                city: Yup.string().required("City is required.").matches(/^\s*[A-Z][a-zA-Z\s]*\s*$/, 'Name of city should start with a capital letter.'),
+                city: Yup.string().required("City is required."),
                 zipCode: Yup.string().required("Zip Code is required.").length(5, 'Zip code should consist exactly 5 characters.'),
                 country: Yup.string().required("Country is required.").matches(/^\s*[A-Z][a-zA-Z\s]*\s*$/, 'Name of country should start with a capital letter.')
             }
