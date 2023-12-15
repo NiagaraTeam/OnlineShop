@@ -43,6 +43,8 @@ namespace API.Controllers
 
             var userDetails = await _userService.UserDetails(user.Id);
 
+            if (userDetails == null) return Unauthorized();
+
             if (userDetails.Value.Status == AccountStatus.Deleted)
                 return Unauthorized();
 

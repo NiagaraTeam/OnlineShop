@@ -43,6 +43,9 @@ namespace Application.Services
             if (user == null)
                 return null;
 
+            if (user.CustomerDetails == null)
+                return null;
+
             var userDetails = new UserDetailsDto
             {
                 Id = user.CustomerDetails.UserId,
