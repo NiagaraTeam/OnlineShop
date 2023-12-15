@@ -15,7 +15,7 @@ export default class ProductStore {
     selectedProduct: Product | undefined = undefined;
 
     topSoldProducts: Product[] = [];
-    discoutedProducts: Product[] = [];
+    discountedProducts: Product[] = [];
     newProducts: Product[] = [];
     favouriteProducts: Product[] = [];
 
@@ -230,12 +230,12 @@ export default class ProductStore {
     loadHomePageProducts = async () => {
         try {
             const topSold = await agent.Products.getTopPurchased();
-            const discouted = await agent.Products.getDiscounted();
+            const discounted = await agent.Products.getDiscounted();
             const newest = await agent.Products.getNewest();
 
             runInAction(() => {           
                 this.topSoldProducts = this.initializeDates(topSold);
-                this.discoutedProducts = this.initializeDates(discouted);
+                this.discountedProducts = this.initializeDates(discounted);
                 this.newProducts = this.initializeDates(newest);
                 store.commonStore.setInitialLoading(false);
             });

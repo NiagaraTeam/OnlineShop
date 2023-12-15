@@ -7,7 +7,7 @@ export const HomePage = observer(() => {
   const {userStore, productStore, commonStore} = useStore();
   const {isLoggedIn, isAdmin} = userStore;
   const {initialLoading} = commonStore;
-  const {topSoldProducts, discoutedProducts, 
+  const {topSoldProducts, discountedProducts, 
     newProducts, favouriteProducts} = productStore;
 
   if (initialLoading) return <div className="text-center m-5"><Loading/></div>
@@ -23,7 +23,7 @@ export const HomePage = observer(() => {
         <ProductsSection label="Bestsellers" products={topSoldProducts} />
       </div>
       <div className="m-3 p-3">
-        <ProductsSection label="Discounted products" products={discoutedProducts} />
+        <ProductsSection label="Discounted products" products={discountedProducts} />
       </div>
       <div className="m-3 p-3">
         <ProductsSection label="New products" products={newProducts} />

@@ -80,7 +80,7 @@ namespace API.Controllers
             return HandleResult(await _productService.GetNewestProducts());
         }
 
-        [HttpGet("products/discounted")] //api/products/discouted
+        [HttpGet("products/discounted")] //api/products/discounted
         [AllowAnonymous]
         public async Task<IActionResult> GetDiscountedProducts()
         {

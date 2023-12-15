@@ -15,7 +15,7 @@ export const ProductDetailsPage = observer(() => {
   const {productStore, commonStore, cartStore} = useStore();
   const {initialLoading} = commonStore;
   const {addItemToCart} = cartStore;
-  const {loadProduct, selectedProduct: product, discoutedProducts} = productStore;
+  const {loadProduct, selectedProduct: product, discountedProducts} = productStore;
   const {id} = useParams();
 
   const [quantity, setQuantity] = useState<number | undefined>(undefined);
@@ -118,7 +118,7 @@ export const ProductDetailsPage = observer(() => {
           </div>
           
           <div className="border-top mt-3 p-3">
-            <ProductsSection products={discoutedProducts.slice(0, 5)} label={"Discounted products"}/>
+            <ProductsSection products={discountedProducts.slice(0, 5)} label={"Discounted products"}/>
           </div>
 
       </div>
