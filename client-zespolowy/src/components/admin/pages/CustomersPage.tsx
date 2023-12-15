@@ -74,6 +74,7 @@ export const CustomersPage = observer(() => {
                   <span>Set user discount</span>
                   <button className="btn btn-close" onClick={() => setShowEditForm(false)}></button>
               </h2>
+              <div className="my-3">User: <b>{selectedUser?.email}</b></div>
               <EditDiscountForm
                   key={selectedUser?.id}
                   onSubmit={handleEdit} buttonText="Save" editMode={true}
