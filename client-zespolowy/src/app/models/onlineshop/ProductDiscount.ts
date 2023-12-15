@@ -1,5 +1,5 @@
 export interface ProductDiscount {
     value: number;
-    start: Date;
-    end: Date;
+    start: Date | null;
+    end: Date | null;
 }

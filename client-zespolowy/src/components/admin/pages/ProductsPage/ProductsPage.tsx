@@ -8,16 +8,20 @@ import { ProductFormValues } from "../../../../app/models/onlineshop/Product";
 import { DeletedProducts } from "./DeletedProducts";
 import { Products } from "./Products";
 import { PhotoUploadWidget } from "../../../common/imageUpload/PhtoUploadWidget";
+import { ProductDiscountForm } from "../../forms/ProductDiscountForm";
+import { format } from 'date-fns';
+import { ProductDiscount } from "../../../../app/models/onlineshop/ProductDiscount";
 
 export const ProductsPage = observer(() => {
     const {productStore, commonStore} = useStore();
-    const {selectedProduct, createProduct, updateProduct, uploadPhoto, uploading} = productStore;
+    const {selectedProduct, createProduct, updateProduct, uploadPhoto, uploading, addProductDiscount} = productStore;
     const {initialLoading} = commonStore;
 
     // view logic
     const [showEditForm, setShowEditForm] = useState(false);
     const [showCreateForm, setShowCreateForm] = useState(false);
     const [showDeletedProducts, setShowDeletedProducts] = useState(false);
+    const [activeTab, setActiveTab] = useState("details");
 
     // edit
     function handleEdit(product: ProductFormValues, formikHelpers: FormikHelpers<ProductFormValues>): void {
@@ -41,6 +45,17 @@ export const ProductsPage = observer(() => {
 
     function handlePhotoUpload(file: Blob): Promise<void> {
         return uploadPhoto(selectedProduct!.id, file);
+    }
+
+    // add product discount
+    function handleAddProductDiscount (discount: ProductDiscount , formikHelpers: FormikHelpers<ProductDiscount>) {
+        addProductDiscount(selectedProduct!.id, discount)
+            .then(() => {
+                formikHelpers.resetForm();
+            })
+            .catch((error) => {
+                console.error(error);
+            });
     }
 
     // render component
@@ -79,17 +94,69 @@ export const ProductsPage = observer(() => {
                     <>
                         <h2 className="my-4 d-flex justify-content-between align-items-center">
                             <span>Edit Product</span>
-                            <button className="btn btn-close" onClick={() => setShowEditForm(false)}></button>
+                            <button className="btn btn-close" onClick={() => {setShowEditForm(false); setActiveTab('details')}}></button>
                         </h2>
-                        <div key={selectedProduct!.id} >
+                        <div className="btn-group d-flex mb-4">
+                            <input type="radio" className="btn-check" name="btnradio" id="btnradio1" autoComplete="off" 
+                                checked={activeTab === 'details'} onChange={() => setActiveTab('details')} />
+                            <label className={`btn btn-outline-secondary ${activeTab === 'details' ? 'active' : ''}`} htmlFor="btnradio1">
+                                Details
+                            </label>
+
+                            <input type="radio" className="btn-check" name="btnradio" id="btnradio2" autoComplete="off" 
+                                checked={activeTab === 'photo'} onChange={() => setActiveTab('photo')} />
+                            <label className={`btn btn-outline-secondary ${activeTab === 'photo' ? 'active' : ''}`} htmlFor="btnradio2">
+                                Photo
+                            </label>
+
+                            <input type="radio" className="btn-check" name="btnradio" id="btnradio3" autoComplete="off" 
+                                checked={activeTab === 'discount'} onChange={() => setActiveTab('discount')} />
+                            <label className={`btn btn-outline-secondary ${activeTab === 'discount' ? 'active' : ''}`} htmlFor="btnradio3">
+                                Discount
+                            </label>
+                        </div>
+
+                        {activeTab === 'details' && 
+                        <div key={selectedProduct!.id}>
                             <ProductForm 
                                 onSubmit={handleEdit} buttonText="Save"
                                 product={ProductFormValues.createFromProduct(selectedProduct!)}
                             />
-                            <div className="my-2">
-                               <PhotoUploadWidget product={selectedProduct!} uploadPhoto={handlePhotoUpload} loading={uploading}/>
+                        </div>}
+
+                        {activeTab === 'photo' && 
+                        <div key={selectedProduct!.id} >
+                            <PhotoUploadWidget product={selectedProduct!} uploadPhoto={handlePhotoUpload} loading={uploading}/>
+                        </div>}
+
+                        {activeTab === 'discount' && 
+                        <>
+                            <div key={selectedProduct!.id} >
+                                <ProductDiscountForm onSubmit={handleAddProductDiscount} buttonText="Add" editMode={false}/>
+                                {selectedProduct!.productDiscounts.length > 0 &&
+                                <>
+                                    <h5>Discounts</h5>
+                                    <table className="table table-bordered">
+                                        <thead className="table-light">
+                                            <tr>
+                                                <th scope="col">Discount Value</th>
+                                                <th scope="col">Start Date</th>
+                                                <th scope="col">End Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {selectedProduct?.productDiscounts.map((discount) => (
+                                                <tr key={`${discount.value} ${discount.start} ${discount.end}`}>
+                                                <td>{discount.value}</td>
+                                                <td>{format(discount.start!, 'dd/MM/yyyy')}</td>
+                                                <td>{format(discount.end!, 'dd/MM/yyyy')}</td>
+                                            </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </>}
                             </div>
-                        </div>
+                        </>}
                     </>}
 
                     
