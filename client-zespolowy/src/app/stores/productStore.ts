@@ -91,6 +91,10 @@ export default class ProductStore {
         this.productsRegistry.set(product.id, this.initializeDate(product));
     }
 
+    deselectProduct = () => {
+        this.selectedProduct = undefined;
+    }
+
     getProduct = (id: number) => {
         return this.productsRegistry.get(id);
     }

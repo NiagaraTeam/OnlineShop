@@ -17,7 +17,7 @@ export default function DateInput(props: Props) {
                 autoComplete='off'
                 selected={(field.value && new Date(field.value)) || null}
                 onChange={value => helpers.setValue(value)}
-                className={`form-control date-picker-control`}
+                className={`form-control`}
             />
             <ErrorMessage name={props.name!} component="span" className="text-danger"/>
         </div>

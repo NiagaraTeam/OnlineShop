@@ -18,7 +18,7 @@ export const Products = observer(({showCreateButton, setShowCreateForm,
     setShowEditForm, setShowDeletedProducts}: Props) => {
     
     const {productStore} = useStore();
-    const {productsAdmin, deleteProduct, loadProduct} = productStore;
+    const {productsAdmin, deleteProduct, loadProduct, selectedProduct} = productStore;
 
     // filter parameters
     const [searchQuery, setSearchQuery] = useState("");
@@ -120,7 +120,7 @@ export const Products = observer(({showCreateButton, setShowCreateForm,
                 </thead>
                 <tbody>
                     {pagedProducts.map((product) => (
-                        <tr key={product.id} >
+                        <tr key={product.id} className={selectedProduct?.id === product.id ? 'selected-row' : ''}>
                             <td className="text-center">{product.id}</td>
                             <td>{product.name}</td>
                             <td className="text-center">{product.category.name}</td>

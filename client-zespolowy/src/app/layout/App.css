@@ -43,6 +43,6 @@
   min-height: calc(100vh - 56px);
 }
 
-.date-picker-control {
-  width: 100% !important;
+.selected-row {
+  --bs-table-bg-state: #f4f4f4; 
 }

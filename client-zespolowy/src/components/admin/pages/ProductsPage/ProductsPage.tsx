@@ -14,7 +14,8 @@ import { ProductDiscount } from "../../../../app/models/onlineshop/ProductDiscou
 
 export const ProductsPage = observer(() => {
     const {productStore, commonStore} = useStore();
-    const {selectedProduct, createProduct, updateProduct, uploadPhoto, uploading, addProductDiscount} = productStore;
+    const {selectedProduct, createProduct, updateProduct, 
+        uploadPhoto, uploading, addProductDiscount, deselectProduct} = productStore;
     const {initialLoading} = commonStore;
 
     // view logic
@@ -94,7 +95,7 @@ export const ProductsPage = observer(() => {
                     <>
                         <h2 className="my-4 d-flex justify-content-between align-items-center">
                             <span>Edit Product</span>
-                            <button className="btn btn-close" onClick={() => {setShowEditForm(false); setActiveTab('details')}}></button>
+                            <button className="btn btn-close" onClick={() => {setShowEditForm(false); deselectProduct(); setActiveTab('details') }}></button>
                         </h2>
                         <div className="btn-group d-flex mb-4">
                             <input type="radio" className="btn-check" name="btnradio" id="btnradio1" autoComplete="off" 
