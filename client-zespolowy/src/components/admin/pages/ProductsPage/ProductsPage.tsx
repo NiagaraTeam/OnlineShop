@@ -27,7 +27,6 @@ export const ProductsPage = observer(() => {
     // edit
     function handleEdit(product: ProductFormValues, formikHelpers: FormikHelpers<ProductFormValues>): void {
         updateProduct(product.id!, product).then(() => {
-            setShowEditForm(false);
             formikHelpers.resetForm();
         });
     }
