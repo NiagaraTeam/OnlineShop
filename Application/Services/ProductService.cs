@@ -15,14 +15,17 @@ namespace Application.Services
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
+        private readonly IPhotoService _photoService;
 
         public ProductService(
             DataContext context, 
-            IMapper mapper
+            IMapper mapper,
+            IPhotoService photoService
         )
         {
             _context = context;
             _mapper = mapper;
+            _photoService = photoService;
         }
 
         public async Task<Result<object>> AddProductDiscount(int productId, DiscountDto discount)
@@ -105,12 +108,15 @@ namespace Application.Services
 
         public async Task<Result<object>> DeletePermanently(int productId)
         {
-            var deleteProduct = await _context.Products.FindAsync(productId);
+            var deleteProduct = await _context.Products
+                .FindAsync(productId);
 
             if (deleteProduct == null) 
                 return Result<object>.Failure("The indicated product is not available");
             
             // trzeba dodać sprawdzenie czy produkt nie jest powiązany z żadnymi zamówieniami
+
+            await _photoService.DeletePhoto(deleteProduct.PhotoId);
 
             _context.Products.Remove(deleteProduct);
 
