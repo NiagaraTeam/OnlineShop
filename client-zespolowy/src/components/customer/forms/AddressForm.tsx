@@ -11,13 +11,13 @@ interface Props {
 
 export const AddressForm = ({ onSubmit, address, buttonText }: Props) => {
         const validationSchema = Yup.object(
-            {
-                addressLine1: Yup.string().required("Address is required."),
-                addressLine2: Yup.string(),
-                city: Yup.string().required("City is required."),
-                zipCode: Yup.string().required("Zip Code is required.").length(5, 'Zip code should consist exactly 5 characters.'),
-                country: Yup.string().required("Country is required.")
-            }
+        {
+            addressLine1: Yup.string().required("Address is required."),
+            addressLine2: Yup.string(),
+            city: Yup.string().required("City is required."),
+            zipCode: Yup.string().required("Zip Code is required.").length(5, 'Zip code should consist exactly 5 characters.'),
+            country: Yup.string().required("Country is required.")
+        }
         );
 
         // Sprawdź, czy wartość jest null i zastąp ją pustym stringiem

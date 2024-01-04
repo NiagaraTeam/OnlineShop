@@ -21,7 +21,6 @@ export const DetailsPage = observer(() => {
   
   return (
     <div>
-      
       <OrderDetails order={order} addItemsFromOrder={addItemsFromOrder}></OrderDetails>
     </div>
   );

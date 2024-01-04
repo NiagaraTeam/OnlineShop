@@ -63,7 +63,7 @@ export const ProductForm = observer(
           <Form >
             {/* Name */}
             <div className="my-2">
-                <TextInput placeholder="Enter payment name" name="name" label="Name"/>
+                <TextInput placeholder="Enter product name" name="name" label="Name"/>
             </div>
 
             {/* Description */}
