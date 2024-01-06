@@ -1,15 +1,16 @@
 import { observer } from "mobx-react-lite"
 import { useStore } from "../../../app/stores/store";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import { LoadingState } from "../../../app/models/common/LoadingState";
 import EditDeleteButtons from "../../common/EditDeleteButtons";
 import { CategoryForm } from "../forms/CategoryForm";
-import { Category } from "../../../app/models/onlineshop/Category";
+import { Category, CategoryTree } from "../../../app/models/onlineshop/Category";
 import { FormikHelpers } from "formik";
+import React from "react";
 
 export const ManageCategoriesPage = observer(() => {
   const {categoryStore} = useStore();
-  const {categories, deleteCategory, createCategory} = categoryStore;
+  const {categoryTree, deleteCategory, createCategory} = categoryStore;
 
   // delete
   const [loading, setLoading] = useState<LoadingState>({});
@@ -34,6 +35,35 @@ export const ManageCategoriesPage = observer(() => {
       .then(() => formikHelpers.resetForm());
   };
 
+  const renderCategory = (category: CategoryTree, level: number = 0) => {
+    const indentation = level * 40;
+    return (
+      <>
+        <li
+          className="list-group-item d-flex justify-content-between align-items-center" 
+          style={level !== 0 ? { paddingLeft: `${indentation}px` }: {}}
+        >
+          {category.name}
+          <EditDeleteButtons
+              loading={loading[category.id]}
+              showEdit={false}
+              deleteAction={() => handleDelete(category.id)}
+              size={25}
+            />
+        </li>
+        {category.childCategories.length > 0 && (
+        <>
+          {category.childCategories.map((childCategory): ReactNode =>
+            <React.Fragment key={childCategory.id}>
+              {renderCategory(childCategory, level + 1)}
+            </React.Fragment>
+          )}
+        </>
+        )}
+      </>
+    );
+  };
+
   return (
     <div className="m-3">
       <div className="row">
@@ -45,16 +75,10 @@ export const ManageCategoriesPage = observer(() => {
             </h2>
           </div>
           <ul className="list-group">
-            {categories.map((category) => (
-              <li key={category.id} className="list-group-item d-flex justify-content-between align-items-center">
-                {category.name}
-                <EditDeleteButtons
-                  loading={loading[category.id]}
-                  showEdit={false}
-                  deleteAction={() => handleDelete(category.id)}
-                  size={25}
-                />
-              </li>
+            {categoryTree && categoryTree.childCategories.map((category) => (
+              <React.Fragment key={category.id}>
+                {renderCategory(category)}
+              </React.Fragment>
             ))}
           </ul>
         </div>
