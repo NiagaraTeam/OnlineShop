@@ -88,5 +88,30 @@ namespace Application.Services
 
             return categoryTreeDto;
         }
+
+        public async Task<Result<object>> Delete(int categoryId)
+        {
+            var category = await _context.Categories
+                .Include(c => c.Products)
+                .Include(c => c.ChildCategories)
+                .FirstOrDefaultAsync(c => c.Id == categoryId);
+
+            if (category == null)
+                return null;
+
+            if (category.ChildCategories.Any())
+                return Result<object>.Failure("The parent category cannot be deleted.");
+
+            if (category.Products.Any()) 
+                return Result<object>.Failure("The category is assigned to one or more products.");
+
+
+            _context.Categories.Remove(category);
+
+            if(await _context.SaveChangesAsync() > 0)
+                return Result<object>.Success(null);
+
+            return Result<object>.Failure("Failed to delete category");
+        }
     }
 }

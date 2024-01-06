@@ -29,6 +29,12 @@ namespace API.Controllers
             return HandleResult(await _categoryService.Update(categoryId, category));
         }
 
+        [HttpDelete("categories/{categoryId}")] //api/categories/categoryId
+        [Authorize(Roles = StaticUserRoles.ADMIN)]
+        public async Task<IActionResult> DeleteCategory(int categoryId)
+        {
+            return HandleResult(await _categoryService.Delete(categoryId));
+        }
 
         [HttpPatch("categories/{categoryId}/{newStatus}")] //api/categories/categoryId/status
         [Authorize(Roles = StaticUserRoles.ADMIN)]

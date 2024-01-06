@@ -61,4 +61,31 @@ export default class CategoryStore {
         traverseAndConvert(categoryTree);
     };
 
+    createCategory = async (category: Category) => { 
+        try {
+            console.log(category);
+            const id = await agent.Categories.create(category);
+            runInAction(() => {
+                category.id = id;
+                this.setCategory(category);
+            });
+            toast.success("Category created");
+        } catch (error) {
+            console.log(error);
+            toast.error("Failed to create category");
+        }
+    }
+
+    deleteCategory = async (categoryId: number) => { 
+        try {
+            await agent.Categories.delete(categoryId);
+
+            runInAction(() => this.categoryRegistry.delete(categoryId));   
+
+            toast.success("Category deleted");
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
 }

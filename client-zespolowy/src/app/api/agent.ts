@@ -113,6 +113,7 @@ const Account = {
 const Categories = {
     create: (category: Category) => requests.post<number>(`/categories`, category),
     update: (categoryId:number, category: Category) => requests.put<void>(`/categories/${categoryId}`, category),
+    delete: (categoryId:number) => requests.del<void>(`/categories/${categoryId}`),
     changeStatus: (categoryId: number, newStatus: CategoryStatus) => requests.patch<void>(`categories/${categoryId}/${newStatus}`, {}),
     getCategoryTree: () => requests.get<CategoryTree>(`/categories`),
 }
