@@ -7,9 +7,11 @@ import { CategoryForm } from "../forms/CategoryForm";
 import { Category, CategoryTree } from "../../../app/models/onlineshop/Category";
 import { FormikHelpers } from "formik";
 import React from "react";
+import { FaClipboardList } from "react-icons/fa";
+import MyTooltip from "../../common/MyTooltip";
 
 export const ManageCategoriesPage = observer(() => {
-  const {categoryStore} = useStore();
+  const {categoryStore, productStore: {downloadData}} = useStore();
   const {categoryTree, deleteCategory, createCategory} = categoryStore;
 
   // delete
@@ -44,12 +46,21 @@ export const ManageCategoriesPage = observer(() => {
           style={level !== 0 ? { paddingLeft: `${indentation}px` }: {}}
         >
           {category.name}
-          <EditDeleteButtons
+          <div className="d-flex ">
+            <MyTooltip placement="left" text={"Dowload price list"}>
+              <FaClipboardList
+                  className="mx-2 hover-primary"
+                  size={25}
+                  onClick={() => downloadData(category.id)}
+              />
+            </MyTooltip>
+            <EditDeleteButtons
               loading={loading[category.id]}
               showEdit={false}
               deleteAction={() => handleDelete(category.id)}
               size={25}
             />
+          </div>
         </li>
         {category.childCategories.length > 0 && (
         <>

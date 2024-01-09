@@ -97,7 +97,7 @@ export const Products = observer(({showCreateButton, setShowCreateForm,
                     <button className="btn btn-success mx-2" 
                         onClick={() => setShowCreateForm(true)}>Create</button>
                     }
-                    <button className="btn btn-secondary"
+                    <button className="btn btn-secondary me-2"
                         onClick={() => setShowDeletedProducts(true)}>Deleted</button>
                 </div>
             </div>

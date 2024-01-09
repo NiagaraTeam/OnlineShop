@@ -95,6 +95,8 @@ namespace API.Controllers
             {
                 var pdf = await _productService.GetPDFWithPriceList(categoryId);
 
+                Response.Headers["Content-Disposition"] = "inline; filename=pricelist.pdf";
+
                 return File(pdf.ToArray(), "application/pdf", "pricelist.pdf");
             }
             catch (Exception)

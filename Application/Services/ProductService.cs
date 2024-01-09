@@ -8,6 +8,10 @@ using Domain;
 using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using iText.Kernel.Pdf;
+using iText.Layout;
+using iText.Layout.Element;
+using iText.Kernel.Pdf.Canvas.Draw;
 
 namespace Application.Services
 {
@@ -212,7 +216,64 @@ namespace Application.Services
 
         public async Task<MemoryStream> GetPDFWithPriceList(int categoryId)
         {
-            throw new NotImplementedException();
+            var products = await _context.Products
+                .Where(p => p.CategoryId == categoryId)
+                .Where(p => p.Status == ProductStatus.Available)
+                .OrderBy(p => p.Id)
+                .ToListAsync();
+
+            var category = await _context.Categories
+                .Where(c => c.Id == categoryId)
+                .FirstOrDefaultAsync();
+
+            var stream = new MemoryStream();
+
+            using (var writer = new PdfWriter(stream))
+            {
+                using var pdf = new PdfDocument(writer);
+
+                var document = new Document(pdf);
+
+                document.Add(new Paragraph("Category: " + category.Name).SetFontSize(20));
+
+                LineSeparator ls = new LineSeparator(new SolidLine()).SetMarginBottom(20f);
+                document.Add(ls);
+
+                // Utwórz tabelę
+                var table = new Table(3);
+
+                // Dodaj nagłówki kolumn do tabeli
+                table.AddHeaderCell("ID");
+
+                var productNameHeaderCell = new Cell().Add(new Paragraph("Product Name"));
+                productNameHeaderCell.SetMinWidth(250f);
+                table.AddHeaderCell(productNameHeaderCell);
+
+                table.AddHeaderCell("Price (PLN)");
+
+                // Dodaj dane do tabeli
+                foreach (var product in products)
+                {   
+                    Cell idCell = new Cell();
+                    idCell.Add(new Paragraph($"{product.Id}"));
+                    idCell.SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER);
+                    table.AddCell(idCell);
+
+                    table.AddCell(product.Name);
+
+                    Cell priceCell = new Cell();
+                    priceCell.Add(new Paragraph($"{product.Price}"));
+                    priceCell.SetTextAlignment(iText.Layout.Properties.TextAlignment.RIGHT);
+                    table.AddCell(priceCell);
+                }
+
+                // Dodaj tabelę do dokumentu
+                document.Add(table);
+
+                document.Close();
+            }
+
+            return stream;
         }
 
         public async Task<Result<PagedList<ProductDto>>> GetProducts(PagingParams parameters)

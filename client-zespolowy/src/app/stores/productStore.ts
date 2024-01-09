@@ -412,6 +412,22 @@ export default class ProductStore {
         }
     }
 
+    downloadData = async (categoryId: number) => {
+        try {
+            const response = await agent.Products.getPriceList(categoryId);
+            const blob = new Blob([response.data], { type: 'application/pdf' })
+            const downloadUrl = URL.createObjectURL(blob)
+            const a = document.createElement("a"); 
+            a.href = downloadUrl;
+            a.download = "priceList.pdf";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        } catch (error) {
+            store.commonStore.setError(`Error downloading file: ${error}`)
+        }
+    }
+
     private moveProductBetweenRegistries = (id: number, newStatus: ProductStatus) => {
         const productInRegistry = this.getProduct(id);
         const deletedProductInRegistry = this.getDeletedProduct(id);
