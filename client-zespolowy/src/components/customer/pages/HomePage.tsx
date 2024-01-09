@@ -2,8 +2,13 @@ import { observer } from "mobx-react-lite"
 import { useStore } from "../../../app/stores/store"
 import { ProductsSection } from "../features/ProductsSection"
 import Loading from "../../common/Loading";
+import { Helmet } from "react-helmet";
 
-export const HomePage = observer(() => {
+interface Props {
+  title: string;
+}
+
+export const HomePage = observer(({title}: Props) => {
   const {userStore, productStore, commonStore} = useStore();
   const {isLoggedIn, isAdmin} = userStore;
   const {initialLoading} = commonStore;
@@ -14,6 +19,9 @@ export const HomePage = observer(() => {
 
   return (
     <div>
+      <Helmet>
+          <title>{title}</title>
+      </Helmet>
       {isLoggedIn && !isAdmin && favouriteProducts.length > 0 &&
         <div className="m-3 p-3">
           <ProductsSection label="Your favorite products" products={favouriteProducts} />

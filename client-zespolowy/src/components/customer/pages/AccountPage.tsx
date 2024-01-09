@@ -6,6 +6,7 @@ import { Address } from "../../../app/models/onlineshop/Address";
 import { AddressForm } from "../forms/AddressForm";
 import { FormikHelpers } from "formik";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 export const AccountPage = observer(() => {
     const {userStore: {user, logout, accountDetails, updateAddress}} = useStore();
@@ -25,6 +26,9 @@ export const AccountPage = observer(() => {
     
     return (
         <div>
+            <Helmet>
+                <title>Account - OnlineShop</title>
+            </Helmet>
             <div className="row border-bottom pb-4 mb-5">
                 <div className="col-md-6 mt-4">
                     <h3>Account details</h3>

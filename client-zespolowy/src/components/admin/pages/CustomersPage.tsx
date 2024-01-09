@@ -7,6 +7,7 @@ import EditDeleteButtons from "../../common/EditDeleteButtons";
 
 import { EditDiscountForm } from "../forms/EditDiscountForm";
 import { AccountStatus } from "../../../app/models/enums/AccountStatus";
+import { Helmet } from "react-helmet";
 
 
 export const CustomersPage = observer(() => {
@@ -30,6 +31,9 @@ export const CustomersPage = observer(() => {
 
   return (
     <div className="m-3">
+      <Helmet>
+          <title>Customers - OnlineShop</title>
+      </Helmet>
       <div className="row">
           <div className="col-lg-6 my-4">
             <h2 className="pb-3">Customers</h2>

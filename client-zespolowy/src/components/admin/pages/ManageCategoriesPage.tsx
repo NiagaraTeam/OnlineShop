@@ -9,6 +9,7 @@ import { FormikHelpers } from "formik";
 import React from "react";
 import { FaClipboardList } from "react-icons/fa";
 import MyTooltip from "../../common/MyTooltip";
+import { Helmet } from "react-helmet";
 
 export const ManageCategoriesPage = observer(() => {
   const {categoryStore, productStore: {downloadData}} = useStore();
@@ -77,6 +78,9 @@ export const ManageCategoriesPage = observer(() => {
 
   return (
     <div className="m-3">
+      <Helmet>
+          <title>Categories - OnlineShop</title>
+      </Helmet>
       <div className="row">
 
         <div className="col-lg-5">

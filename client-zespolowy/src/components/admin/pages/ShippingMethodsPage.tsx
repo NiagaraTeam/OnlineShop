@@ -7,6 +7,7 @@ import EditDeleteButtons from "../../common/EditDeleteButtons";
 import { ShippingMethodForm } from "../forms/ShippingMethodForm";
 import { ShippingMethod } from "../../../app/models/onlineshop/ShippingMethod";
 import { FormikHelpers } from "formik";
+import { Helmet } from "react-helmet";
 
 export const ShippingMethodsPage = observer(() => {
   const {shippingPaymentStore, commonStore} = useStore();
@@ -40,6 +41,9 @@ export const ShippingMethodsPage = observer(() => {
 
   return (
     <div className="m-3">
+      <Helmet>
+          <title>Shipping Methods - OnlineShop</title>
+      </Helmet>
       <div className="row">
 
         <div className="col-lg-5">

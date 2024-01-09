@@ -5,6 +5,7 @@ import { useStore } from "../../../app/stores/store";
 import { CategoryFilter } from "../../common/CategoryFilter";
 import { Search } from "../../common/Search";
 import { Pagination } from "../../common/Pagination";
+import { Helmet } from "react-helmet";
 
 export const ProductsPage = observer(() => {
       const {productStore} = useStore();
@@ -62,6 +63,9 @@ export const ProductsPage = observer(() => {
 
     return (
       <div className="container">
+        <Helmet>
+          <title>Products - OnlineShop</title>
+        </Helmet>
         <div className="row offset-3">
           {search} {categoryFilter}
         </div>

@@ -7,6 +7,7 @@ import EditDeleteButtons from "../../common/EditDeleteButtons";
 import { PaymentMethodForm } from "../forms/PaymentMethodForm";
 import { PaymentMethod } from "../../../app/models/onlineshop/PaymentMethod";
 import { FormikHelpers } from "formik";
+import { Helmet } from "react-helmet";
 
 export const PaymentMethodsPage = observer(() => {
   const {shippingPaymentStore, commonStore} = useStore();
@@ -41,6 +42,9 @@ export const PaymentMethodsPage = observer(() => {
 
   return (
     <div className="m-3">
+      <Helmet>
+          <title>Payment Methods - OnlineShop</title>
+      </Helmet>
       <div className="row">
 
         <div className="col-lg-5">

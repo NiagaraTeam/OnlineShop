@@ -7,6 +7,7 @@ import { CartPageTotalValue } from "./CartPageTotalValue";
 import { CartPageSelectShipping } from "./CartPageSelectShipping";
 import { CartPageSelectPayment } from "./CartPageSelectPayment";
 import { CartPagePlaceOrder } from "./CartPagePlaceOrder";
+import { Helmet } from "react-helmet";
 
 export const CartPage = observer(() => {
   const {cartStore} = useStore();
@@ -16,8 +17,10 @@ export const CartPage = observer(() => {
 
   return (
     <div className="container">
+      <Helmet>
+        <title>Cart - OnlineShop</title>
+      </Helmet>
       <div className="row">
-        
         {cartItems.length > 0 &&
         <>
           <div className="col-lg-8">

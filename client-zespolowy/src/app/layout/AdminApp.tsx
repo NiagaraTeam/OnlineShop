@@ -7,6 +7,7 @@ import { Header } from '../../components/admin/common/Header';
 import { Footer } from '../../components/common/Footer';
 import Loading from '../../components/common/Loading';
 import { ToastContainer } from 'react-toastify';
+import { Helmet } from 'react-helmet';
 
 export const AdminApp = observer(() => {
   const { commonStore, userStore } = useStore();
@@ -29,7 +30,10 @@ export const AdminApp = observer(() => {
     return <div className='center'><Loading/></div>
 
   return (
-    <>  
+    <> 
+      <Helmet>
+        <title>Admin Panel - OnlineShop</title>
+      </Helmet>
       <div className='container'>
         <ScrollRestoration/>
         <ToastContainer position='bottom-right' hideProgressBar theme='colored' style={{ width: '500px' }}/>

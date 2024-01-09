@@ -13,19 +13,17 @@ import { OrderDetailsPage } from "../../components/admin/pages/OrderDetailsPage/
 import { ShippingMethodsPage } from "../../components/admin/pages/ShippingMethodsPage";
 import { PaymentMethodsPage } from "../../components/admin/pages/PaymentMethodsPage";
 import { CustomersPage } from "../../components/admin/pages/CustomersPage";
-import { CustomerDetailsPage } from "../../components/admin/pages/CutomerDetailsPage";
-import { ProductCreatePage } from "../../components/admin/pages/ProductCreatePage";
-import { ProductUpdatePage } from "../../components/admin/pages/ProductUpdatePage";
 import { AboutPage } from "../../components/customer/pages/AboutPage";
 import { ContactPage } from "../../components/customer/pages/ContactPage";
 import { CartPage } from "../../components/customer/pages/CartPage/CartPage";
-import { OffertsPage } from "../../components/customer/pages/OffertsPage";
 import { ProductDetailsPage } from "../../components/customer/pages/ProductDetailsPage/ProductDetailsPage";
 import { RegisterPage } from "../../components/customer/pages/RegisterPage";
 import { RequireCustomerAuth } from "./RequireCustomerAuth";
 import { RequireAdminAuth } from "./RequireAdminAuth";
 import { ManageCategoriesPage } from "../../components/admin/pages/ManageCategoriesPage";
 import { DetailsPage } from "../../components/customer/pages/DetailsPage";
+import { HomePage } from "../../components/customer/pages/HomePage";
+
 export const routes: RouteObject[] = [
     {
         path: '/',
@@ -39,7 +37,7 @@ export const routes: RouteObject[] = [
             //no login required
             {path: 'products', element: <CustomerProductsPage />},
             {path: 'product/:id', element: <ProductDetailsPage />},
-            {path: 'offerts', element: <OffertsPage />},
+            {path: 'offerts', element: <HomePage title='OnlineShop - Offerts'/>},
             {path: 'cart', element: <CartPage />},
             {path: 'about', element: <AboutPage />},
             {path: 'contact', element: <ContactPage />},
@@ -60,15 +58,12 @@ export const routes: RouteObject[] = [
             //login required as admin
             {element: <RequireAdminAuth/>, children: [
                 {path: 'products', element: <AdminProductsPage/> },
-                {path: 'products/create', element: <ProductCreatePage/> },
-                {path: 'products/update', element: <ProductUpdatePage/> },
                 {path: 'orders', element: <OrdersPage/> },
                 {path: 'order/:id', element: <OrderDetailsPage/> },
                 {path: 'categories', element: <ManageCategoriesPage/> },
                 {path: 'methods/shipping', element: <ShippingMethodsPage/> },
                 {path: 'methods/payment', element: <PaymentMethodsPage/> },
                 {path: 'customers', element: <CustomersPage/> },
-                {path: 'customer/:id', element: <CustomerDetailsPage/> },
             ]},
             //no login required
             {path: 'login', element: <AdminLogin />},

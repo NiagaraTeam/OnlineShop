@@ -11,6 +11,7 @@ import { PhotoUploadWidget } from "../../../common/imageUpload/PhtoUploadWidget"
 import { ProductDiscountForm } from "../../forms/ProductDiscountForm";
 import { format } from 'date-fns';
 import { ProductDiscount } from "../../../../app/models/onlineshop/ProductDiscount";
+import { Helmet } from "react-helmet";
 
 export const ProductsPage = observer(() => {
     const {productStore, commonStore} = useStore();
@@ -63,6 +64,9 @@ export const ProductsPage = observer(() => {
 
     return (
         <div className="m-3">
+            <Helmet>
+                <title>Products - OnlineShop</title>
+            </Helmet>
             <div className="row">
 
                 <div className="col-lg-6">

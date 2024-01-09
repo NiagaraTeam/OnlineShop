@@ -8,6 +8,7 @@ import { Footer } from '../../components/common/Footer';
 import Loading from '../../components/common/Loading';
 import { ToastContainer } from 'react-toastify';
 import { HomePage } from '../../components/customer/pages/HomePage';
+import { Helmet } from 'react-helmet';
 
 export const App = observer(() => {
   const { commonStore, userStore } = useStore();
@@ -33,6 +34,9 @@ export const App = observer(() => {
 
   return (
     <>
+      <Helmet>
+        <title>OnlineShop</title>
+      </Helmet>
       <div className='container'>
         <ScrollRestoration/>
         <ToastContainer position='bottom-right' hideProgressBar theme='colored' style={{ width: '500px' }}/>
@@ -41,7 +45,7 @@ export const App = observer(() => {
           <div className='my-5'>
             {location.pathname === '/' 
             ? 
-              <HomePage/>
+              <HomePage title='OnlineShop'/>
             : 
               <Outlet />
             }

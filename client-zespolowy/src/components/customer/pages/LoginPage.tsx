@@ -2,6 +2,7 @@ import { LoginForm } from "../../common/forms/LoginForm"
 import { useStore } from "../../../app/stores/store";
 import { observer } from "mobx-react-lite";
 import { Navigate } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 interface Props {
     redirectTo?: string;
@@ -15,6 +16,9 @@ export const LoginPage = observer(({redirectTo = "/"}: Props) => {
 
     return (
         <>
+            <Helmet>
+                <title>Login - OnlineShop</title>
+            </Helmet>
             <div className="p-4 col-4 offset-4">
                 <h3 className="text-center mb-5">Login to OnlineShop</h3>
                 <LoginForm />

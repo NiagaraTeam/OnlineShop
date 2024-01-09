@@ -5,6 +5,7 @@ import Loading from '../../common/Loading';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { enumToOptions } from '../../../app/models/options/Option';
+import { Helmet } from 'react-helmet';
 
 export const OrdersPage = observer(() => {
   const { orderStore, commonStore } = useStore();
@@ -25,6 +26,9 @@ export const OrdersPage = observer(() => {
 
   return (
     <div className="m-3">
+      <Helmet>
+          <title>Orders - OnlineShop</title>
+      </Helmet>
       <h2 className="my-4">Orders</h2>
       <div className="col-md-3 order-md-1">
         <select

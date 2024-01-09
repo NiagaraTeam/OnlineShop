@@ -10,6 +10,7 @@ import { ProductExpert } from "./ProductExpert";
 import { ProductStatus } from "../../../../app/models/enums/ProductStatus";
 import { router } from "../../../../app/router/Routes";
 import { roundValue } from "../../../../app/utils/RoundValue";
+import { Helmet } from "react-helmet";
 
 export const ProductDetailsPage = observer(() => {
   const {productStore, commonStore, cartStore} = useStore();
@@ -39,6 +40,9 @@ export const ProductDetailsPage = observer(() => {
 
   return (
       <div className="container align-center ">
+        <Helmet>
+            <title>{product.name} - OnlineShop</title>
+        </Helmet>
           <div className="row">
 
             <div className="col">
