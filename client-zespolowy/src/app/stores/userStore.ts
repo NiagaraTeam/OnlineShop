@@ -180,7 +180,6 @@ export default class UserStore {
             const details = await agent.Account.details(this.user.id);
             const favourites = await agent.Account.getFavouriteProducts();
             
-            console.log("faworyt"+ favourites[0])
             runInAction(() => {
                 this.accountDetails = details;
                 store.productStore.favouriteProducts 
