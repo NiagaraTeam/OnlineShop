@@ -9,7 +9,7 @@ import { FormikHelpers } from "formik";
 import React from "react";
 import { FaClipboardList } from "react-icons/fa";
 import MyTooltip from "../../common/MyTooltip";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 export const ManageCategoriesPage = observer(() => {
   const {categoryStore, productStore: {downloadData}} = useStore();

@@ -6,7 +6,7 @@ import { Address } from "../../../app/models/onlineshop/Address";
 import { AddressForm } from "../forms/AddressForm";
 import { FormikHelpers } from "formik";
 import { Link } from "react-router-dom";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 export const AccountPage = observer(() => {
     const {userStore: {user, logout, accountDetails, updateAddress}} = useStore();

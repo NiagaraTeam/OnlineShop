@@ -7,7 +7,7 @@ import { CartPageTotalValue } from "./CartPageTotalValue";
 import { CartPageSelectShipping } from "./CartPageSelectShipping";
 import { CartPageSelectPayment } from "./CartPageSelectPayment";
 import { CartPagePlaceOrder } from "./CartPagePlaceOrder";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 export const CartPage = observer(() => {
   const {cartStore} = useStore();

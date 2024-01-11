@@ -8,7 +8,7 @@ import { Footer } from '../../components/common/Footer';
 import Loading from '../../components/common/Loading';
 import { ToastContainer } from 'react-toastify';
 import { HomePage } from '../../components/customer/pages/HomePage';
-import { Helmet } from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 
 export const App = observer(() => {
   const { commonStore, userStore } = useStore();

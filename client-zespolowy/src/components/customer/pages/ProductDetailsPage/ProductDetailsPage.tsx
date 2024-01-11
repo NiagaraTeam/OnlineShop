@@ -10,7 +10,7 @@ import { ProductExpert } from "./ProductExpert";
 import { ProductStatus } from "../../../../app/models/enums/ProductStatus";
 import { router } from "../../../../app/router/Routes";
 import { roundValue } from "../../../../app/utils/RoundValue";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 export const ProductDetailsPage = observer(() => {
   const {productStore, commonStore, cartStore} = useStore();

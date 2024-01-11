@@ -2,7 +2,7 @@ import { observer } from "mobx-react-lite"
 import { useStore } from "../../../app/stores/store";
 import { Navigate } from "react-router-dom";
 import { RegisterForm } from "../forms/RegisterForm";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 export const RegisterPage = observer(() => {
   const {userStore: {isLoggedIn, isAdmin}} = useStore();

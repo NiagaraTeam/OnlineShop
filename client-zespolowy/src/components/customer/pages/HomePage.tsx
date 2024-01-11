@@ -2,7 +2,7 @@ import { observer } from "mobx-react-lite"
 import { useStore } from "../../../app/stores/store"
 import { ProductsSection } from "../features/ProductsSection"
 import Loading from "../../common/Loading";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 interface Props {
   title: string;

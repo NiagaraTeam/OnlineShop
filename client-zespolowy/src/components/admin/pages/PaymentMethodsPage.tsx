@@ -7,7 +7,7 @@ import EditDeleteButtons from "../../common/EditDeleteButtons";
 import { PaymentMethodForm } from "../forms/PaymentMethodForm";
 import { PaymentMethod } from "../../../app/models/onlineshop/PaymentMethod";
 import { FormikHelpers } from "formik";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 export const PaymentMethodsPage = observer(() => {
   const {shippingPaymentStore, commonStore} = useStore();

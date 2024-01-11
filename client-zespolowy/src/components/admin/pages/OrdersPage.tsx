@@ -5,7 +5,7 @@ import Loading from '../../common/Loading';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { enumToOptions } from '../../../app/models/options/Option';
-import { Helmet } from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 
 export const OrdersPage = observer(() => {
   const { orderStore, commonStore } = useStore();

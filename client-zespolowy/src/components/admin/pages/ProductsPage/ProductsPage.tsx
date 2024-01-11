@@ -11,7 +11,7 @@ import { PhotoUploadWidget } from "../../../common/imageUpload/PhtoUploadWidget"
 import { ProductDiscountForm } from "../../forms/ProductDiscountForm";
 import { format } from 'date-fns';
 import { ProductDiscount } from "../../../../app/models/onlineshop/ProductDiscount";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 export const ProductsPage = observer(() => {
     const {productStore, commonStore} = useStore();

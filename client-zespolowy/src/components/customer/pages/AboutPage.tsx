@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite"
-import { Helmet } from "react-helmet"
+import { Helmet } from "react-helmet-async"
 
 export const AboutPage = observer(() => {
   return (

@@ -7,7 +7,7 @@ import EditDeleteButtons from "../../common/EditDeleteButtons";
 
 import { EditDiscountForm } from "../forms/EditDiscountForm";
 import { AccountStatus } from "../../../app/models/enums/AccountStatus";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 
 export const CustomersPage = observer(() => {

@@ -5,7 +5,7 @@ import { useStore } from "../../../app/stores/store";
 import { CategoryFilter } from "../../common/CategoryFilter";
 import { Search } from "../../common/Search";
 import { Pagination } from "../../common/Pagination";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 export const ProductsPage = observer(() => {
       const {productStore} = useStore();

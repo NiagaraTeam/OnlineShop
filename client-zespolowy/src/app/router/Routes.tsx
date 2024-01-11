@@ -37,7 +37,7 @@ export const routes: RouteObject[] = [
             //no login required
             {path: 'products', element: <CustomerProductsPage />},
             {path: 'product/:id', element: <ProductDetailsPage />},
-            {path: 'offerts', element: <HomePage title='OnlineShop - Offerts'/>},
+            {path: 'offerts', element: <HomePage title='Offerts - OnlineShop'/>},
             {path: 'cart', element: <CartPage />},
             {path: 'about', element: <AboutPage />},
             {path: 'contact', element: <ContactPage />},

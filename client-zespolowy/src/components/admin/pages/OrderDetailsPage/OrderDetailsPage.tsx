@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { useStore } from "../../../../app/stores/store";
 import Loading from "../../../common/Loading";
 import { OrderDetails } from "../../../common/OrderDetails";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 export const OrderDetailsPage = observer(() => {
   const {orderStore, commonStore} = useStore();

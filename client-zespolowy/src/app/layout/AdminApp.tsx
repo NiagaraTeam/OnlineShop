@@ -7,7 +7,7 @@ import { Header } from '../../components/admin/common/Header';
 import { Footer } from '../../components/common/Footer';
 import Loading from '../../components/common/Loading';
 import { ToastContainer } from 'react-toastify';
-import { Helmet } from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 
 export const AdminApp = observer(() => {
   const { commonStore, userStore } = useStore();
