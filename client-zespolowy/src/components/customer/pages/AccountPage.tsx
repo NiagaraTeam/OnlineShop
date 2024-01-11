@@ -59,7 +59,7 @@ export const AccountPage = observer(() => {
 
             <div className="row">
 
-                <div className="col-5">
+                <div className="col-lg-5">
                     <h3 className="mb-3">Orders</h3>
                     <table className="table table-bordered">
                         <thead className="table-light">

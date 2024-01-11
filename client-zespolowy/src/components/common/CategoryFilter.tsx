@@ -11,7 +11,7 @@ export const CategoryFilter = observer(({handleCategoryChange, selectedCategory}
     const {categoriesAsOptions} = categoryStore;
   
     return (
-    <div className="col-md-3 order-md-1">
+    <div>
         <select
             className="form-select"
             value={selectedCategory}

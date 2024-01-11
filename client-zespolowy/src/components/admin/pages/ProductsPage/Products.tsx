@@ -103,7 +103,7 @@ export const Products = observer(({showCreateButton, setShowCreateForm,
             </div>
 
             <div className="d-flex justify-content-between align-items-center py-3">
-                {search} {categoryFilter}
+                {search} <div className="col-3">{categoryFilter}</div>
             </div>
             
             {productsAdmin.length > 0 &&

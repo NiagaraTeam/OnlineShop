@@ -15,7 +15,7 @@ export const RegisterPage = observer(() => {
             <Helmet>
                 <title>Sign Up - OnlineShop</title>
             </Helmet>
-            <div className="p-4 col-4 offset-4">
+            <div className="p-4 col-lg-4 offset-lg-4">
                 <h3 className="text-center mb-5">Sign up to OnlineShop</h3>
                 <RegisterForm />
             </div>

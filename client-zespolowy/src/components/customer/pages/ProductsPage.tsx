@@ -52,7 +52,8 @@ export const ProductsPage = observer(() => {
         pageNumber={pageNumber}/>
      
     const search = 
-      <Search 
+      <Search
+        colSize={12}
         handleSearch={handleSearch} 
         searchQuery={searchQuery}/>
 
@@ -66,8 +67,9 @@ export const ProductsPage = observer(() => {
         <Helmet>
           <title>Products - OnlineShop</title>
         </Helmet>
-        <div className="row offset-3">
-          {search} {categoryFilter}
+        <div className="row">
+          <div className="col-lg-4 offset-lg-3 mb-2">{search}</div> 
+          <div className="col-lg-2 mb-2">{categoryFilter}</div>
         </div>
         <div className="mt-5">
           <div className="row row-cols-2 row-cols-md-5 g-2">

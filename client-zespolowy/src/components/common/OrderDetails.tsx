@@ -24,7 +24,7 @@ export const OrderDetails = ({order, adminView = false, addItemsFromOrder}: Prop
       
       <div className="row">
 
-        <div className="col-8 pe-5">
+        <div className="col-lg-8 pe-lg-5">
           <div className="fs-3 row">
             <div>Order no. <b className="fs-2">{order.id}</b></div>
             <div className="fs-6">Date: {order.orderDate.toLocaleDateString()}</div>
@@ -61,17 +61,36 @@ export const OrderDetails = ({order, adminView = false, addItemsFromOrder}: Prop
               ))}
             </tbody>
           </table>
-          {!adminView && 
+          {/* {!adminView && 
           <div className="d-flex justify-content-end">
             <button 
               className="btn btn-secondary mt-3" 
               onClick={() => addItemsFromOrder!(order)}>
                 Add products to cart
               </button>
+          </div>} */}
+          {!adminView && 
+          <div className="d-lg-none mb-5">
+            <button 
+              className="btn btn-secondary mt-3 w-100" 
+              onClick={() => addItemsFromOrder!(order)}
+            >
+              Add products to cart
+            </button>
+          </div>}
+
+        {!adminView && 
+          <div className="d-none d-lg-flex justify-content-end mb-4">
+            <button 
+              className="btn btn-secondary mt-3" 
+              onClick={() => addItemsFromOrder!(order)}
+            >
+              Add products to cart
+            </button>
           </div>}
         </div>
 
-        <div className="col-4 border rounded px-4 py-4">
+        <div className="col-lg-4 border rounded px-4 py-4">
           <h5 className="">Details</h5>
 
           <div className="mt-4">
