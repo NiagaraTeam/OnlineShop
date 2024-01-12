@@ -38,10 +38,16 @@ namespace Application.Services
             // utworzenie zdjęcia
             var photoUploadResult = await _photoAccessor.AddPhoto(file, 400, 400);
 
+            // Tworzenie nowego URL-a dla zdjęcia w rozmiarze large
+            string urlLarge = photoUploadResult.Url.Replace("/image/upload", "/image/upload/f_auto/q_auto/c_scale,w_400");
+
+            // Tworzenie nowego URL-a dla zdjęcia w rozmiarze small
+            string urlSmall = photoUploadResult.Url.Replace("/image/upload", "/image/upload/f_auto/q_auto/c_scale,w_200");
+
             var photo = new Photo
             {
-                UrlLarge = photoUploadResult.Url,
-                UrlSmall = photoUploadResult.Url,
+                UrlLarge = urlLarge,
+                UrlSmall = urlSmall,
                 Id = photoUploadResult.PublicId
             };
 
