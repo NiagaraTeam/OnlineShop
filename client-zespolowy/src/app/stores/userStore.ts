@@ -1,4 +1,4 @@
-import { makeAutoObservable, runInAction } from "mobx";
+import { makeAutoObservable, reaction, runInAction } from "mobx";
 import { ChangePasswordFormValues, User, UserFormValues } from "../models/common/User";
 import agent from "../api/agent";
 import { store } from "./store";
@@ -12,11 +12,24 @@ export default class UserStore {
     user: User | null = null;
     accountDetails: AccountDetails | null = null;
     users: AccountDetails[] = []
+    
+    itemsPerPage: string = localStorage.getItem('itemsPerPage') || "10";
 
     selectedUser: AccountDetails | undefined = undefined;
 
     constructor() {
         makeAutoObservable(this);
+        
+        reaction(
+            () => this.itemsPerPage, 
+            token => {
+                if (token) {
+                    localStorage.setItem('itemsPerPage', token);
+                } else {
+                    localStorage.removeItem('itemsPerPage');
+                }
+            }
+        )
     }
 
     get currentUser() {
@@ -37,6 +50,10 @@ export default class UserStore {
 
     get userDiscount() {
         return this.accountDetails ? this.accountDetails.discountValue : 0;
+    }
+
+    setItemsPerPage = (number: string) => {
+        this.itemsPerPage = number;
     }
 
     register = async (creds: UserFormValues) => {
