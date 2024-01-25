@@ -11,7 +11,7 @@ interface Props {
 }
 
 export const CartListItem = observer(({ item }: Props) => {
-    const {productStore, cartStore} = useStore();
+    const {productStore, cartStore, userStore: {isNetValue}} = useStore();
     const {getProductObject} = productStore;
     const {deleteItemFromCart, changeQuantity} = cartStore;
     const [product, setProduct] = useState<Product | null>(null);
@@ -37,6 +37,34 @@ export const CartListItem = observer(({ item }: Props) => {
       changeQuantity(product.id, editedQuantity);
     };
 
+    const renderPrice = () => {
+        if (isNetValue)
+            return renderNetPrice();
+        else 
+            return renderGrossPrice();
+    }
+
+
+    const renderNetPrice = () => {
+        return(
+          Product.isOnSale(product) 
+          ? 
+            <><del className="text-muted">{product.price} zł</del> {Product.getDiscountedPrice(product)} zł</>
+          : 
+            <span className="mt-2">{product.price} zł</span>
+        )
+    }
+
+    const renderGrossPrice = () => {
+        return(
+          Product.isOnSale(product) 
+          ? 
+            <><del className="text-muted">{Product.getPriceWithTax(product)} zł</del> {Product.getDiscountedPriceWithTax(product)} zł</>
+          : 
+            <span className="mt-2">{Product.getPriceWithTax(product)} zł</span>
+        )
+    }
+
     return (
       <div className="d-flex justify-content-between align-items-center p-2">
         <div>
@@ -51,12 +79,7 @@ export const CartListItem = observer(({ item }: Props) => {
         </div>
         <div className="d-flex">
           <div className="d-flex flex-column">
-            {Product.isOnSale(product) 
-            ? 
-              <><del className="text-muted">{product.price} zł</del> {Product.getDiscountedPrice(product)} zł</>
-            : 
-              <span className="mt-2">{product.price} zł</span>
-            }
+            {renderPrice()}
           </div>
           <div style={{width: "75px", marginRight: "50px"}}>
             <input 

@@ -10,7 +10,7 @@ import { CartPagePlaceOrder } from "./CartPagePlaceOrder";
 import { Helmet } from "react-helmet-async";
 
 export const CartPage = observer(() => {
-  const {cartStore} = useStore();
+  const {cartStore, userStore: {isNetValue, handleVauleWithTaxCheckBox}} = useStore();
   const {showLoginForm, cartItems, resetCart} = cartStore;
 
   if (showLoginForm) return <LoginPage redirectTo="/cart"/>
@@ -25,6 +25,16 @@ export const CartPage = observer(() => {
         <>
           <div className="col-lg-8">
             <CartPageItems cartItems={cartItems} resetCart={resetCart}/>
+            <div className="form-check mt-3 mx-3">
+              <input className="form-check-input" 
+                  type="checkbox" 
+                  id="netValueCheckBox" 
+                  checked={isNetValue} 
+                  onChange={handleVauleWithTaxCheckBox}/>
+              <label className="form-check-label" htmlFor="netValueCheckBox">
+                  Use net prices
+              </label>
+          </div>
           </div>
       
           <div className="col-lg-4 border rounded py-3 px-3"

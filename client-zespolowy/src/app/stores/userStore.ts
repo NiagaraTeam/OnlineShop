@@ -14,6 +14,7 @@ export default class UserStore {
     users: AccountDetails[] = []
     
     itemsPerPage: string = localStorage.getItem('itemsPerPage') || "10";
+    netValueFlag: string = localStorage.getItem('netValueFlag') || "true";
 
     selectedUser: AccountDetails | undefined = undefined;
 
@@ -21,12 +22,21 @@ export default class UserStore {
         makeAutoObservable(this);
         
         reaction(
-            () => this.itemsPerPage, 
-            token => {
-                if (token) {
-                    localStorage.setItem('itemsPerPage', token);
+            () => ({
+                itemsPerPage: this.itemsPerPage,
+                netValueFlag: this.netValueFlag,
+            }), 
+            (data) => {
+                if (data.itemsPerPage) {
+                    localStorage.setItem('itemsPerPage', data.itemsPerPage);
                 } else {
                     localStorage.removeItem('itemsPerPage');
+                }
+
+                if (data.netValueFlag) {
+                    localStorage.setItem('netValueFlag', data.netValueFlag);
+                } else {
+                    localStorage.removeItem('netValueFlag');
                 }
             }
         )
@@ -55,6 +65,22 @@ export default class UserStore {
     setItemsPerPage = (number: string) => {
         this.itemsPerPage = number;
     }
+
+    setNetValue = (flag: boolean) => {
+        if (flag)
+            this.netValueFlag = "true";
+        else
+            this.netValueFlag = "false";
+    }
+
+    get isNetValue() {
+        return (this.netValueFlag === "true");
+    }
+
+    handleVauleWithTaxCheckBox = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const isChecked = e.target.checked;
+        this.setNetValue(isChecked);
+    };
 
     register = async (creds: UserFormValues) => {
         try {

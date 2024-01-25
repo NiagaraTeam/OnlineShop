@@ -7,9 +7,10 @@ import { AddressForm } from "../forms/AddressForm";
 import { FormikHelpers } from "formik";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
+import { ItemsPerPage } from "../../common/ItemsPerPageSelect";
 
 export const AccountPage = observer(() => {
-    const {userStore: {user, logout, accountDetails, updateAddress}} = useStore();
+    const {userStore: {user, logout, accountDetails, updateAddress, isNetValue, handleVauleWithTaxCheckBox}} = useStore();
 
     const handleAddressSubmit = (address: Address, formikHelpers: FormikHelpers<Address>) => {
         if (user) {
@@ -92,9 +93,27 @@ export const AccountPage = observer(() => {
                     </table>
                 </div>
 
-                {/* <div className="col-6 offset-1">
+                <div className="col-6 offset-1">
                     <h3 className="mb-3">Settings</h3>
-                </div> */}
+                    
+                    <p className="fs-5">Net/Gross setting</p>
+                    <div className="form-check mx-3 my-3">
+                        <input className="form-check-input" 
+                            type="checkbox" 
+                            id="netValueCheckBox" 
+                            checked={isNetValue} 
+                            onChange={handleVauleWithTaxCheckBox}/>
+                        <label className="form-check-label" htmlFor="netValueCheckBox">
+                            Use net prices
+                        </label>
+                    </div>
+
+                    <p className="fs-5">Items per page setting</p>
+                    <div className="mx-3 my-3">
+                        <ItemsPerPage/>
+                    </div>
+                    
+                </div>
 
             </div>
         </div>
