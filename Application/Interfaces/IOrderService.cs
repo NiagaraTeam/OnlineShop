@@ -14,5 +14,6 @@ namespace Application.Interfaces
         Task<Result<object>> ChangeOrderItemQuantity(int orderId, OrderItemNewQuantityDto item);
         Task<Result<object>> ChangeOrderStatus(int orderId, OrderStatus status);
         Task<Result<IEnumerable<OrderDto>>> GetAllOrders();
+        Task<Result<ICollection<OrderItemAddDto>>> CheckItemsAvailability(OrderCreateUpdateDto order);
     }
 }

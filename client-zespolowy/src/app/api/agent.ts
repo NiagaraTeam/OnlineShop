@@ -19,6 +19,7 @@ import { Photo } from "../models/onlineshop/Photo";
 import { PaginatedResult } from "../models/common/Pagination";
 import { ProductExpert } from "../models/onlineshop/ProductExpert";
 import { AccountDetails } from "../models/onlineshop/AccountDetails";
+import { CartItem } from "../models/onlineshop/Cart";
 
 const sleep = (delay: number) => {
     return new Promise((resolve) => {
@@ -138,6 +139,7 @@ const Products = {
 
 const Orders = {
     list: () => requests.get<Order[]>("getOrders"),
+    checkItemsAvailability: (order: CreateOrder) => requests.post<CartItem[]>("/orders/check", order),
     create: (order: CreateOrder) => requests.post<number>("/orders", order),
     getDetails: (orderId: number) => requests.get<Order>(`/orders/${orderId}`),
     update: (orderId: number, order: Order) => requests.put<void>(`/orders/${orderId}`, order),

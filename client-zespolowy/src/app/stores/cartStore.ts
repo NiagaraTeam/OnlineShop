@@ -5,13 +5,17 @@ import agent from "../api/agent";
 import { CreateOrder, Order } from "../models/onlineshop/Order";
 import { store } from "./store";
 import { roundValue } from "../utils/RoundValue";
+import { router } from "../router/Routes";
 
 export default class CartStore {
     cartItems: CartItem[] = [];
     shippingMethodId: number | undefined = undefined;
     paymentMethodId: number | undefined = undefined;
 
+    unavailableItems: CartItem[] = [];
+
     showLoginForm: boolean = false;
+    showDialog: boolean = false;
     subbmiting: boolean = false;
     
     constructor() {
@@ -38,8 +42,16 @@ export default class CartStore {
         this.showLoginForm = state;
     }
 
+    setShowDialog = (state: boolean) => {
+        this.showDialog = state;
+    }
+
     get productIds(): number[] {
         return this.cartItems.map(item => item.productId);
+    }
+
+    setCartItems = (cartItems: CartItem[]) => {
+        this.cartItems = cartItems;
     }
 
     addItemsFromOrder = (order: Order) => {
@@ -193,7 +205,14 @@ export default class CartStore {
             const orderId = await agent.Orders.create(orderData);
             toast.success(`Order created successfully. Order ID: ${orderId}`);
             this.resetCart();
-            runInAction(async() => store.userStore.accountDetails?.orders.push(await agent.Orders.getDetails(orderId)));
+            runInAction(async () => {
+                const orderDetails = await agent.Orders.getDetails(orderId);
+              
+                // Access the observable state and update it within the action
+                if (store.userStore.accountDetails) {
+                  store.userStore.addOrder(orderDetails);
+                }
+              });
         } catch (error) {
             console.error('Error creating order:', error);
             toast.error("Failed to crate order.");
@@ -201,6 +220,62 @@ export default class CartStore {
             runInAction(() => this.subbmiting = false);
         }
     }
+
+    tryCreateOrder = async () => {
+        try {
+            const orderData: CreateOrder = {
+                paymentMethodId: this.paymentMethodId!,
+                shippingMethodId: this.shippingMethodId!,
+                items: this.cartItems,
+            };
+            
+            const unavailableItems = await agent.Orders.checkItemsAvailability(orderData);
+            
+            runInAction(() => {
+                if (unavailableItems.length > 0)
+                {
+                    this.unavailableItems = unavailableItems;
+                    this.setShowDialog(true);
+                }
+                else
+                {
+                    this.createOrder().then(() => {
+                        this.setShowDialog(false);
+                        router.navigate('/account');
+                    });
+                }
+                    
+            });
+        } catch (error) {
+            console.error('Error while checking availability', error);
+        }
+    }
+
+    removeUnavailableItems = () => {
+        // Filter out items that are unavailable or have a quantity less than in unavailableItems
+        const updatedCartItems = this.cartItems.filter(cartItem => {
+            const unavailableItem = this.unavailableItems.find(unavailable => unavailable.productId === cartItem.productId);
+
+            if (unavailableItem) {
+                // If quantity in unavailableItems is less than in cartItems, decrease the quantity
+                if (unavailableItem.quantity < cartItem.quantity) {
+                    cartItem.quantity -= unavailableItem.quantity;
+                    return true; // Keep the item in cartItems
+                } else {
+                    return false; // Remove the item from cartItems
+                }
+            }
+
+            return true; // Keep items that are not in unavailableItems
+        });
+
+        // Update the cartItems with the filtered items
+        this.setCartItems(updatedCartItems);
+        this.unavailableItems = [];
+
+        // Close the dialog
+        this.setShowDialog(false);
+    };
 
     resetCart = () => {
         this.cartItems = [];

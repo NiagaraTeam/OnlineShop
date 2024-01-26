@@ -50,6 +50,13 @@ namespace API.Controllers
             return HandleResult(await _orderService.AddOrderItem(orderId, item));
         }
 
+        [HttpPost("orders/check")] //api/orders/check
+        [Authorize(Roles = StaticUserRoles.CUSTOMER)]
+        public async Task<IActionResult> CheckItemsAvailability(OrderCreateUpdateDto order)
+        {
+            return HandleResult(await _orderService.CheckItemsAvailability(order));
+        }
+
         [HttpDelete("orders/{orderId}/items/{productId}")] //api/orders/orderId/items/productId
         [Authorize(Roles = StaticUserRoles.CUSTOMER)]
         public async Task<IActionResult> RemoveOrderItem(int orderId, int productId)

@@ -7,6 +7,7 @@ import { AccountDetails } from "../models/onlineshop/AccountDetails";
 import { Address } from "../models/onlineshop/Address";
 import { toast } from "react-toastify";
 import { UserDiscount } from "../models/onlineshop/UserDiscount";
+import { Order } from "../models/onlineshop/Order";
 
 export default class UserStore {
     user: User | null = null;
@@ -81,6 +82,11 @@ export default class UserStore {
         const isChecked = e.target.checked;
         this.setNetValue(isChecked);
     };
+
+    addOrder = (order: Order) => {
+        if (this.accountDetails)
+            this.accountDetails.orders.push(order);
+    }
 
     register = async (creds: UserFormValues) => {
         try {
