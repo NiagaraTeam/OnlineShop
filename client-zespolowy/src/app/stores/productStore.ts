@@ -60,7 +60,7 @@ export default class ProductStore {
             if (product.status === ProductStatus.Available)
                 return Product.isOnSale(product)
                 ?
-                    Product.getDiscountedPrice(product)
+                    Number(Product.getDiscountedPrice(product))
                 :
                     product.price;
         } 
@@ -80,7 +80,7 @@ export default class ProductStore {
             
             return Product.isOnSale(product)
             ?
-                Product.getDiscountedPrice(product) * (1 + (product.taxRate / 100))
+                Number(Product.getDiscountedPrice(product)) * (1 + (product.taxRate / 100))
             :
                 product.price * (1 + (product.taxRate / 100));
         }

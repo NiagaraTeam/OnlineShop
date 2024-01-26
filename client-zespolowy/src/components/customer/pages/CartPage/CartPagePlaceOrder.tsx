@@ -1,11 +1,9 @@
 import { observer } from "mobx-react-lite";
 import { useStore } from "../../../../app/stores/store";
-import { router } from "../../../../app/router/Routes";
 
 export const CartPagePlaceOrder = observer(() => {
     const {cartStore, userStore} = useStore();
-    const {setShowLoginForm, subbmiting, 
-        createOrder} = cartStore;
+    const {setShowLoginForm, subbmiting, tryCreateOrder} = cartStore;
     const {isLoggedIn, isAdmin} = userStore;
   
     return (
@@ -15,8 +13,8 @@ export const CartPagePlaceOrder = observer(() => {
                 <button 
                   className="btn btn-primary" 
                   disabled={subbmiting} 
-                  onClick={() => createOrder().then(() => router.navigate('/account'))}>
-                    Place order
+                  onClick={() => tryCreateOrder()}>
+                    Place Order
                 </button>
               :
                 <button 

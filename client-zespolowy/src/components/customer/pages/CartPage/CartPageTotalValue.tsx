@@ -15,7 +15,7 @@ export const CartPageTotalValue = observer(() => {
         <>
             {hasDiscount && 
             <div className="text-success">
-                ({roundValue(accountDetails!.discountValue * 100, 2)} % discount applied)
+                ({roundValue(accountDetails!.discountValue * 100, 0)} % discount applied)
             </div>}
             <div className="my-4">
                 <h4>

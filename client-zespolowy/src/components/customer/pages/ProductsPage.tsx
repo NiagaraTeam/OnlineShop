@@ -6,10 +6,12 @@ import { CategoryFilter } from "../../common/CategoryFilter";
 import { Search } from "../../common/Search";
 import { Pagination } from "../../common/Pagination";
 import { Helmet } from "react-helmet-async";
+import { ItemsPerPage } from "../../common/ItemsPerPageSelect";
 
 export const ProductsPage = observer(() => {
-      const {productStore} = useStore();
+      const {productStore, userStore} = useStore();
       const {products} = productStore;
+      const {itemsPerPage} = userStore;
 
       const [pageNumber, setPageNumber] = useState(0)
       const [searchQuery, setSearchQuery] = useState("")
@@ -21,7 +23,7 @@ export const ProductsPage = observer(() => {
             (selectedCategory == "" || product.category.id.toString() == selectedCategory)
       )
 
-      const productsPerPage = 10;
+      const productsPerPage = parseInt(itemsPerPage);
       const pagesVisited = pageNumber * productsPerPage
       const pageCount = Math.ceil(filteredProducts.length / productsPerPage);
 
@@ -77,9 +79,10 @@ export const ProductsPage = observer(() => {
           </div>
         </div>
         {filteredProducts.length > 0 &&
-        <div className="p-2 mt-3">
+        <div className="d-flex justify-content-between align-items-center p-2 mt-3">
           {pagination}
-        </div>}
+          <ItemsPerPage/>
+      </div>}
         {(filteredProducts.length === 0 && products.length > 0) &&
         <div className="text-center">
           <h5>There are no products with the given criteria</h5>

@@ -1,4 +1,4 @@
-import { makeAutoObservable, runInAction } from "mobx";
+import { makeAutoObservable, reaction, runInAction } from "mobx";
 import { ChangePasswordFormValues, User, UserFormValues } from "../models/common/User";
 import agent from "../api/agent";
 import { store } from "./store";
@@ -7,16 +7,40 @@ import { AccountDetails } from "../models/onlineshop/AccountDetails";
 import { Address } from "../models/onlineshop/Address";
 import { toast } from "react-toastify";
 import { UserDiscount } from "../models/onlineshop/UserDiscount";
+import { Order } from "../models/onlineshop/Order";
 
 export default class UserStore {
     user: User | null = null;
     accountDetails: AccountDetails | null = null;
     users: AccountDetails[] = []
+    
+    itemsPerPage: string = localStorage.getItem('itemsPerPage') || "10";
+    netValueFlag: string = localStorage.getItem('netValueFlag') || "true";
 
     selectedUser: AccountDetails | undefined = undefined;
 
     constructor() {
         makeAutoObservable(this);
+        
+        reaction(
+            () => ({
+                itemsPerPage: this.itemsPerPage,
+                netValueFlag: this.netValueFlag,
+            }), 
+            (data) => {
+                if (data.itemsPerPage) {
+                    localStorage.setItem('itemsPerPage', data.itemsPerPage);
+                } else {
+                    localStorage.removeItem('itemsPerPage');
+                }
+
+                if (data.netValueFlag) {
+                    localStorage.setItem('netValueFlag', data.netValueFlag);
+                } else {
+                    localStorage.removeItem('netValueFlag');
+                }
+            }
+        )
     }
 
     get currentUser() {
@@ -37,6 +61,31 @@ export default class UserStore {
 
     get userDiscount() {
         return this.accountDetails ? this.accountDetails.discountValue : 0;
+    }
+
+    setItemsPerPage = (number: string) => {
+        this.itemsPerPage = number;
+    }
+
+    setNetValue = (flag: boolean) => {
+        if (flag)
+            this.netValueFlag = "true";
+        else
+            this.netValueFlag = "false";
+    }
+
+    get isNetValue() {
+        return (this.netValueFlag === "true");
+    }
+
+    handleVauleWithTaxCheckBox = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const isChecked = e.target.checked;
+        this.setNetValue(isChecked);
+    };
+
+    addOrder = (order: Order) => {
+        if (this.accountDetails)
+            this.accountDetails.orders.push(order);
     }
 
     register = async (creds: UserFormValues) => {

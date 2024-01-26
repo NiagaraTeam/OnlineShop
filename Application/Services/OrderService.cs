@@ -176,6 +176,29 @@ namespace Application.Services
             return Result<int>.Failure("Failed creating order");
         }
 
+        public async Task<Result<ICollection<OrderItemAddDto>>> CheckItemsAvailability(OrderCreateUpdateDto order)
+        {
+            var items = order.Items;
+
+            List<OrderItemAddDto> unavailableItems = new();
+
+            foreach (var item in items)
+            {
+                var product = await _context.Products.Include(p => p.ProductInfo).FirstOrDefaultAsync(p => p.Id == item.ProductId);
+
+                if (product.ProductInfo.CurrentStock < item.Quantity)
+                {
+                    var unavailableQuiantity = item.Quantity - product.ProductInfo.CurrentStock;
+                    
+                    item.Quantity = unavailableQuiantity;
+
+                    unavailableItems.Add(item);
+                }
+            }
+
+            return Result<ICollection<OrderItemAddDto>>.Success(unavailableItems);
+        }
+
         public async Task<Result<OrderDto>> Details(int orderId)
         {
             var order = await _context.Orders

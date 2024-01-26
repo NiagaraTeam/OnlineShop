@@ -27,17 +27,17 @@ export class Product {
     static isOnSale(product: Product): boolean {       
         const currentDate = new Date();
         return product.productDiscounts.some(
-            (discount) => currentDate >= discount.start && currentDate <= discount.end
+            (discount) => currentDate >= discount.start! && currentDate <= discount.end!
         );
     }
 
     // Funkcja pobierająca discount value i zwracająca zniżoną cenę
-    static getDiscountedPrice(product: Product): number {
+    static getDiscountedPrice(product: Product): string | number {
 
         if (Product.isOnSale(product)) {
             const currentDiscount = product.productDiscounts.find((discount) => {
                 const currentDate = new Date();
-                return currentDate >= discount.start && currentDate <= discount.end;
+                return currentDate >= discount.start! && currentDate <= discount.end!;
             });
 
             if (currentDiscount) {
@@ -46,6 +46,25 @@ export class Product {
         }
 
         return product.price; // Jeśli brak promocji, zwracamy standardową cenę
+    }
+
+    static getPriceWithTax(product: Product): string  {
+        return roundValue(product.price * (1 + (product.taxRate / 100)), 2);
+    }
+
+    static getDiscountedPriceWithTax(product: Product): string  {
+        if (Product.isOnSale(product)) {
+            const currentDiscount = product.productDiscounts.find((discount) => {
+                const currentDate = new Date();
+                return currentDate >= discount.start! && currentDate <= discount.end!;
+            });
+
+            if (currentDiscount) {
+                return roundValue(Number(Product.getPriceWithTax(product)) * (1 - currentDiscount.value), 2)
+            }
+        }
+
+        return Product.getPriceWithTax(product);
     }
 }
 

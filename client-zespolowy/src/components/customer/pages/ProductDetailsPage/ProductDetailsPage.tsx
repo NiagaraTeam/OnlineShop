@@ -9,11 +9,10 @@ import { FavouriteCheckBox } from "../../features/FavouriteCheckBox";
 import { ProductExpert } from "./ProductExpert";
 import { ProductStatus } from "../../../../app/models/enums/ProductStatus";
 import { router } from "../../../../app/router/Routes";
-import { roundValue } from "../../../../app/utils/RoundValue";
 import { Helmet } from "react-helmet-async";
 
 export const ProductDetailsPage = observer(() => {
-  const {productStore, commonStore, cartStore} = useStore();
+  const {productStore, commonStore, cartStore, userStore: {isNetValue}} = useStore();
   const {initialLoading} = commonStore;
   const {addItemToCart} = cartStore;
   const {loadProduct, selectedProduct: product, discountedProducts} = productStore;
@@ -36,7 +35,46 @@ export const ProductDetailsPage = observer(() => {
 
   }, [id, loadProduct]);
 
+
   if (initialLoading || !product) return <div className="text-center m-5"><Loading/></div>
+
+  const renderPrice = () => {
+        if (isNetValue)
+            return renderNetPrice();
+        else 
+            return renderGrossPrice();
+    }
+
+
+    const renderNetPrice = () => {
+        return(
+            Product.isOnSale(product) ?  (
+                <>
+                    <h5 className="text-decoration-line-through">Net Price: {product.price} zł</h5>
+                    <h5>Discounted net price: {Product.getDiscountedPrice(product)} zł </h5>
+                </>
+            ) : (
+                <>
+                    <h5>Net Price: {product.price} zł</h5>
+                </>
+            )
+        )
+    }
+
+    const renderGrossPrice = () => {
+        return(
+            Product.isOnSale(product) ?  (
+                <>
+                    <h5 className="text-decoration-line-through">Price (with Tax): {Product.getPriceWithTax(product)} zł</h5>
+                    <h5>Discounted price (with Tax): {Product.getDiscountedPriceWithTax(product)} zł </h5>
+                </>
+            ) : (
+                <>
+                    <h5>Price (with Tax): {Product.getPriceWithTax(product)} zł</h5>
+                </>
+            )
+        )
+    }
 
   return (
       <div className="container align-center ">
@@ -77,22 +115,10 @@ export const ProductDetailsPage = observer(() => {
                 </p>
                 <p>Tax rate: {product.taxRate === -1 ? "Tax free" : `${product.taxRate} %`}</p>
 
-                {Product.isOnSale(product) ?  (
-                    <>
-                        <h5 className="text-decoration-line-through">Price: {product.price} zł</h5>
-                        <h5>Discounted price: {Product.getDiscountedPrice(product)} zł </h5>
-                        <p>Discounted price with Tax: {roundValue(Product.getDiscountedPrice(product) * (1 + product.taxRate/100), 2)} zł </p>
-
-                    </>
-                ) : (
-                    <>
-                        <h5>Price: {product.price} zł</h5>
-                        <p>Price with Tax: {roundValue(product.price * (product.taxRate === -1 ? 1 : 1 + product.taxRate/100), 2)} zł</p>
-                    </>
-                )}
+                {renderPrice()}
 
                 {product.status === ProductStatus.Available &&
-                <div className="row align-items-center">
+                <div className="row align-items-center mt-4">
                     <div className="col-5">
                         <div className="input-group mb-3">
                             <input type="number" min={1} max={product.productInfo.currentStock} 

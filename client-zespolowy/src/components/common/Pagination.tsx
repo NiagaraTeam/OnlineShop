@@ -14,26 +14,26 @@ export const Pagination = ({setPageNumber, pageCount, pageNumber }: Props) => {
     return (
     <nav>
         <ul className="pagination">
-        <li className="page-item">
-            <a className="page-link" onClick={() => changePage({ selected: pageNumber - 1 })}>
-            Previous
-            </a>
-        </li>
-        {[...Array(pageCount)].map((_, index) => (
-            <li key={index} className="page-item">
-            <a
-                className={`page-link ${pageNumber === index ? 'active' : ''}`}
-                onClick={() => setPageNumber(index)}
-            >
-                {index + 1}
-            </a>
+            <li className="page-item">
+                <a className="page-link" onClick={() => changePage({ selected: pageNumber - 1 })}>
+                Previous
+                </a>
             </li>
-        ))}
-        <li className="page-item">
-            <a className="page-link" onClick={() => changePage({ selected: pageNumber + 1 })}>
-            Next
-            </a>
-        </li>
+            {[...Array(pageCount)].map((_, index) => (
+                <li key={index} className="page-item">
+                <a
+                    className={`page-link ${pageNumber === index ? 'active' : ''}`}
+                    onClick={() => setPageNumber(index)}
+                >
+                    {index + 1}
+                </a>
+                </li>
+            ))}
+            <li className="page-item">
+                <a className="page-link" onClick={() => changePage({ selected: pageNumber + 1 })}>
+                Next
+                </a>
+            </li>
         </ul>
     </nav>
   )
