@@ -40,16 +40,13 @@ export const ProductDiscountForm = observer(
         {({ isValid, dirty, isSubmitting }) => {
           return(
           <Form >
-            {/* value */}
-            <div className="my-2">
-                <NumberInput placeholder="Enter discount value" name="value" label="Discount"/>
-            </div>
+           
 
             <div className="row">
                 <div className="col">
-                    <div>Start date:</div>
+                    <div><b>Start date:</b></div>
                     <DateInput name="start"
-                        placeholderText="Click to select a date"
+                        placeholderText="Select a start date"
                         todayButton="Today"
                         calendarStartDay={1}
                         dateFormat="dd/MM/yyyy"
@@ -57,21 +54,24 @@ export const ProductDiscountForm = observer(
                 </div>
                 
                 <div className="col offset-2">
-                    <div>End date:</div>
+                    <div><b>End date:</b></div>
                     <DateInput name="end"
-                        placeholderText="Click to select a date"
+                        placeholderText="Select an end date"
                         todayButton="Today"
                         calendarStartDay={1}
                         dateFormat="dd/MM/yyyy"
                     />
                 </div>
             </div>
-
+            {/* value */}
+            <div className="my-2">
+              <b><NumberInput placeholder="Discount value" name="value" label="Discount"/></b>
+            </div>
             {/* Button */}
             <div className="text-center my-4">
               <button
                 type="submit"
-                className="btn btn-success"
+                className="btn btn-primary"
                 disabled={!(dirty && isValid) || isSubmitting}
               >
                 {buttonText}

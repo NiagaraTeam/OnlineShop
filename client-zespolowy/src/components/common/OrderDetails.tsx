@@ -24,21 +24,19 @@ export const OrderDetails = ({order, adminView = false, addItemsFromOrder}: Prop
       
       <div className="row">
 
-        <div className="col-lg-8 pe-lg-5">
-          <div className="fs-3 row">
-            <div>Order no. <b className="fs-2">{order.id}</b></div>
-            <div className="fs-6">Date: {order.orderDate.toLocaleDateString()}</div>
-            <div className="fs-6">Status: {OrderStatus[order.status]}</div>
+        <div className="col-lg-12 pe-lg-5">
+          <div className="fs-3 row text-center">
+            <div>ORDER ID <b className="fs-2 text-center">{order.id}</b></div>
           </div>
-          <table className="table table-bordered mt-4">
-            <thead className="table-light">
+          <table className="table table-bordered text-center mt-4">
+            <thead className="table-primary">
               <tr>
-                <th>Product Name</th>
-                <th>Quantity</th>
-                <th>Price</th>
-                <th>Tax</th>
-                <th>Gross Value</th>
-                <th>Net Value</th>
+                <th>PRODUCT NAME</th>
+                <th>QUANTITY</th>
+                <th>PRICE</th>
+                <th>TAX</th>
+                <th>GROSS VALUE</th>
+                <th>NET VALUE</th>
               </tr>
             </thead>
             <tbody>
@@ -90,55 +88,45 @@ export const OrderDetails = ({order, adminView = false, addItemsFromOrder}: Prop
           </div>}
         </div>
 
-        <div className="col-lg-4 border rounded px-4 py-4">
-          <h5 className="">Details</h5>
-
+        <div className="text-center">
           <div className="mt-4">
-            <div className="fs-6 my-3">Payment Method: <b>{order.paymentMethod.name}</b></div>
-            <div className="fs-6 my-3">Shipping Method: <b>{order.shippingMethod.name} ({order.shippingMethod.cost} zł)</b></div>
-          </div>
-          
-          <div className="mt-5">
-            <p className="fs-6 mb-3">Shipping address:</p>
-            <dl className="row">
-              <dt className="col-sm-4">Address Line:</dt>
-              <dd className="col-sm-8">{order.userDetails.address.addressLine1}</dd>
+            <div className="fs-6 "><b>DATE:</b> {order.orderDate.toLocaleDateString()}</div>
+            <div className="fs-6 "><b>STATUS: </b>{OrderStatus[order.status]}</div>
+            <div className="my-3 ">
+            <div className="fs-6 "><b>PAYMENT METHOD: </b>{order.paymentMethod.name}</div>
+            <div className="fs-6"><b>SHIPPING METHOD: </b>{order.shippingMethod.name} ({order.shippingMethod.cost} zł)</div>
+            </div>
+            <div className="row">
+            <div className="fs-6 "><b>ADDRESS LINE: </b>{order.userDetails.address.addressLine1}</div>
 
               {order.userDetails.address.addressLine2 && (
                 <>
-                  <dt className="col-sm-4">Address Line 2:</dt>
-                  <dd className="col-sm-8">{order.userDetails.address.addressLine2}</dd>
+                <div className="fs-6 "><b>ADDRESS LINE: </b>{order.userDetails.address.addressLine2}</div>
                 </>
               )}
-
-              <dt className="col-sm-4">City:</dt>
-              <dd className="col-sm-8">{order.userDetails.address.city}</dd>
-
-              <dt className="col-sm-4">Country:</dt>
-              <dd className="col-sm-8">{order.userDetails.address.country}</dd>
-
-              <dt className="col-sm-4">Zip Code:</dt>
-              <dd className="col-sm-8">{order.userDetails.address.zipCode}</dd>
-            </dl>
+              <div className="fs-6 "><b>CITY: </b>{order.userDetails.address.city}</div>
+              <div className="fs-6 "><b>COUNTRY: </b>{order.userDetails.address.country}</div>
+              <div className="fs-6 "><b>ZIP CODE: </b>{order.userDetails.address.zipCode}</div>
+            </div>
           </div>
-
+   
           {hasDiscount && 
             <div className="my-4">
-                {roundValue(userDiscount * 100, 2)} % discount applied
+                <b>{roundValue(userDiscount * 100, 2)} % discount applied</b>
             </div>}
-
-          <div className="fs-5 ">
-            Total:&nbsp;
-            {hasDiscount && <del className="text-muted">{roundValue(order.totalValue / (1 -userDiscount), 2)} zł</del>}
-            <b>&nbsp;{roundValue(order.totalValue, 2)} zł</b>
-          </div>
-          <div className="fs-5 ">
-            Total with Tax:&nbsp;
-            {hasDiscount && <del className="text-muted">{roundValue(order.totalValueWithTax / (1 -userDiscount), 2)} zł</del>}
-            <b>&nbsp;{roundValue(order.totalValueWithTax, 2)} zł</b>
+          <div className="frame-container ">
+            <div className="fs-5 ">
+              Total:&nbsp;
+              {hasDiscount && <del className="text-muted">{roundValue(order.totalValue / (1 -userDiscount), 2)} zł</del>}
+              <b>&nbsp;{roundValue(order.totalValue, 2)} zł</b>
+            </div>
+            <div className="fs-5 ">
+              Total with Tax:&nbsp;
+              {hasDiscount && <del className="text-muted">{roundValue(order.totalValueWithTax / (1 -userDiscount), 2)} zł</del>}
+              <b>&nbsp;{roundValue(order.totalValueWithTax, 2)} zł</b>
+            </div>
           </div>
         </div>
-
         
       </div>
     </div>

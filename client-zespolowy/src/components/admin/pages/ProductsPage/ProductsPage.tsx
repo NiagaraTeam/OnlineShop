@@ -65,11 +65,11 @@ export const ProductsPage = observer(() => {
     return (
         <div className="m-3">
             <Helmet>
-                <title>Products - OnlineShop</title>
+                <title>Products - BeautyShop</title>
             </Helmet>
             <div className="row">
 
-                <div className="col-lg-6">
+                <div className="mx-auto">
 
                     {!showDeletedProducts &&
                         <Products 

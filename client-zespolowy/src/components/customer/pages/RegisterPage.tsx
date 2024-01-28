@@ -13,10 +13,10 @@ export const RegisterPage = observer(() => {
     return (
         <>
             <Helmet>
-                <title>Sign Up - OnlineShop</title>
+                <title>Sign Up - BeautyShop</title>
             </Helmet>
             <div className="p-4 col-lg-4 offset-lg-4">
-                <h3 className="text-center mb-5">Sign up to OnlineShop</h3>
+                <h3 className="text-center mb-5">Sign up to BeautyShop</h3>
                 <RegisterForm />
             </div>
         </>

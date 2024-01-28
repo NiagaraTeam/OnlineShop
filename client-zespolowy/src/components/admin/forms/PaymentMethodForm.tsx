@@ -33,14 +33,14 @@ const validationSchema = Yup.object({
           <Form >
             {/* Name */}
             <div className="my-2">
-                <TextInput placeholder="Enter payment name" name="name" label="Name"/>
+                <TextInput placeholder="Payment name" name="name" />
             </div>
             
             {/* Button */}
             <div className="text-center my-4">
               <button
                 type="submit"
-                className="btn btn-success"
+                className="btn btn-primary"
                 disabled={!(dirty && isValid) || isSubmitting}
               >
                 {buttonText}

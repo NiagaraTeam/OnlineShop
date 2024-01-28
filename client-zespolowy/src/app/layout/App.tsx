@@ -35,7 +35,7 @@ export const App = observer(() => {
   return (
     <>
       <Helmet>
-        <title>OnlineShop</title>
+        <title>BeautyShop</title>
       </Helmet>
       <div className='container'>
         <ScrollRestoration/>
@@ -45,7 +45,7 @@ export const App = observer(() => {
           <div className='my-5'>
             {location.pathname === '/' 
             ? 
-              <HomePage title='OnlineShop'/>
+              <HomePage title='BeautyShop'/>
             : 
               <Outlet />
             }

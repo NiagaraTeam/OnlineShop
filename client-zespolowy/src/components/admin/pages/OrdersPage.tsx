@@ -27,10 +27,10 @@ export const OrdersPage = observer(() => {
   return (
     <div className="m-3">
       <Helmet>
-          <title>Orders - OnlineShop</title>
+          <title>Orders - BeautyShop</title>
       </Helmet>
-      <h2 className="my-4">Orders</h2>
-      <div className="col-md-3 order-md-1">
+      <h2 className=" my-5 text-center">ORDERS</h2>
+      <div className="col-md-5 order-md-1 mx-auto">
         <select
           className="form-select"
           value={selectedStatus}
@@ -44,60 +44,62 @@ export const OrdersPage = observer(() => {
           ))}
         </select>
       </div>
-      <div className="mb-3"></div>
-      <div className="col-md-10 order-md-10">
+      <div className="mb-5"></div>
+      <div className="col-md-15 order-md-10 mx-auto">
         
-        {filteredOrders.length !== 0 &&
-        <table className="table table-bordered">
-          <thead className='table-light'>
-            <tr>
-              <th>Order ID</th>
-              <th>Date</th>
-              <th>Customer</th>
-              <th>Status</th>
-              <th style={{ width: "0", whiteSpace: "nowrap" }} className="text-center"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredOrders.map((order) => (
-              <tr key={order.id}>
-                <td>{order.id}</td>
-                <td>{order.orderDate.toDateString()}</td>
-                <td>{order.userDetails.email}</td>
-                <td>{OrderStatus[order.status]}</td>
-                <td>
-                  <div className='d-flex me-2'>
-                    <Link to={`/admin/order/${order.id}`} className="btn btn-primary btn-sm mx-2">
-                    Details
-                    </Link>
-                    {order.status !== OrderStatus.Completed && order.status !== OrderStatus.Canceled &&
-                    <div className="dropdown d-inline-block">
+                {filteredOrders.length !== 0 &&
+                <table className="table table-bordered table-striped">
+                  <thead className='table-primary text-center'>
+                    <tr>
+                      <th>ID</th>
+                      <th>CUSTOMER</th>
+                      <th>DATE</th>
+                      <th>STATUS</th>
+                      <th style={{ width: "0", whiteSpace: "nowrap" }} className="text-center">DETAILS</th>
+                      <th style={{ width: "0", whiteSpace: "nowrap" }} className="text-center">ACTION</th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-center">
+                  {filteredOrders.map((order) => (
+          <tr key={order.id}>
+            <td>{order.id}</td>
+            <td>{order.userDetails.email}</td>
+            <td>{order.orderDate.toDateString()}</td>
+            <td>{OrderStatus[order.status]}</td>
+            <td>
+              <Link to={`/admin/order/${order.id}`} className="btn btn-secondary btn-sm mx-2">
+                Show
+              </Link>
+            </td>
+            <td>
+              {order.status !== OrderStatus.Completed && order.status !== OrderStatus.Canceled &&
+                <div className="dropdown d-inline-block">
+                  <button
+                    className="btn btn-primary btn-sm dropdown-toggle"
+                    type="button"
+                    id={`statusDropdown${order.id}`}
+                    data-bs-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                  >
+                    Change
+                  </button>
+                  <div className="dropdown-menu" aria-labelledby={`statusDropdown${order.id}`}>
+                    {orderStatusOptions.map((option) => (
                       <button
-                        className="btn btn-secondary btn-sm dropdown-toggle"
-                        type="button"
-                        id={`statusDropdown${order.id}`}
-                        data-bs-toggle="dropdown"
-                        aria-haspopup="true"
-                        aria-expanded="false"
+                        key={option.value}
+                        className="dropdown-item"
+                        onClick={() => handleStatusChange(order.id, option.value as OrderStatus)}
                       >
-                        Status
+                        {option.text}
                       </button>
-                      <div className="dropdown-menu" aria-labelledby={`statusDropdown${order.id}`}>
-                        {orderStatusOptions.map((option) => (
-                          <button
-                            key={option.value}
-                            className="dropdown-item"
-                            onClick={() => handleStatusChange(order.id, option.value as OrderStatus)}
-                          >
-                            {option.text}
-                          </button>
-                        ))}
-                      </div>
-                    </div>}
+                    ))}
                   </div>
-                </td>
-              </tr>
-            ))}
+                </div>
+              }
+            </td>
+          </tr>
+        ))}
           </tbody>
         </table>}
         

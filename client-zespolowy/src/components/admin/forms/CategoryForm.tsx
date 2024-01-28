@@ -48,19 +48,19 @@ export const CategoryForm = observer(
           <Form >
             {/* Name */}
             <div className="my-2">
-                <TextInput placeholder="Enter category name" name="name" label="Name"/>
+            <b><TextInput placeholder="Category name" name="name" label="Name"/></b>
             </div>
 
             {/* Parent Category - select */}
             <div className="my-2">
-                <SelectInput label="Parent Category" name="parentCategoryId" options={categoriesAsOptions}/>
+            <b><SelectInput label="Parent Category" name="parentCategoryId" options={categoriesAsOptions}/></b>
             </div>
             
             {/* Button */}
             <div className="text-center my-4">
               <button
                 type="submit"
-                className="btn btn-success"
+                className="btn btn-primary"
                 disabled={!(dirty && isValid) || isSubmitting}
               >
                 {buttonText}

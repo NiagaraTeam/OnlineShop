@@ -42,39 +42,39 @@ export const ShippingMethodsPage = observer(() => {
   return (
     <div className="m-3">
       <Helmet>
-          <title>Shipping Methods - OnlineShop</title>
+          <title>Shipping Methods - BeautyShop</title>
       </Helmet>
       <div className="row">
 
-        <div className="col-lg-5">
-          <div className="d-flex justify-content-between align-items-center">
-            <h2 className="my-4">
-              Shipping Methods
+          <div className="text-center">
+            <h2 className="my-4 text-center">
+              SHIPPING METHODS
             </h2>
           </div>
           <ul className="list-group">
             {shippingMethods.map((method) => (
               <li key={method.id} className="list-group-item d-flex justify-content-between align-items-center">
-                {method.name} ({method.cost} zł)
-                <EditDeleteButtons
-                  loading={loading[method.id]}
-                  showEdit={false}
-                  deleteAction={() => handleDelete(method.id)}
-                  size={25}
-                />
+                <b>{method.name} ({method.cost} zł)</b>
+                <div className="d-flex align-items-center">
+                  <button
+                    className="btn btn-danger me-2"
+                    onClick={() => handleDelete(method.id)}
+                    disabled={loading[method.id]}
+                  >
+                    Delete
+                  </button>
+                </div>
               </li>
             ))}
           </ul>
         </div>
 
-        <div className="col-lg-5 offset-lg-2">
-          <h2 className="my-4">
-            Create Shipping Method
-          </h2>
+        
+          <h4 className="mt-5 text-center">
+            Create New Shipping Method
+          </h4>
           <ShippingMethodForm onSubmit={handleCreate} buttonText="Create"/>
-        </div>
 
       </div>
-    </div>
   )
 })
