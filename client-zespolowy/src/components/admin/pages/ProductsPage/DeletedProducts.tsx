@@ -92,7 +92,7 @@ export const DeletedProducts = observer(({setShowDeletedProducts}: Props) => {
             </table>}
             <div>
                     {deletedProducts.length > 0 &&
-                    <button className="btn btn-danger my-3"
+                    <button className="btn btn-dark my-3"
                         onClick={() => deleteAll()}>Delete all</button>}
                     <button className="btn btn-secondary mx-4"
                         onClick={() => setShowDeletedProducts(false)}>Cancel</button>

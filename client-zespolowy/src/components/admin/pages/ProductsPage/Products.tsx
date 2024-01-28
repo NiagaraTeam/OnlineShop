@@ -149,7 +149,7 @@ export const Products = observer(({showCreateButton, setShowCreateForm,
                         onClick={() => setShowCreateForm(true)}>Create</button>
                     }
                     <button className="btn btn-dark me-2"
-                        onClick={() => setShowDeletedProducts(true)}>Deleted</button>
+                        onClick={() => setShowDeletedProducts(true)}>All Deleted</button>
                 </div>
 
             {filteredProducts.length > 0 &&
