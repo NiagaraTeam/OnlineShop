@@ -1,6 +1,6 @@
 import { Link, NavLink } from "react-router-dom";
 import { useStore } from "../../../app/stores/store";
-import { FaShoppingCart, FaUser } from 'react-icons/fa';
+import { FaCartArrowDown, FaCartPlus, FaSadCry, FaShoppingCart, FaUser } from 'react-icons/fa';
 import { RiAccountCircleFill } from 'react-icons/ri';
 import { BiLogOut } from 'react-icons/bi';
 import { FiList } from 'react-icons/fi';
@@ -29,7 +29,7 @@ export const Header = observer(() => {
                 <Link to='/cart' className="btn px-2">
                         <IconContext.Provider value={{ size: "25px" }}>
                             <div>
-                                <FaShoppingCart/> {cartItems.length > 0 && `(${cartItems.length})`}
+                                <b>Cart{cartItems.length > 0 && `(${cartItems.length})`}</b>
                             </div>
                         </IconContext.Provider>
                         </Link>
