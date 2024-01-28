@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@reach/alert-dialog": "^0.18.0",
+    "react-helmet-async": "^2.0.4"
+  }
+}
