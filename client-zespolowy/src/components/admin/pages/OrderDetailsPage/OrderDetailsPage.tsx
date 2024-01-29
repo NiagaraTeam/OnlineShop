@@ -23,7 +23,7 @@ export const OrderDetailsPage = observer(() => {
   return (
     <div>
       <Helmet>
-          <title>{`Order - ${order.id} - BeautyShop`}</title>
+          <title>{`Order - ${order.id} - OnlineShop`}</title>
       </Helmet>
       <OrderDetails order={order} adminView={true} ></OrderDetails>
     </div>
