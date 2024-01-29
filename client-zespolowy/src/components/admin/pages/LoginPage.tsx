@@ -10,15 +10,20 @@ export const LoginPage = observer(() => {
     if (isLoggedIn && isAdmin)
         return <Navigate to="/admin/orders"/>;
 
-    return (
-        <>
-            <Helmet>
-                <title>Admin Login - OnlineShop</title>
-            </Helmet>
-            <div className="p-4 col-lg-4 offset-lg-4">
-                <h3 className="text-center mb-5">Admin login page</h3>
-                <LoginForm customerLogin={false}/>
-            </div>
-        </>
-    )
+        return (
+            <>
+                <Helmet>
+                    <title>Admin Login - BeautyShop</title>
+                </Helmet>
+                <div className="text-center">
+                    <div className="frame-container">
+                        <div className="p-4 col-lg-4 offset-lg-4">
+                            <h3 className="new-color text-center mb-5">ADMIN LOGIN PAGE</h3>
+                            <LoginForm customerLogin={false}/>
+                        </div>
+                    </div>
+                </div>
+            </>
+        );
+        
 })

@@ -17,10 +17,10 @@ export const LoginPage = observer(({redirectTo = "/"}: Props) => {
     return (
         <>
             <Helmet>
-                <title>Login - OnlineShop</title>
+                <title>Login - BeautyShop</title>
             </Helmet>
             <div className="p-4 col-lg-4 offset-lg-4">
-                <h3 className="text-center mb-5">Login to OnlineShop</h3>
+                <h3 className="text-center mb-5">Login to BeautyShop</h3>
                 <LoginForm />
             </div>
         </>

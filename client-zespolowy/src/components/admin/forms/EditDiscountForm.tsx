@@ -37,7 +37,7 @@ export const EditDiscountForm = observer(
           <Form >
             {/* value */}
             <div className="my-2">
-                <NumberInput placeholder="Enter discount value" name="value" label="Discount"/>
+                <NumberInput placeholder="Discount value" name="value" label="Discount"/>
             </div>
             
 
@@ -45,7 +45,7 @@ export const EditDiscountForm = observer(
             <div className="text-center my-4">
               <button
                 type="submit"
-                className="btn btn-success"
+                className="btn btn-primary"
                 disabled={!(dirty && isValid) || isSubmitting}
               >
                 {buttonText}

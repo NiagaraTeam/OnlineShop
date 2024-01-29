@@ -5,7 +5,7 @@ export const AboutPage = observer(() => {
   return (
     <div>
       <Helmet>
-        <title>About - OnlineShop</title>
+        <title>About - BeautyShop</title>
       </Helmet>
       <p>About Page</p>
     </div>

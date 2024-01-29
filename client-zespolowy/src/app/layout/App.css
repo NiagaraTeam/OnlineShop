@@ -82,3 +82,19 @@
 [data-reach-alert-dialog-label] {
   font-size: 23px;
 }
+.new-color{
+  color: #9570bc;
+}
+
+.frame-container {
+  border: 4px solid #a37ccc; /* Grubość i kolor ramki */
+  padding: 40px; /* Odstęp wewnątrz ramki */
+  border-radius: 40px; /* Zaokrąglenie rogów ramki */
+  border-width : 5px;
+  max-width: 60%;
+  margin: 0 auto;
+}
+.table-color {
+  background-color:#a37ccc; /* Twój wybrany kolor tła */
+  color: #f4f4f4; /* Twój wybrany kolor tekstu */
+}

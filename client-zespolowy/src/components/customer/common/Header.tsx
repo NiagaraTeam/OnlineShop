@@ -1,6 +1,6 @@
 import { Link, NavLink } from "react-router-dom";
 import { useStore } from "../../../app/stores/store";
-import { FaShoppingCart } from 'react-icons/fa';
+import { FaCartArrowDown, FaCartPlus, FaSadCry, FaShoppingCart, FaUser } from 'react-icons/fa';
 import { RiAccountCircleFill } from 'react-icons/ri';
 import { BiLogOut } from 'react-icons/bi';
 import { FiList } from 'react-icons/fi';
@@ -13,16 +13,15 @@ export const Header = observer(() => {
 
     return (
         <>
-            <header className="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+       
+            <header className="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-between py-2 mb- border-bottom" style={{ backgroundColor: '#ecdefb' }}>
                 <Link to="/" className="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
-                    <h4>OnlineShop</h4>
+                    <h1 className="new-color">BeautyShop</h1>
                 </Link>
 
                 <ul className="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-                    <li><NavLink to="/products" className="nav-link px-2 link-dark">Products</NavLink></li>
-                    <li><NavLink to="/offerts" className="nav-link px-2 link-dark">Offerts</NavLink></li>
-                    <li><NavLink to="/about" className="nav-link px-2 link-dark">About</NavLink></li>
-                    <li><NavLink to="/contact" className="nav-link px-2 link-dark">Contact</NavLink></li>
+                    <b><li><NavLink to="/products" className="nav-link px-3 link-dark">Products</NavLink></li></b>
+                    <b><li><NavLink to="/offerts" className="nav-link px-3 link-dark">Offerts</NavLink></li></b>
                 </ul>
 
                
@@ -30,7 +29,7 @@ export const Header = observer(() => {
                 <Link to='/cart' className="btn px-2">
                         <IconContext.Provider value={{ size: "25px" }}>
                             <div>
-                                <FaShoppingCart/> Cart {cartItems.length > 0 && `(${cartItems.length})`}
+                                <b>Cart{cartItems.length > 0 && `(${cartItems.length})`}</b>
                             </div>
                         </IconContext.Provider>
                         </Link>
@@ -38,8 +37,8 @@ export const Header = observer(() => {
                 ? 
                     <div className="btn px-2">
                         <div  className="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                            <IconContext.Provider value={{ size: "25px" }}>
-                                <RiAccountCircleFill/> {user?.userName}
+                            <IconContext.Provider value={{ size: "20px" }}>
+                                <FaUser/> {user?.userName}
                             </IconContext.Provider>
                         </div>
                         <ul className="dropdown-menu">
@@ -55,6 +54,7 @@ export const Header = observer(() => {
                 }
                 </div>
             </header>
+            
         </>
     )
 })

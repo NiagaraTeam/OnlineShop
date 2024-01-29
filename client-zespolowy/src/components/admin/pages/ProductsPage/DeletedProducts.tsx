@@ -46,49 +46,57 @@ export const DeletedProducts = observer(({setShowDeletedProducts}: Props) => {
 
     return (
         <>
-            <div className="d-flex justify-content-between align-items-center">
-                <h2 className="my-4">
-                Deleted products
+            <div className=" text-center">
+                <h2 className="my-4 ">
+                    DELETED PRODUCTS
                 </h2>
-                <div>
-                    {deletedProducts.length > 0 &&
-                    <button className="btn btn-danger mx-2"
-                        onClick={() => deleteAll()}>Delete all</button>}
-                    <button className="btn btn-secondary"
-                        onClick={() => setShowDeletedProducts(false)}>Cancel</button>
-                </div>
             </div>
 
             {deletedProducts.length > 0 &&
-            <table className="table table-bordered">
-                <thead className="table-light">
+            <table className="table table-bordered table-striped">
+                <thead className="table-primary">
                     <tr>
                     <th className="text-center">ID</th>
-                    <th>Name</th>
-                    <th className="text-center">Category</th>
-                    <th style={{ width: "0", whiteSpace: "nowrap" }} className="text-center">Action</th>
+                    <th className="text-center">NAME</th>
+                    <th className="text-center">CATEGORY</th>
+                    <th style={{ width: "0", whiteSpace: "nowrap" }} className="text-center">ACTION</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {deletedProducts.map((product) => (
-                        <tr key={product.id} >
-                            <td className="text-center">{product.id}</td>
-                            <td>{product.name}</td>
-                            <td className="text-center">{product.category.name}</td>
-                            <td>
-                            <RestoreDeleteButtons
-                                loadingDelete={loadingDelete[product.id]}
-                                loadingRestore={loadingRestore[product.id]}
-                                deleteAction={() => handleDeletePermanently(product.id)}
-                                restoreAction={() => handleRestore(product.id)}
-                                size={25}
-                            />
-                            </td>
-                        </tr>
+                {deletedProducts.map((product) => (
+                    <tr key={product.id} >
+                        <td className="text-center">{product.id}</td>
+                        <td className="text-center">{product.name}</td>
+                        <td className="text-center">{product.category.name}</td>
+                        <td>
+                        <div className="d-flex justify-content-around align-items-center ">
+                            <button
+                            className="btn btn-danger mx-3"
+                            onClick={() => handleDeletePermanently(product.id)}
+                            disabled={loadingDelete[product.id]}
+                            >
+                            Delete
+                            </button>
+                            <button
+                            className="btn btn-primary"
+                            onClick={() => handleRestore(product.id)}
+                            disabled={loadingRestore[product.id]}
+                            >
+                            Restore
+                            </button>
+                        </div>
+                        </td>
+                    </tr>
                     ))}
                 </tbody>
             </table>}
-
+            <div>
+                    {deletedProducts.length > 0 &&
+                    <button className="btn btn-dark my-3"
+                        onClick={() => deleteAll()}>Delete all</button>}
+                    <button className="btn btn-secondary mx-4"
+                        onClick={() => setShowDeletedProducts(false)}>Cancel</button>
+                </div>
             {deletedProducts.length === 0 && 
                 <h5>Trash is empty</h5>
             }

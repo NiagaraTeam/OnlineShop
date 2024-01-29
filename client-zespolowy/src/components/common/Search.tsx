@@ -9,10 +9,10 @@ export const Search = ({handleSearch, searchQuery, colSize = 5}: Props) => {
         <div className={`col-${colSize}`}>
             <div className="input-group">
             <input
-                className="form-control border-end-0 border rounded-pill"
+                className="form-control border-end-1"
                 type="search"
                 id="example-search-input"
-                placeholder="Search products..."
+                placeholder="Search..."
                 value={searchQuery}
                 onChange={handleSearch}
             />

@@ -90,16 +90,8 @@ export const Products = observer(({showCreateButton, setShowCreateForm,
 
     return (
         <>
-            <div className="d-flex justify-content-between align-items-center mt-4">
-                <h2>Products</h2>
-                <div>
-                    {showCreateButton &&
-                    <button className="btn btn-success mx-2" 
-                        onClick={() => setShowCreateForm(true)}>Create</button>
-                    }
-                    <button className="btn btn-secondary me-2"
-                        onClick={() => setShowDeletedProducts(true)}>Deleted</button>
-                </div>
+            <div className="text-center">
+                <h2>PRODUCTS</h2>
             </div>
 
             <div className="d-flex justify-content-between align-items-center py-3">
@@ -107,46 +99,64 @@ export const Products = observer(({showCreateButton, setShowCreateForm,
             </div>
             
             {productsAdmin.length > 0 &&
-            <table className="table table-bordered">
-                <thead className="table-light">
+            <table className="table table-bordered table-striped text-center">
+                <thead className="table-primary ">
                     <tr>
                     <th className="text-center">ID</th>
-                    <th>Name</th>
-                    <th className="text-center">Category</th>
-                    <th className="text-center">Status</th>
-                    <th className="text-center">Stock</th>
-                    <th style={{ width: "0", whiteSpace: "nowrap" }} className="text-center">Action</th>
+                    <th>NAME</th>
+                    <th className="text-center">CATEGORY</th>
+                    <th style={{ width: "0", whiteSpace: "nowrap" }}  className="text-center">STOCK</th>
+                    <th className="text-center">STATUS</th>
+                    <th style={{ width: "0", whiteSpace: "nowrap" }} className="text-center">ACTION</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {pagedProducts.map((product) => (
-                        <tr key={product.id} className={selectedProduct?.id === product.id ? 'selected-row' : ''}>
-                            <td className="text-center">{product.id}</td>
-                            <td>{product.name}</td>
-                            <td className="text-center">{product.category.name}</td>
-                            <td className="text-center">{ProductStatus[product.status]}</td>
-                            <td className="text-center">{product.productInfo.currentStock}</td>
-                            <td>
-                                <EditDeleteButtons
-                                    loading={loadingDelete[product.id]}
-                                    deleteAction={() => handleDelete(product.id)}
-                                    deleteToolTipText="Move to trash"
-                                    editAction={() => displayEditForm(product.id)}
-                                    size={25}/> 
-                            </td>
-                        </tr>
-                    ))}
+                {pagedProducts.map((product) => (
+                <tr key={product.id} className={selectedProduct?.id === product.id ? 'selected-row' : ''}>
+                    <td className="text-center">{product.id}</td>
+                    <td>{product.name}</td>
+                    <td className="text-center">{product.category.name}</td>
+                    <td className="text-center">{product.productInfo.currentStock}</td>
+                    <td className="text-center">{ProductStatus[product.status]}</td>
+                    <td>
+                    <div className="d-flex justify-content-around align-items-center">
+                        <button
+                        className="btn btn-secondary"
+                        onClick={() => displayEditForm(product.id)}
+                        >
+                        Edit
+                        </button>
+                        <button
+                        className="btn btn-danger mx-2"
+                        onClick={() => handleDelete(product.id)}
+                        disabled={loadingDelete[product.id]}
+                        >
+                        Delete
+                        </button>
+                    </div>
+                    </td>
+                </tr>
+                ))}
                 </tbody>
             </table>}
+            {filteredProducts.length === 0 &&
+            <div className="text-center">
+                <h4>There is no such product</h4>
+            </div>}
+            <div className=" my-5 text-center">
+                    {showCreateButton &&
+                    <button className="btn btn-primary mx-2" 
+                        onClick={() => setShowCreateForm(true)}>Create</button>
+                    }
+                    <button className="btn btn-dark me-2"
+                        onClick={() => setShowDeletedProducts(true)}>All Deleted</button>
+                </div>
 
             {filteredProducts.length > 0 &&
             <div className="mt-3">
                 {pagination}
             </div>}
-            {filteredProducts.length === 0 &&
-            <div className="text-center">
-                <h5>There are no products with the given criteria</h5>
-            </div>}
+            
         </> 
     );
 });
