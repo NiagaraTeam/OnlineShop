@@ -67,7 +67,7 @@ export const ProductsPage = observer(() => {
     return (
       <div className="container">
         <Helmet>
-          <title>Products - BeautyShop</title>
+          <title>Products - OnlineShop</title>
         </Helmet>
         <div className="row">
           <div className="col-lg-4 offset-lg-3 mb-2">{search}</div> 

@@ -63,49 +63,49 @@ export const ProductForm = observer(
           <Form >
             {/* Name */}
             <div className="my-2">
-                <b><TextInput placeholder="Product name" name="name" label="Name"/></b>
+                <TextInput placeholder="Enter product name" name="name" label="Name"/>
             </div>
 
             {/* Description */}
             <div className="my-2">
-                <b><TextAreaInput placeholder="Description" name="description" label="Description" rows={2}/></b>
+                <TextAreaInput placeholder="Enter description" name="description" label="Description" rows={3}/>
             </div>
 
             {/* Price */}
             <div className="my-2">
-                <b><NumberInput placeholder="Price" name="price" label="Price"/></b>
+                <NumberInput placeholder="Enter price" name="price" label="Price"/>
             </div>
 
             {/* TaxRate - select */}
             <div className="my-2">
-              <b><SelectInput label="Tax Rate" name="taxRate" options={taxRateOptions}/></b>
+                <SelectInput label="Tax Rate" name="taxRate" options={taxRateOptions}/>
             </div>
 
             {/* Category - select */}
             <div className="my-2">
-                <b><SelectInput label="Category" name="categoryId" options={categoriesAsOptions}/></b>
+                <SelectInput label="Category" name="categoryId" options={categoriesAsOptions}/>
             </div>
 
             {/* Expert - select */}
             <div className="my-2">
-                <b><SelectInput label="Product Expert" name="productExpertId" options={expertsAsOptions}/></b>
+                <SelectInput label="Product Expert" name="productExpertId" options={expertsAsOptions}/>
             </div>
 
             {/* Status - select */}
             <div className="my-2">
-                <b><SelectInput label="Status" name="status" options={enumToOptions(ProductStatus)}/></b>
+                <SelectInput label="Status" name="status" options={enumToOptions(ProductStatus)}/>
             </div>
 
             {/* CurrentStock */}
             <div className="my-2">
-                <b><NumberInput placeholder="Current stock" name="currentStock" label="Stock"/></b>
+                <NumberInput placeholder="Enter current stock" name="currentStock" label="Stock"/>
             </div>
 
             {/* Button */}
             <div className="text-center my-5">
               <button
                 type="submit"
-                className="btn btn-primary"
+                className="btn btn-success"
                 disabled={!(dirty && isValid) || isSubmitting}
               >
                 {buttonText}
