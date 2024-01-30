@@ -87,9 +87,7 @@ export const CartPage = observer(() => {
                 <CartPagePlaceOrder/>
               </div>
             </div>
-              
-
-            </div>
+          </div>
         </>}
 
         {cartItems.length === 0 &&
