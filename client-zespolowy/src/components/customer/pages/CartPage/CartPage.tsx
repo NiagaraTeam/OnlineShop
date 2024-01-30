@@ -16,8 +16,6 @@ export const CartPage = observer(() => {
   const {cartStore, userStore: {isNetValue, handleVauleWithTaxCheckBox}} = useStore();
   const {showLoginForm, cartItems, resetCart, showDialog, createOrder, setShowDialog, removeUnavailableItems} = cartStore;
 
-  if (showLoginForm) return <LoginPage redirectTo="/cart"/>
-
   const [reloadKey, setReloadKey] = useState(0);
   
   const handlePlaceOrder = () => {
@@ -31,6 +29,8 @@ export const CartPage = observer(() => {
     removeUnavailableItems();
     setReloadKey(prevKey => prevKey + 1);
   }
+
+  if (showLoginForm) return <LoginPage redirectTo="/cart"/>
 
   return (
     <div className="container">
@@ -72,9 +72,8 @@ export const CartPage = observer(() => {
           </div>
           </div>
       
-          <div className="col-lg-4 border rounded py-3 px-3"
-            style={{marginTop: "53px"}}>
-
+          <div className="col-lg-4" style={{marginTop: "53px"}}>
+            <div className="border rounded py-3 px-3">
               <div className="mt-2">
                 <CartPageSelectShipping />
               </div>
@@ -85,10 +84,10 @@ export const CartPage = observer(() => {
 
               <div className="mt-5 pt-4">
                 <CartPageTotalValue />
-                <div className="d-grid">
-                  <CartPagePlaceOrder/>
-                </div>
+                <CartPagePlaceOrder/>
               </div>
+            </div>
+              
 
             </div>
         </>}
