@@ -19,9 +19,9 @@ export const CartPage = observer(() => {
   const [reloadKey, setReloadKey] = useState(0);
   
   const handlePlaceOrder = () => {
-    createOrder().then(() => {
+    createOrder().then((orderId) => {
       setShowDialog(false);
-      router.navigate('/account');
+      router.navigate(`/order/${orderId}`);
   });
   }
 
