@@ -213,6 +213,8 @@ export default class CartStore {
                   store.userStore.addOrder(orderDetails);
                 }
               });
+
+            return orderId;
         } catch (error) {
             console.error('Error creating order:', error);
             toast.error("Failed to crate order.");
@@ -239,9 +241,9 @@ export default class CartStore {
                 }
                 else
                 {
-                    this.createOrder().then(() => {
+                    this.createOrder().then((orderId) => {
                         this.setShowDialog(false);
-                        router.navigate('/account');
+                        router.navigate(`/order/${orderId}`);
                     });
                 }
                     
