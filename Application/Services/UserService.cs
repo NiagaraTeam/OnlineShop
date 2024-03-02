@@ -273,5 +273,28 @@ namespace Application.Services
             }
             return Result<IEnumerable<UserDetailsDto>>.Success(allUsers);
         }
+
+///////
+        public async Task<Result<object>> UpdateNewsletter(string userId, NewsletterDto newsletter)
+        {
+            var user = await _context.Users
+                .Include(u => u.CustomerDetails)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null)
+                return Result<object>.Failure("User not found");
+
+            user.CustomerDetails.Newsletter = newsletter.Newsletter;
+
+            _context.Users.Update(user);
+
+            if (await _context.SaveChangesAsync() > 0)
+                return Result<object>.Success(newsletter.Newsletter);
+
+            return Result<object>.Failure("Failed to update newsletter settings");
+        }
+
+
+
     }
 }

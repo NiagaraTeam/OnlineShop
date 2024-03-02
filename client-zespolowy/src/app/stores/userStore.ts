@@ -82,6 +82,46 @@ export default class UserStore {
         const isChecked = e.target.checked;
         this.setNetValue(isChecked);
     };
+////
+    setNewsletterValue = (flag: boolean) => {
+        if (flag)
+            this.netValueFlag = "true";
+        else
+            this.netValueFlag = "false";
+    }
+
+    get isNewsletterValue() {
+        return (this.netValueFlag === "true");
+    }
+
+    handleValueOfNewsletterCheckBox = async () => {
+        try {
+            if (!this.user || this.isAdmin || !this.accountDetails)
+                return;
+    
+            const newValue = !this.accountDetails.newsletter;
+            const idUser = this.accountDetails.id;
+
+            console.log(`Current newsletter state for user ${idUser}: ${this.accountDetails.newsletter}`);
+
+            const newsletterDto = { newsletter: newValue }; // Tworzenie obiektu NewsletterDto
+            await agent.Account.updateNewsletter(idUser, newsletterDto); // metody z agenta
+    
+            runInAction(() => {
+                this.accountDetails!.newsletter = newValue;
+            });
+
+
+            console.log(`Updated newsletter state for user ${idUser}: ${this.accountDetails.newsletter}`);
+
+    
+            toast.success(`Newsletter subscription ${newValue ? 'enabled' : 'disabled'}`);
+        } catch (error) {
+            console.log(error);
+            toast.error('Failed to update newsletter subscription');
+        }
+    };
+    
 
     addOrder = (order: Order) => {
         if (this.accountDetails)

@@ -212,6 +212,13 @@ namespace API.Controllers
         {
             return HandleResult(await _userService.SetUserDiscount(userId, discountValue));
         }
+///////
+        [HttpPatch("accounts/{userId}/newsletter")] // accounts/{userId}/newsletter
+        [Authorize(Roles = StaticUserRoles.CUSTOMER)]
+        public async Task<IActionResult> UpdateNewsletter(string userId, NewsletterDto newsletter)
+        {
+            return HandleResult(await _userService.UpdateNewsletter(userId, newsletter));
+        }
 
         [HttpGet("customers")] //api/customers
         [Authorize(Roles = StaticUserRoles.ADMIN)]
