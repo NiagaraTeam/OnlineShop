@@ -16,6 +16,7 @@ export default class UserStore {
     
     itemsPerPage: string = localStorage.getItem('itemsPerPage') || "10";
     netValueFlag: string = localStorage.getItem('netValueFlag') || "true";
+    NewsletterValue: boolean = this.accountDetails?.newsletter || false;
 
     selectedUser: AccountDetails | undefined = undefined;
 
@@ -85,13 +86,13 @@ export default class UserStore {
 ////
     setNewsletterValue = (flag: boolean) => {
         if (flag)
-            this.netValueFlag = "true";
+            this.NewsletterValue = true;
         else
-            this.netValueFlag = "false";
+            this.NewsletterValue = false;
     }
 
     get isNewsletterValue() {
-        return (this.netValueFlag === "true");
+        return (this.accountDetails?.newsletter);
     }
 
     handleValueOfNewsletterCheckBox = async () => {
@@ -102,17 +103,18 @@ export default class UserStore {
             const newValue = !this.accountDetails.newsletter;
             const idUser = this.accountDetails.id;
 
-            console.log(`Current newsletter state for user ${idUser}: ${this.accountDetails.newsletter}`);
+            // console.log(`Current newsletter state ${idUser}: ${this.accountDetails.newsletter}`);
 
-            const newsletterDto = { newsletter: newValue }; // Tworzenie obiektu NewsletterDto
-            await agent.Account.updateNewsletter(idUser, newsletterDto); // metody z agenta
+            const newsletterDto = { newsletter: newValue };
+            await agent.Account.updateNewsletter(idUser, newsletterDto);
     
             runInAction(() => {
+                this.setNewsletterValue(newValue);
                 this.accountDetails!.newsletter = newValue;
             });
 
 
-            console.log(`Updated newsletter state for user ${idUser}: ${this.accountDetails.newsletter}`);
+            // console.log(`Updated newsletter state ${idUser}: ${this.accountDetails.newsletter}`);
 
     
             toast.success(`Newsletter subscription ${newValue ? 'enabled' : 'disabled'}`);
