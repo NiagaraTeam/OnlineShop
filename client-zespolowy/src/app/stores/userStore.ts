@@ -16,6 +16,7 @@ export default class UserStore {
     
     itemsPerPage: string = localStorage.getItem('itemsPerPage') || "10";
     netValueFlag: string = localStorage.getItem('netValueFlag') || "true";
+    NewsletterValue: boolean = this.accountDetails?.newsletter || false;
 
     selectedUser: AccountDetails | undefined = undefined;
 
@@ -82,6 +83,40 @@ export default class UserStore {
         const isChecked = e.target.checked;
         this.setNetValue(isChecked);
     };
+////
+    setNewsletterValue = (flag: boolean) => {
+        if (flag)
+            this.NewsletterValue = true;
+        else
+            this.NewsletterValue = false;
+    }
+
+    get isNewsletterValue() {
+        return (this.accountDetails?.newsletter);
+    }
+
+    handleValueOfNewsletterCheckBox = async () => {
+        try {
+            if (!this.user || this.isAdmin || !this.accountDetails)
+                return;
+    
+            const newValue = !this.accountDetails.newsletter;
+
+            const newsletterDto = { newsletter: newValue };
+            await agent.Account.updateNewsletter(this.user.id, newsletterDto);
+    
+            runInAction(() => {
+                this.setNewsletterValue(newValue);
+                this.accountDetails!.newsletter = newValue;
+            });
+    
+            toast.success(`Newsletter subscription ${newValue ? 'enabled' : 'disabled'}`);
+        } catch (error) {
+            console.log(error);
+            toast.error('Failed to update newsletter subscription');
+        }
+    };
+    
 
     addOrder = (order: Order) => {
         if (this.accountDetails)

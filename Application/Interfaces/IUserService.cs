@@ -17,5 +17,8 @@ namespace Application.Interfaces
         Task<Result<object>> SetUserDiscount(string userId, DiscountValueDto discountValue);
         Task<Result<IEnumerable<ProductDto>>> GetFavouriteProducts();
         Task<Result<IEnumerable<UserDetailsDto>>> GetAllUsers();
+//////
+        Task<Result<object>> UpdateNewsletter(string userId, NewsletterDto newsletter);
+
     }
 }

@@ -10,7 +10,7 @@ import { Helmet } from "react-helmet-async";
 import { ItemsPerPage } from "../../common/ItemsPerPageSelect";
 
 export const AccountPage = observer(() => {
-    const {userStore: {user, logout, accountDetails, updateAddress, isNetValue, handleVauleWithTaxCheckBox}} = useStore();
+    const {userStore: {user, logout, accountDetails, updateAddress, isNetValue, handleVauleWithTaxCheckBox, isNewsletterValue, handleValueOfNewsletterCheckBox}} = useStore();
 
     const handleAddressSubmit = (address: Address, formikHelpers: FormikHelpers<Address>) => {
         if (user) {
@@ -43,8 +43,8 @@ export const AccountPage = observer(() => {
                         <dt className="col-sm-3">Discount:</dt>
                         <dd className="col-sm-9 list-group-item mx-2">-{(accountDetails?.discountValue as number) * 100} %</dd>
 
-                        <dt className="col-sm-3">Newsletter:</dt>
-                        <dd className="col-sm-9 list-group-item mx-2">{accountDetails?.newsletter ? "yes" : "no"}</dd>
+                        {/* <dt className="col-sm-3">Newsletter:</dt>
+                        <dd className="col-sm-9 list-group-item mx-2">{accountDetails?.newsletter ? "yes" : "no"}</dd> */}
                     </dl>
                     <button className="btn btn-primary mt-4" onClick={logout}>Logout</button>
                 </div>
@@ -106,6 +106,18 @@ export const AccountPage = observer(() => {
                         <label className="form-check-label" htmlFor="netValueCheckBox">
                             Use net prices
                         </label>
+                    </div>
+
+                    <p className="fs-5 mb-0 me-3">Newsletter</p>
+                    <div className="form-check mx-3 my-3">
+                        <input className="form-check-input" 
+                            type="checkbox" 
+                            id="NewsletterCheckBox" 
+                            checked={isNewsletterValue} 
+                            onChange={handleValueOfNewsletterCheckBox}/>
+                            <label className="form-check-label" htmlFor="NewsletterCheckBox">
+                                Subscribe to newsletter
+                            </label>
                     </div>
 
                     <p className="fs-5">Items per page setting</p>
