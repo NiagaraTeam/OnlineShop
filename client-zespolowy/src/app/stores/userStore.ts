@@ -101,21 +101,14 @@ export default class UserStore {
                 return;
     
             const newValue = !this.accountDetails.newsletter;
-            const idUser = this.accountDetails.id;
-
-            // console.log(`Current newsletter state ${idUser}: ${this.accountDetails.newsletter}`);
 
             const newsletterDto = { newsletter: newValue };
-            await agent.Account.updateNewsletter(idUser, newsletterDto);
+            await agent.Account.updateNewsletter(this.user.id, newsletterDto);
     
             runInAction(() => {
                 this.setNewsletterValue(newValue);
                 this.accountDetails!.newsletter = newValue;
             });
-
-
-            // console.log(`Updated newsletter state ${idUser}: ${this.accountDetails.newsletter}`);
-
     
             toast.success(`Newsletter subscription ${newValue ? 'enabled' : 'disabled'}`);
         } catch (error) {

@@ -108,20 +108,17 @@ export const AccountPage = observer(() => {
                         </label>
                     </div>
 
-                    <div className="d-flex align-items-center">
-                        <p className="fs-5 mb-0 me-3">Newsletter</p>
-                        <div className="form-check mx-3 my-3">
-                            <input className="form-check-input" 
-                                type="checkbox" 
-                                id="NewsletterCheckBox" 
-                                checked={isNewsletterValue} 
-                                onChange={handleValueOfNewsletterCheckBox}/>
-                                <label className="form-check-label" htmlFor="NewsletterCheckBox">
-                                    Subscribe to newsletter
-                                </label>
-                        </div>
+                    <p className="fs-5 mb-0 me-3">Newsletter</p>
+                    <div className="form-check mx-3 my-3">
+                        <input className="form-check-input" 
+                            type="checkbox" 
+                            id="NewsletterCheckBox" 
+                            checked={isNewsletterValue} 
+                            onChange={handleValueOfNewsletterCheckBox}/>
+                            <label className="form-check-label" htmlFor="NewsletterCheckBox">
+                                Subscribe to newsletter
+                            </label>
                     </div>
-
 
                     <p className="fs-5">Items per page setting</p>
                     <div className="mx-3 my-3">
