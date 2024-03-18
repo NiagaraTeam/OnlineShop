@@ -23,6 +23,7 @@ import { RequireAdminAuth } from "./RequireAdminAuth";
 import { ManageCategoriesPage } from "../../components/admin/pages/ManageCategoriesPage";
 import { DetailsPage } from "../../components/customer/pages/DetailsPage";
 import { HomePage } from "../../components/customer/pages/HomePage";
+import { NewsletterPage } from "../../components/admin/pages/NewsletterPage";
 
 export const routes: RouteObject[] = [
     {
@@ -64,6 +65,7 @@ export const routes: RouteObject[] = [
                 {path: 'methods/shipping', element: <ShippingMethodsPage/> },
                 {path: 'methods/payment', element: <PaymentMethodsPage/> },
                 {path: 'customers', element: <CustomersPage/> },
+                {path: 'newsletter', element: <NewsletterPage/>}
             ]},
             //no login required
             {path: 'login', element: <AdminLogin />},

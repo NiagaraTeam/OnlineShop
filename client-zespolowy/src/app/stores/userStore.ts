@@ -116,6 +116,17 @@ export default class UserStore {
             toast.error('Failed to update newsletter subscription');
         }
     };
+    sendNewsletter = async () => {
+        try {
+            await agent.Account.sendNewsletter();
+            toast.success(`Newsletter sent successfully`)
+        } catch(error) {
+            toast.error('Failed to send Newsletter')
+            throw error;
+        }
+    }
+
+
     
 
     addOrder = (order: Order) => {
@@ -137,7 +148,6 @@ export default class UserStore {
             throw error;
         }
     }
-
     loginCustomer = async (creds: UserFormValues) => {
         try {
             const user = await agent.Account.loginCustomer(creds);
