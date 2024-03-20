@@ -26,7 +26,7 @@ namespace Application.Services
         public async Task<Result<object>> SendEmailAsync() {
             var user = _context.Users
                 .Include(u => u.CustomerDetails)
-                .Where(u => u.CustomerDetails.Newsletter == false)
+                .Where(u => u.CustomerDetails.Newsletter == true)
                 .Select(u => u.Email)
                 .ToList();
             var products = _context.Products
