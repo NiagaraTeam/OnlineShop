@@ -26,7 +26,7 @@ namespace Application.Services
         public async Task<Result<object>> SendEmailAsync() {
             var user = _context.Users
                 .Include(u => u.CustomerDetails)
-                .Where(u => u.CustomerDetails.Newsletter == false) //ustawić później na true, w ramach testu false
+                .Where(u => u.CustomerDetails.Newsletter == false)
                 .Select(u => u.Email)
                 .ToList();
             var products = _context.Products
@@ -37,7 +37,6 @@ namespace Application.Services
 
             for (int i = 0; i < user.Count; i++) {
                 email.To.Add(MailboxAddress.Parse(user[i]));
-                Console.WriteLine(user[i]);
             }
 
             email.Subject = "Newsletter";

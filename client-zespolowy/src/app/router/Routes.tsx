@@ -65,7 +65,7 @@ export const routes: RouteObject[] = [
                 {path: 'methods/shipping', element: <ShippingMethodsPage/> },
                 {path: 'methods/payment', element: <PaymentMethodsPage/> },
                 {path: 'customers', element: <CustomersPage/> },
-                {path: 'newsletter', element: <NewsletterPage/>}
+                {path: 'newsletter', element: <NewsletterPage/>},
             ]},
             //no login required
             {path: 'login', element: <AdminLogin />},
