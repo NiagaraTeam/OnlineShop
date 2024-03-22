@@ -15,27 +15,21 @@ export const NewsletterPage = observer(() => {
           <div className="col-lg-6 my-4">
             <h2 className="pb-3">Newsletter</h2>
             {users.length > 0 && (
-              <table className="table table-bordered">
-                <thead className="table-light">
-                  <tr>
-                    <th className="text-center">Name</th>
-                    <th className="text-center">Email</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {users.map((user) => (
+            <>
+              <ul className="list-group">
+                <li className="list-group-item"><b>Customers with newsletter subscription</b></li>
+                {users.map((user) => (
                     user.newsletter === true &&
-                    <tr key={user.id}>
-                      <td className="text-center">{user.userName}</td>
-                      <td className="text-center">{user.email}</td>
-                    </tr>
+                    <li key={user.id} className="list-group-item px-5">
+                      {user.email}
+                    </li>
                   ))}
-                </tbody>
-                <button onClick={() => userStore.sendNewsletter()} className="btn btn-primary">
-                      Send newsletter
-                </button>
-              </table>)}
-            </div>
+              </ul>
+              <button onClick={() => userStore.sendNewsletter()} className="btn btn-primary mt-3">
+                Send newsletter
+              </button>
+            </>)}
+          </div>
       </div>
     </div>
     )

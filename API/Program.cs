@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 using API.Extentions;
 using API.Middleware;
 using Application.Interfaces;
-using Application.Services;
+using Application.Services.Mail;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

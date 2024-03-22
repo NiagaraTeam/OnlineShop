@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Application.Interfaces;
-using Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Persistence;
@@ -17,9 +12,9 @@ namespace API.Controllers
             this._mailService = mailService;
         }
         [Authorize(Roles = StaticUserRoles.ADMIN)]
-        [HttpPost("send")] //api/send
-        public async Task<IActionResult> SendMail() {
-            return HandleResult(await _mailService.SendEmailAsync());
+        [HttpPost("send-newsletter")] //api/send-newsletter
+        public async Task<IActionResult> SendNewsletter() {
+            return HandleResult(await _mailService.SendNewsletterAsync());
         }
     }
 }

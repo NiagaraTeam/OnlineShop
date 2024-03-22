@@ -21,7 +21,6 @@ import { ProductExpert } from "../models/onlineshop/ProductExpert";
 import { AccountDetails } from "../models/onlineshop/AccountDetails";
 import { CartItem } from "../models/onlineshop/Cart";
 import { Newsletter } from "../models/onlineshop/Newsletter";
-import { setNestedObjectValues } from "formik";
 
 const sleep = (delay: number) => {
     return new Promise((resolve) => {
@@ -111,8 +110,8 @@ const Account = {
     getUserDiscount: (userId: string) => requests.get<number>(`/accounts/${userId}/discount`),
     setUserDiscount: (userId: string, userDiscount: UserDiscount) => requests.put(`/accounts/${userId}/discount`, userDiscount),
     getUsersAsync: () => requests.get<AccountDetails[]>('/customers/'),
-    updateNewsletter: (userId: string) => requests.get<void>(`accounts/${userId}/newsletter`),
-    sendNewsletter: () => requests.post<void>(`/send`, {})
+    updateNewsletter: (userId: string, newsletter: Newsletter) => requests.patch<void>(`accounts/${userId}/newsletter`, newsletter),
+    sendNewsletter: () => requests.post<void>(`/send-newsletter`, {})
 }
 
 const Categories = {
