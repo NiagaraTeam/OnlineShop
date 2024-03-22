@@ -20,10 +20,25 @@ export const Header = observer(() => {
                 <ul className="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
                     <li><NavLink to="/admin/products" className="nav-link px-2 link-dark">Products</NavLink></li>
                     <li><NavLink to="/admin/orders" className="nav-link px-2 link-dark">Orders</NavLink></li>
-                    <li><NavLink to="/admin/customers" className="nav-link px-2 link-dark">Customers</NavLink></li>
                     <li><NavLink to="/admin/categories" className="nav-link px-2 link-dark">Categories</NavLink></li>
-                    <li><NavLink to="/admin/methods/payment" className="nav-link px-2 link-dark">Payment Methods</NavLink></li>
-                    <li><NavLink to="/admin/methods/shipping" className="nav-link px-2 link-dark">Shipping Methods</NavLink></li>
+                    <li className="nav-item">
+                        <a className="nav-link dropdown-toggle link-dark px-2" data-bs-toggle="dropdown" aria-expanded="false" role="button">
+                            Payment & Shipping
+                        </a>
+                        <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><NavLink to="/admin/methods/payment" className="dropdown-item">Payment Methods</NavLink></li>
+                            <li><NavLink to="/admin/methods/shipping" className="dropdown-item">Shipping Methods</NavLink></li>
+                        </ul>
+                    </li>
+                    <li className="nav-item dropdown">
+                        <a className="nav-link dropdown-toggle link-dark px-2" data-bs-toggle="dropdown" aria-expanded="false" role="button">
+                            Customers
+                        </a>
+                        <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><NavLink to="/admin/customers" className="dropdown-item">Manage Customers</NavLink></li>
+                            <li><NavLink to="/admin/newsletter" className="dropdown-item">Newsletter Settings</NavLink></li>
+                        </ul>
+                    </li>
                 </ul>
                 }
 

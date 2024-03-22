@@ -1,6 +1,8 @@
 using System.Text.Json.Serialization;
 using API.Extentions;
 using API.Middleware;
+using Application.Interfaces;
+using Application.Services.Mail;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -11,7 +13,8 @@ using Persistence;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
+builder.Services.AddTransient<IMailService, MailService>();
 builder.Services.AddControllers(opt => {
     var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
     opt.Filters.Add(new AuthorizeFilter(policy));
@@ -19,6 +22,7 @@ builder.Services.AddControllers(opt => {
 
 builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddIdentityServices(builder.Configuration);
+
 
 var app = builder.Build();
 

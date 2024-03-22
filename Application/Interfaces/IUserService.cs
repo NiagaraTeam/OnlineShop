@@ -2,6 +2,11 @@ using Application.Core;
 using Application.Dto.Product;
 using Application.Dto.User;
 using Microsoft.AspNetCore.Identity;
+using MailKit.Net.Smtp;
+using MailKit.Security;
+using MimeKit.Text;
+using MimeKit;
+using MailKit;
 
 namespace Application.Interfaces
 {
@@ -19,6 +24,5 @@ namespace Application.Interfaces
         Task<Result<IEnumerable<UserDetailsDto>>> GetAllUsers();
 //////
         Task<Result<object>> UpdateNewsletter(string userId, NewsletterDto newsletter);
-
     }
 }

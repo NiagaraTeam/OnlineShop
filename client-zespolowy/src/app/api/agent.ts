@@ -111,6 +111,7 @@ const Account = {
     setUserDiscount: (userId: string, userDiscount: UserDiscount) => requests.put(`/accounts/${userId}/discount`, userDiscount),
     getUsersAsync: () => requests.get<AccountDetails[]>('/customers/'),
     updateNewsletter: (userId: string, newsletter: Newsletter) => requests.patch<void>(`accounts/${userId}/newsletter`, newsletter),
+    sendNewsletter: () => requests.post<void>(`/send-newsletter`, {})
 }
 
 const Categories = {
@@ -137,6 +138,7 @@ const Products = {
     addDiscount: (productId: number, productDiscount: ProductDiscount) => requests.post<void>(`/products/${productId}/discount`, productDiscount),
     //askQuestion: (productId: number, question: Question) => requests.post<void>(`/products/${productId}/question`, question),
     getProductsExperts: () => requests.get<ProductExpert[]>("/products/experts"),
+    
 };
 
 const Orders = {
