@@ -16,5 +16,6 @@ namespace API.Controllers
         public async Task<IActionResult> SendNewsletter() {
             return HandleResult(await _mailService.SendNewsletterAsync());
         }
+
     }
 }
