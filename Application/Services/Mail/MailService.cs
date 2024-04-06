@@ -8,21 +8,27 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using Persistence;
+using Application.Dto.Order;
+using Domain;
+using AutoMapper;
+using Application.Dto.User;
 
 namespace Application.Services.Mail
 {
     public class MailService : IMailService
-    {
+    {        
+        private readonly IMapper _mapper;
+
         private readonly MailSettings _mailSettings;
         private readonly DataContext _context;
         private readonly IProductService _productService;
-        private readonly IOrderService _orderService;
-        public MailService(DataContext context, IOptions<MailSettings> mailSettings, IProductService productService, IOrderService orderService)
+        public MailService(DataContext context, IOptions<MailSettings> mailSettings, IProductService productService, IMapper mapper)
         {
             _mailSettings = mailSettings.Value;
             _context = context;
             _productService = productService;
-            _orderService=orderService;
+            _mapper=mapper;
+            
         }
         public async Task<Result<object>> SendNewsletterAsync()
         {
@@ -92,34 +98,32 @@ namespace Application.Services.Mail
             }
         }
 
-      public async Task<Result<object>> SendOrderDetailsAsync(int orderId)
+      public async Task<Result<object>> SendOrderDetailsAsync(OrderDto orderdto)
         { 
-            var order = _orderService.Details(orderId).Result.Value;
-
             var email = new MimeMessage
             {
                 Sender = MailboxAddress.Parse(_mailSettings.Mail)
             };
-            email.To.Add(MailboxAddress.Parse(order.UserDetails.Email));
+            email.To.Add(MailboxAddress.Parse(orderdto.UserDetails.Email));
 
             email.Subject = "Order confirmation";
 
             var builder = new BodyBuilder { HtmlBody = "" };
 
-            builder.HtmlBody+=$"<h1>Order number: {order.Id}</h1>";
+            builder.HtmlBody+=$"<h1>Order number: {orderdto.Id}</h1>";
             builder.HtmlBody += "<h3>Products:</h3>";
             builder.HtmlBody+=  "<table><tr><th>Name</th><th>Quantity</th><th>Unit price</th><th>Total price</th></tr>";
 
-            foreach (var item in order.Items)
+            foreach (var item in orderdto.Items)
             {
                 builder.HtmlBody+=$"<tr style='text-align: center'><td>{item.Product.Name}</td><td>{item.Quantity}</td><td>{item.Product.Price}</td><td>{item.Quantity*item.Product.Price}</td></tr>";
             }
 
             builder.HtmlBody+="</table>";
-            builder.HtmlBody+=$"<h3>Total: {order.TotalValue.ToString("F2")}</h3>";
-            builder.HtmlBody+=$"<h3>Total with TAX: {order.TotalValueWithTax.ToString("F2")}</h3>";
-            builder.HtmlBody+= $"<h3>Order details:</h3> Payment method: <strong>{order.PaymentMethod.Name}</strong><br>Shipping method: <strong>{order.ShippingMethod.Name}</strong>";
-            builder.HtmlBody+= $"<h3>Customer details:</h3> E-mail: <strong>{order.UserDetails.Email}</strong><br>Address: <strong>{order.UserDetails.Address.AddressLine1} {order.UserDetails.Address.AddressLine2}</strong>";
+            builder.HtmlBody+=$"<h3>Total: {orderdto.TotalValue.ToString("F2")}</h3>";
+            builder.HtmlBody+=$"<h3>Total with TAX: {orderdto.TotalValueWithTax.ToString("F2")}</h3>";
+            builder.HtmlBody+= $"<h3>Order details:</h3> Payment method: <strong>{orderdto.PaymentMethod.Name}</strong><br>Shipping method: <strong>{orderdto.ShippingMethod.Name}</strong>";
+            builder.HtmlBody+= $"<h3>Customer details:</h3> E-mail: <strong>{orderdto.UserDetails.Email}</strong><br>Address: <strong>{orderdto.UserDetails.Address.AddressLine1} {orderdto.UserDetails.Address.AddressLine2}</strong>";
 
             email.Body = builder.ToMessageBody();
 
@@ -140,8 +144,6 @@ namespace Application.Services.Mail
                 client.Disconnect(true);
                 client.Dispose();
             }
-
         }
-
     }
 }

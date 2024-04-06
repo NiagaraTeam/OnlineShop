@@ -16,17 +16,20 @@ namespace Application.Services
         private readonly DataContext _context;
         private readonly IMapper _mapper;
         private readonly IUserAccessor _userAccessor;
+        private readonly IMailService _mailService;
 
 
         public OrderService(
             DataContext context,
             IMapper mapper,
-            IUserAccessor userAccessor
+            IUserAccessor userAccessor,
+            IMailService mailService
         )
         {
             _context = context;
             _mapper = mapper;
             _userAccessor = userAccessor;
+            _mailService=mailService;
         }
 
         public async Task<Result<object>> AddOrderItem(int orderId, OrderItemAddDto item)
@@ -170,9 +173,14 @@ namespace Application.Services
             orderToCreate.Status = OrderStatus.New;
 
             _context.Orders.Add(orderToCreate);
-
             if (await _context.SaveChangesAsync() > 0)
+            {
+
+                await _mailService.SendOrderDetailsAsync(Details(orderToCreate.Id).Result.Value);
                 return Result<int>.Success(orderToCreate.Id);
+                }
+
+                
 
             return Result<int>.Failure("Failed creating order");
         }

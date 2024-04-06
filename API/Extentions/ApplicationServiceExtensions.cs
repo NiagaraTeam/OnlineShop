@@ -1,6 +1,7 @@
 using Application.Core;
 using Application.Interfaces;
 using Application.Services;
+using Application.Services.Mail;
 using Infrastructure.Photos;
 using Infrastructure.Security;
 using Microsoft.EntityFrameworkCore;
@@ -46,6 +47,7 @@ namespace API.Extentions
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IShippingPaymentService, ShippingPaymentService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IMailService, MailService>();
 
             services.AddAutoMapper(typeof(MappingProfiles).Assembly);
 
