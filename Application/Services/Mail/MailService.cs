@@ -1,5 +1,3 @@
-using iText.Layout.Element;
-
 using Application.Core;
 using Application.Interfaces;
 using MailKit.Net.Smtp;
@@ -9,9 +7,7 @@ using Microsoft.Extensions.Options;
 using MimeKit;
 using Persistence;
 using Application.Dto.Order;
-using Domain;
 using AutoMapper;
-using Application.Dto.User;
 
 namespace Application.Services.Mail
 {
@@ -98,7 +94,7 @@ namespace Application.Services.Mail
             }
         }
 
-      public async Task<Result<object>> SendOrderDetailsAsync(OrderDto orderdto)
+        public async Task<Result<object>> SendOrderDetailsAsync(OrderDto orderdto)
         { 
             var email = new MimeMessage
             {
@@ -112,7 +108,7 @@ namespace Application.Services.Mail
 
             builder.HtmlBody+=$"<h1>Order number: {orderdto.Id}</h1>";
             builder.HtmlBody += "<h3>Products:</h3>";
-            builder.HtmlBody+=  "<table><tr><th>Name</th><th>Quantity</th><th>Unit price</th><th>Total price</th></tr>";
+            builder.HtmlBody+=  "<table border=\"1\"><tr><th>Name</th><th>Quantity</th><th>Unit price</th><th>Total price</th></tr>";
 
             foreach (var item in orderdto.Items)
             {
