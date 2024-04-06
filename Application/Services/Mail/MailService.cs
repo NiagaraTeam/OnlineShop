@@ -106,20 +106,48 @@ namespace Application.Services.Mail
 
             var builder = new BodyBuilder { HtmlBody = "" };
 
-            builder.HtmlBody+=$"<h1>Order number: {orderdto.Id}</h1>";
+            // Header
+            builder.HtmlBody += $"<h1>Order number: {orderdto.Id}</h1>";
             builder.HtmlBody += "<h3>Products:</h3>";
-            builder.HtmlBody+=  "<table border=\"1\"><tr><th>Name</th><th>Quantity</th><th>Unit price</th><th>Total price</th></tr>";
 
+            // Table header
+            builder.HtmlBody += "<table>";
+            builder.HtmlBody += "<tr><th>Name</th><th>Quantity</th><th>Unit price</th><th>Total price</th></tr>";
+
+            // Table body
             foreach (var item in orderdto.Items)
             {
-                builder.HtmlBody+=$"<tr style='text-align: center'><td>{item.Product.Name}</td><td>{item.Quantity}</td><td>{item.Product.Price}</td><td>{item.Quantity*item.Product.Price}</td></tr>";
+                builder.HtmlBody += $"<tr style='text-align: center'>";
+                builder.HtmlBody += $"<td>{item.Product.Name}</td>";
+                builder.HtmlBody += $"<td>{item.Quantity}</td>";
+                builder.HtmlBody += $"<td>{item.Product.Price}</td>";
+                builder.HtmlBody += $"<td>{item.Quantity * item.Product.Price}</td>";
+                builder.HtmlBody += $"</tr>";
             }
 
-            builder.HtmlBody+="</table>";
-            builder.HtmlBody+=$"<h3>Total: {orderdto.TotalValue.ToString("F2")}</h3>";
-            builder.HtmlBody+=$"<h3>Total with TAX: {orderdto.TotalValueWithTax.ToString("F2")}</h3>";
-            builder.HtmlBody+= $"<h3>Order details:</h3> Payment method: <strong>{orderdto.PaymentMethod.Name}</strong><br>Shipping method: <strong>{orderdto.ShippingMethod.Name}</strong>";
-            builder.HtmlBody+= $"<h3>Customer details:</h3> E-mail: <strong>{orderdto.UserDetails.Email}</strong><br>Address: <strong>{orderdto.UserDetails.Address.AddressLine1} {orderdto.UserDetails.Address.AddressLine2}</strong>";
+            // Table closing tag
+            builder.HtmlBody += "</table>";
+
+            // Total and Tax
+            builder.HtmlBody += $"<h3>Total: {orderdto.TotalValue.ToString("F2")}</h3>";
+            builder.HtmlBody += $"<h3>Total with TAX: {orderdto.TotalValueWithTax.ToString("F2")}</h3>";
+
+            // Order details
+            builder.HtmlBody += "<h3>Order details:</h3>";
+            builder.HtmlBody += $"Payment method: <strong>{orderdto.PaymentMethod.Name}</strong><br>";
+            builder.HtmlBody += $"Shipping method: <strong>{orderdto.ShippingMethod.Name}</strong>";
+
+            // Customer details
+            builder.HtmlBody += "<h3>Customer details:</h3>";
+            builder.HtmlBody += $"E-mail: <strong>{orderdto.UserDetails.Email}</strong><br>";
+            builder.HtmlBody += $"Address:<br>";
+            builder.HtmlBody += $"<strong>{orderdto.UserDetails.Address.AddressLine1}<br>";
+
+            if (!string.IsNullOrEmpty(orderdto.UserDetails.Address.AddressLine2))
+                builder.HtmlBody += $"{orderdto.UserDetails.Address.AddressLine2}<br>";
+
+            builder.HtmlBody += $"{orderdto.UserDetails.Address.ZipCode} {orderdto.UserDetails.Address.City}<br>";
+            builder.HtmlBody += $"{orderdto.UserDetails.Address.Country}</strong>";
 
             email.Body = builder.ToMessageBody();
 

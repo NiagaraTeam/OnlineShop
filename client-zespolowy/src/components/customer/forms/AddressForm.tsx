@@ -6,7 +6,7 @@ import TextInput from "../../common/formInputs/TextInput";
 interface Props {
     onSubmit: (address: Address, formikHelpers: FormikHelpers<Address>) => void;
     buttonText: string;
-    address?: Address;
+    address: Address;
 }
 
 export const AddressForm = ({ onSubmit, address, buttonText }: Props) => {
@@ -21,21 +21,14 @@ export const AddressForm = ({ onSubmit, address, buttonText }: Props) => {
         );
 
         // Sprawdź, czy wartość jest null i zastąp ją pustym stringiem
-        const initialAddress = address
-        ? {
+        const initialAddress = 
+        {
             addressLine1: address.addressLine1 || "",
             addressLine2: address.addressLine2 || "",
             city: address.city || "",
             zipCode: address.zipCode || "",
             country: address.country || "",
         }
-        : {
-            addressLine1: "",
-            addressLine2: "",
-            city: "",
-            zipCode: "",
-            country: "",
-        };
 
         return (
             <>
