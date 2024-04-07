@@ -48,6 +48,7 @@ namespace API.Extentions
             services.AddScoped<IShippingPaymentService, ShippingPaymentService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IMailService, MailService>();
+            
             services.AddAutoMapper(typeof(MappingProfiles).Assembly);
 
             return services;
