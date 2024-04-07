@@ -8,6 +8,7 @@ using Domain;
 using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using Application.Services.Mail;
 
 namespace Application.Services
 {
@@ -17,7 +18,6 @@ namespace Application.Services
         private readonly IMapper _mapper;
         private readonly IUserAccessor _userAccessor;
         private readonly IMailService _mailService;
-
 
         public OrderService(
             DataContext context,
@@ -78,12 +78,11 @@ namespace Application.Services
         public async Task<Result<object>> ChangeOrderStatus(int orderId, OrderStatus status)
         {
             var orderToChangeStatus = await _context.Orders
-            .Include(i => i.Items)
-            .FirstOrDefaultAsync(o => o.Id == orderId);
+                .Include(i => i.Items)
+                .FirstOrDefaultAsync(o => o.Id == orderId);
 
             if (orderToChangeStatus == null)
                 return null;
-
 
             if (orderToChangeStatus.Status == OrderStatus.Canceled || orderToChangeStatus.Status == OrderStatus.Completed)
                 return Result<object>.Failure("Failed to update order status, order is already completed or canceled");
@@ -116,10 +115,14 @@ namespace Application.Services
             _context.Orders.Update(orderToChangeStatus);
 
             if (await _context.SaveChangesAsync() > 0)
+            {
+                await _mailService.SendOrderStatusChangeEmail(orderId, status);
                 return Result<object>.Success(null);
+            }    
 
             return Result<object>.Failure("Failed to update order status");
         }
+
         public async Task<Result<IEnumerable<OrderDto>>> GetAllOrders()
         {
             var orders = await _context.Orders
