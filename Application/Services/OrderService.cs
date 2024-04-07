@@ -176,9 +176,11 @@ namespace Application.Services
             orderToCreate.Status = OrderStatus.New;
 
             _context.Orders.Add(orderToCreate);
-
             if (await _context.SaveChangesAsync() > 0)
+            {
+                await _mailService.SendOrderDetailsAsync(Details(orderToCreate.Id).Result.Value);
                 return Result<int>.Success(orderToCreate.Id);
+            }
 
             return Result<int>.Failure("Failed creating order");
         }
