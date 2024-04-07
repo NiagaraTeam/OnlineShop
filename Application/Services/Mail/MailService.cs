@@ -2,7 +2,6 @@ using Application.Core;
 using Application.Dto.Order;
 using Application.Interfaces;
 using AutoMapper;
-using Domain;
 using Domain.Enums;
 using MailKit.Net.Smtp;
 using MailKit.Security;
@@ -10,19 +9,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using Persistence;
-using Application.Dto.Order;
-using AutoMapper;
 
 namespace Application.Services.Mail
 {
     public class MailService : IMailService
     {        
         private readonly IMapper _mapper;
-
         private readonly MailSettings _mailSettings;
         private readonly DataContext _context;
         private readonly IProductService _productService;
-        private readonly IMapper _mapper;
 
         public MailService(DataContext context, IOptions<MailSettings> mailSettings, IProductService productService, IMapper mapper)
         {
