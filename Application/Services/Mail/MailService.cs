@@ -1,5 +1,9 @@
 using Application.Core;
+using Application.Dto.Order;
 using Application.Interfaces;
+using AutoMapper;
+using Domain;
+using Domain.Enums;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.EntityFrameworkCore;
@@ -14,10 +18,13 @@ namespace Application.Services.Mail
         private readonly MailSettings _mailSettings;
         private readonly DataContext _context;
         private readonly IProductService _productService;
-        public MailService(DataContext context, IOptions<MailSettings> mailSettings, IProductService productService) {
+        private readonly IMapper _mapper;
+        public MailService(DataContext context, IOptions<MailSettings> mailSettings, IProductService productService, IMapper mapper)
+        {
             _mailSettings = mailSettings.Value;
             _context = context;
             _productService = productService;
+            _mapper = mapper;
         }
         public async Task<Result<object>> SendNewsletterAsync() {
             var user = _context.Users
@@ -39,7 +46,7 @@ namespace Application.Services.Mail
             }
 
             email.Subject = "Okazje i promocje OnlineShop";
-            
+
             var builder = new BodyBuilder{ HtmlBody = "" };
 
             if (discountedProducts.Count > 0)
@@ -61,6 +68,46 @@ namespace Application.Services.Mail
                 }
             }
 
+            email.Body = builder.ToMessageBody();
+
+            using var client = new SmtpClient();
+            try
+            {
+                client.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.StartTls);
+                client.Authenticate(_mailSettings.Mail, _mailSettings.Password);
+                await client.SendAsync(email);
+                return Result<object>.Success(null);
+            }
+            catch (Exception e)
+            {
+                return Result<object>.Failure("Failed to send email: " + e.Message);
+            }
+            finally
+            {
+                client.Disconnect(true);
+                client.Dispose();
+            }
+        }
+
+        public async Task<Result<object>> SendOrderStatusChangeEmail(int orderId, OrderStatus status)
+        {
+             var order = await _context.Orders
+                .Include(o => o.CustomerDetails)
+                .ThenInclude(cd => cd.User)
+                .FirstOrDefaultAsync(o => o.Id == orderId);
+
+            var email = new MimeMessage
+            {
+                Sender = MailboxAddress.Parse(_mailSettings.Mail)
+            };
+
+            email.Subject = "Change of order status";
+
+            var builder = new BodyBuilder { HtmlBody = "" };
+
+            email.To.Add(MailboxAddress.Parse(order.CustomerDetails.User.Email));
+                        
+            builder.HtmlBody += $"<span class=\"strong\">Your order number: <strong>{orderId}</strong> changed status to: <strong>{status}</strong></span>";
             email.Body = builder.ToMessageBody();
 
             using var client = new SmtpClient();

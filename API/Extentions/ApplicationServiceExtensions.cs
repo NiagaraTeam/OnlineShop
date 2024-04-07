@@ -5,6 +5,7 @@ using Infrastructure.Photos;
 using Infrastructure.Security;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using Application.Services.Mail;
 
 namespace API.Extentions
 {
@@ -46,7 +47,7 @@ namespace API.Extentions
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IShippingPaymentService, ShippingPaymentService>();
             services.AddScoped<IUserService, UserService>();
-
+            services.AddScoped<IMailService, MailService>();
             services.AddAutoMapper(typeof(MappingProfiles).Assembly);
 
             return services;
