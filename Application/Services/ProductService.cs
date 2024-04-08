@@ -328,6 +328,9 @@ namespace Application.Services
 
             updateProduct.ProductInfo.CurrentStock = product.CurrentStock;
 
+            if (updateProduct.ProductInfo.CurrentStock <= 0)
+                        updateProduct.Status = ProductStatus.Unavailable;
+
             _context.Products.Update(updateProduct);
 
             if (await _context.SaveChangesAsync() == 0) {

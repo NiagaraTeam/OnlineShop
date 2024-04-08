@@ -4,7 +4,7 @@ import { useState } from "react";
 import Loading from "../../../common/Loading";
 import { ProductForm } from "../../forms/ProductForm";
 import { FormikHelpers } from "formik";
-import { ProductFormValues } from "../../../../app/models/onlineshop/Product";
+import { Product, ProductFormValues } from "../../../../app/models/onlineshop/Product";
 import { DeletedProducts } from "./DeletedProducts";
 import { Products } from "./Products";
 import { PhotoUploadWidget } from "../../../common/imageUpload/PhtoUploadWidget";
@@ -16,7 +16,7 @@ import { Helmet } from "react-helmet-async";
 export const ProductsPage = observer(() => {
     const {productStore, commonStore} = useStore();
     const {selectedProduct, createProduct, updateProduct, 
-        uploadPhoto, uploading, addProductDiscount, deselectProduct} = productStore;
+        uploadPhoto, uploading, addProductDiscount, deselectProduct, getProductObject} = productStore;
     const {initialLoading} = commonStore;
 
     // view logic
@@ -27,8 +27,8 @@ export const ProductsPage = observer(() => {
 
     // edit
     function handleEdit(product: ProductFormValues, formikHelpers: FormikHelpers<ProductFormValues>): void {
-        updateProduct(product.id!, product).then(() => {
-            formikHelpers.resetForm({values: {...product}});
+        updateProduct(product.id!, product).then(async () => {
+            formikHelpers.resetForm({values: {...ProductFormValues.createFromProduct(await getProductObject(product.id!) as Product)}});
         });
     }
 
