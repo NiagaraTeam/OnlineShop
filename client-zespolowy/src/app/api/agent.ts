@@ -136,7 +136,7 @@ const Products = {
     getDiscounted: () => requests.get<Product[]>("/products/discounted"),
     getPriceList: (categoryId: number) => axios.get(`products/price-list/${categoryId}`, { responseType: 'arraybuffer'}),
     addDiscount: (productId: number, productDiscount: ProductDiscount) => requests.post<void>(`/products/${productId}/discount`, productDiscount),
-    //askQuestion: (productId: number, question: Question) => requests.post<void>(`/products/${productId}/question`, question),
+    // askQuestion: (productId: number, question: Question) => requests.post<void>(`/products/${productId}/question`, question),
     getProductsExperts: () => requests.get<ProductExpert[]>("/products/experts"),
     
 };

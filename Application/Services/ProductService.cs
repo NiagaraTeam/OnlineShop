@@ -12,6 +12,10 @@ using iText.Kernel.Pdf;
 using iText.Layout;
 using iText.Layout.Element;
 using iText.Kernel.Pdf.Canvas.Draw;
+using MimeKit;
+using Application.Services.Mail;
+using MailKit.Net.Smtp;
+using MailKit.Security;
 
 namespace Application.Services
 {
@@ -20,16 +24,19 @@ namespace Application.Services
         private readonly DataContext _context;
         private readonly IMapper _mapper;
         private readonly IPhotoService _photoService;
+        private readonly MailSettings _mailSettings;
 
         public ProductService(
             DataContext context, 
             IMapper mapper,
-            IPhotoService photoService
+            IPhotoService photoService,
+            MailSettings mailSettings
         )
         {
             _context = context;
             _mapper = mapper;
             _photoService = photoService;
+            _mailSettings = mailSettings;
         }
 
         public async Task<Result<object>> AddProductDiscount(int productId, DiscountDto discount)
@@ -291,7 +298,53 @@ namespace Application.Services
 
         public async Task<Result<object>> QuestionAboutProduct(int productId, QuestionDto question)
         {
-            throw new NotImplementedException();
+            //szukamy produktu i experta z nim powiązanego
+            var product = await _context.Products
+                .Include(p => p.ProductExpert)
+                .FirstOrDefaultAsync(p => p.Id == productId);
+
+            if (product == null) 
+            {
+                return Result<object>.Failure("This product not exist.");
+            }
+            
+            var email = new MimeMessage
+            {
+                Sender = MailboxAddress.Parse(_mailSettings.Mail)
+            };
+            
+            email.Subject = "Product Question";
+
+            var builder = new BodyBuilder {HtmlBody = ""};
+
+            //pobieramy adres experta
+            email.To.Add(MailboxAddress.Parse(product.ProductExpert.Email));
+
+            //dodanie tresci z zqpytania
+            builder.HtmlBody += $"<p>Question from: <strong>{question.Email}</strong></p>";
+            builder.HtmlBody += $"<p>Message: {question.Message}</p>";
+
+            //wysylanie maila
+            using var client = new SmtpClient();
+            try
+            {
+                client.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.StartTls);
+                client.Authenticate(_mailSettings.Mail, _mailSettings.Password);
+                await client.SendAsync(email);
+
+                return Result<object>.Success("null");
+
+            }
+            catch (Exception e)
+            {
+                return Result<object>.Failure("Failed to send email: " + e.Message);
+            }
+            finally
+            {
+                client.Disconnect(true);
+                client.Dispose();
+            }
+            
         }
 
         public async Task<Result<IEnumerable<ProductDto>>> TopPurchasedProducts()
