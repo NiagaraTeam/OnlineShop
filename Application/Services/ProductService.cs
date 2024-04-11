@@ -16,6 +16,7 @@ using MimeKit;
 using Application.Services.Mail;
 using MailKit.Net.Smtp;
 using MailKit.Security;
+using Microsoft.Extensions.Options;
 
 namespace Application.Services
 {
@@ -26,17 +27,19 @@ namespace Application.Services
         private readonly IPhotoService _photoService;
         private readonly MailSettings _mailSettings;
 
+
         public ProductService(
             DataContext context, 
             IMapper mapper,
             IPhotoService photoService,
-            MailSettings mailSettings
+            IOptions<MailSettings> mailSettings
         )
         {
             _context = context;
             _mapper = mapper;
             _photoService = photoService;
-            _mailSettings = mailSettings;
+            _mailSettings = mailSettings.Value;
+
         }
 
         public async Task<Result<object>> AddProductDiscount(int productId, DiscountDto discount)
@@ -344,6 +347,7 @@ namespace Application.Services
                 client.Disconnect(true);
                 client.Dispose();
             }
+            //throw new NotImplementedException();
             
         }
 

@@ -21,6 +21,7 @@ import { ProductExpert } from "../models/onlineshop/ProductExpert";
 import { AccountDetails } from "../models/onlineshop/AccountDetails";
 import { CartItem } from "../models/onlineshop/Cart";
 import { Newsletter } from "../models/onlineshop/Newsletter";
+import { Question } from "../models/onlineshop/Question";
 
 const sleep = (delay: number) => {
     return new Promise((resolve) => {
@@ -136,7 +137,7 @@ const Products = {
     getDiscounted: () => requests.get<Product[]>("/products/discounted"),
     getPriceList: (categoryId: number) => axios.get(`products/price-list/${categoryId}`, { responseType: 'arraybuffer'}),
     addDiscount: (productId: number, productDiscount: ProductDiscount) => requests.post<void>(`/products/${productId}/discount`, productDiscount),
-    // askQuestion: (productId: number, question: Question) => requests.post<void>(`/products/${productId}/question`, question),
+    askQuestion: (productId: number, question: Question) => requests.post<void>(`/products/${productId}/question`, question),
     getProductsExperts: () => requests.get<ProductExpert[]>("/products/experts"),
     
 };
