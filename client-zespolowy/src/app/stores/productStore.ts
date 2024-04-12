@@ -8,6 +8,7 @@ import { Pagination, PagingParams } from "../models/common/Pagination";
 import { router } from "../router/Routes";
 import { ProductDiscount } from "../models/onlineshop/ProductDiscount";
 import { OrderItem } from "../models/onlineshop/OrderItem";
+import { Question } from "../models/onlineshop/Question";
 
 export default class ProductStore {
     productsRegistry = new Map<number,Product>();
@@ -456,4 +457,14 @@ export default class ProductStore {
             }
         }
     }
+
+    //zapytania o produkty
+    askQuestion = async (productId: number, question: Question) => {
+        try {
+            await agent.Products.askQuestion(productId, question);
+        } catch (error) {
+            console.error("Error while sending question:", error);
+        }
+    }
+
 }

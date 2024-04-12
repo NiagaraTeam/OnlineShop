@@ -10,6 +10,7 @@ import { ProductExpert } from "./ProductExpert";
 import { ProductStatus } from "../../../../app/models/enums/ProductStatus";
 import { router } from "../../../../app/router/Routes";
 import { Helmet } from "react-helmet-async";
+import { QuestionForm } from "../../forms/QuestionForm";
 
 export const ProductDetailsPage = observer(() => {
   const {productStore, commonStore, cartStore, userStore: {isNetValue}} = useStore();
@@ -148,6 +149,12 @@ export const ProductDetailsPage = observer(() => {
 
           <div className="border-top mt-5 p-3">
               <ProductExpert product={product}/>
+          </div>
+
+          <div className="border-top mt-3 p-3">
+            <QuestionForm 
+                buttonText="Send question"            
+            />
           </div>
           
           <div className="border-top mt-3 p-3">
