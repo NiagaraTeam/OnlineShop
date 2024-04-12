@@ -17,7 +17,7 @@ export const ProductDetailsPage = observer(() => {
   const {productStore, commonStore, cartStore, userStore: {isNetValue}} = useStore();
   const {initialLoading} = commonStore;
   const {addItemToCart} = cartStore;
-  const {loadProduct, selectedProduct: product, discountedProducts} = productStore;
+  const {loadProduct, selectedProduct: product, discountedProducts, askQuestion} = productStore;
   const {id} = useParams();
 
   const [quantity, setQuantity] = useState<number | undefined>(undefined);
@@ -29,7 +29,8 @@ export const ProductDetailsPage = observer(() => {
 
   const handleSubmitQuestion = (question: Question) => {
     console.log(question);
-
+    //chiba będzie git z ! jak tak sądze
+    askQuestion(product!.id, question);
 };
 
   useEffect(() => {
