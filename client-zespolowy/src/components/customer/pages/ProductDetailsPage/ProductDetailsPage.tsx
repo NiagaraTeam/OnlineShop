@@ -11,6 +11,7 @@ import { ProductStatus } from "../../../../app/models/enums/ProductStatus";
 import { router } from "../../../../app/router/Routes";
 import { Helmet } from "react-helmet-async";
 import { QuestionForm } from "../../forms/QuestionForm";
+import { Question } from "../../../../app/models/onlineshop/Question";
 
 export const ProductDetailsPage = observer(() => {
   const {productStore, commonStore, cartStore, userStore: {isNetValue}} = useStore();
@@ -25,6 +26,11 @@ export const ProductDetailsPage = observer(() => {
     addItemToCart(product!.id, quantity!);
     setQuantity(undefined);
   }
+
+  const handleSubmitQuestion = (question: Question) => {
+    console.log(question);
+
+};
 
   useEffect(() => {
       if (id)
@@ -153,7 +159,9 @@ export const ProductDetailsPage = observer(() => {
 
           <div className="border-top mt-3 p-3">
             <QuestionForm 
-                buttonText="Send question"            
+                buttonText="Send question"  
+                onSubmit={handleSubmitQuestion}
+                productExpertEmail={product.productExpert.email}            
             />
           </div>
           

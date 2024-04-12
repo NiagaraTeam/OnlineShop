@@ -1,12 +1,15 @@
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import TextInput from "../../common/formInputs/TextInput";
+import { Question } from "../../../app/models/onlineshop/Question";
 
 interface Props {
     buttonText: string;
+    productExpertEmail: string;
+    onSubmit: (question: Question) => void;
 }
 
-export const QuestionForm = ({ buttonText }: Props) => {
+export const QuestionForm = ({ buttonText, onSubmit, productExpertEmail }: Props) => {
     const validationSchema = Yup.object().shape({
         question: Yup.string(),
     });
@@ -17,7 +20,8 @@ export const QuestionForm = ({ buttonText }: Props) => {
                 initialValues={{ question: '' }}
                 validationSchema={validationSchema}
                 onSubmit={(values, { resetForm }) => {
-                    console.log(values.question);
+                    // console.log(values.question);
+                    onSubmit({email: productExpertEmail, message: values.question});
                     resetForm();
                 }}
             >
