@@ -28,6 +28,7 @@ export const ProductDetailsPage = observer(() => {
   }
 
   const handleSubmitQuestion = (question: Question) => {
+    console.log('handler');    
     console.log(question);
     //chiba będzie git z ! jak tak sądze
     askQuestion(product!.id, question);

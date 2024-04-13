@@ -20,7 +20,8 @@ export const QuestionForm = ({ buttonText, onSubmit, productExpertEmail }: Props
                 initialValues={{ question: '' }}
                 validationSchema={validationSchema}
                 onSubmit={(values, { resetForm }) => {
-                    // console.log(values.question);
+                    console.log('formularz');
+                    console.log(values.question);
                     onSubmit({email: productExpertEmail, message: values.question});
                     resetForm();
                 }}

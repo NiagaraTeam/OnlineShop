@@ -461,8 +461,12 @@ export default class ProductStore {
     //zapytania o produkty
     askQuestion = async (productId: number, question: Question) => {
         try {
+            console.log('Stor');
+            console.log(productId);
+            console.log(question);
             await agent.Products.askQuestion(productId, question);
         } catch (error) {
+            console.log('odpalil sie catch')
             console.error("Error while sending question:", error);
         }
     }

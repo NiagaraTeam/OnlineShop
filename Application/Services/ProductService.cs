@@ -313,7 +313,9 @@ namespace Application.Services
             
             var email = new MimeMessage
             {
+                //ustawiamy nadawce ?
                 Sender = MailboxAddress.Parse(_mailSettings.Mail)
+                // Sender = MailboxAddress.Parse(question.Email)
             };
             
             email.Subject = "Product Question";
@@ -323,9 +325,11 @@ namespace Application.Services
             //pobieramy adres experta
             email.To.Add(MailboxAddress.Parse(product.ProductExpert.Email));
 
-            //dodanie tresci z zqpytania
+            //dodanie tresci z zapytania; email ma nalezy do klienta
             builder.HtmlBody += $"<p>Question from: <strong>{question.Email}</strong></p>";
             builder.HtmlBody += $"<p>Message: {question.Message}</p>";
+            email.Body = builder.ToMessageBody();
+
 
             //wysylanie maila
             using var client = new SmtpClient();
