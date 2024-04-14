@@ -5,11 +5,11 @@ import { Question } from "../../../app/models/onlineshop/Question";
 
 interface Props {
     buttonText: string;
-    productExpertEmail: string;
+    userEmail: string;
     onSubmit: (question: Question) => void;
 }
 
-export const QuestionForm = ({ buttonText, onSubmit, productExpertEmail }: Props) => {
+export const QuestionForm = ({ buttonText, onSubmit, userEmail }: Props) => {
     const validationSchema = Yup.object().shape({
         question: Yup.string(),
     });
@@ -20,9 +20,10 @@ export const QuestionForm = ({ buttonText, onSubmit, productExpertEmail }: Props
                 initialValues={{ question: '' }}
                 validationSchema={validationSchema}
                 onSubmit={(values, { resetForm }) => {
-                    console.log('formularz');
-                    console.log(values.question);
-                    onSubmit({email: productExpertEmail, message: values.question});
+                    // console.log('formularz');
+                    // console.log(values.question);
+                    // console.log(userEmail);
+                    onSubmit({email: userEmail, message: values.question});
                     resetForm();
                 }}
             >

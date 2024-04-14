@@ -14,7 +14,7 @@ import { QuestionForm } from "../../forms/QuestionForm";
 import { Question } from "../../../../app/models/onlineshop/Question";
 
 export const ProductDetailsPage = observer(() => {
-  const {productStore, commonStore, cartStore, userStore: {isNetValue}} = useStore();
+  const {productStore, commonStore, cartStore, userStore: {isNetValue, user}} = useStore();
   const {initialLoading} = commonStore;
   const {addItemToCart} = cartStore;
   const {loadProduct, selectedProduct: product, discountedProducts, askQuestion} = productStore;
@@ -28,8 +28,8 @@ export const ProductDetailsPage = observer(() => {
   }
 
   const handleSubmitQuestion = (question: Question) => {
-    console.log('handler');    
-    console.log(question);
+    // console.log('handler');    
+    // console.log(question);
     //chiba będzie git z ! jak tak sądze
     askQuestion(product!.id, question);
 };
@@ -163,7 +163,7 @@ export const ProductDetailsPage = observer(() => {
             <QuestionForm 
                 buttonText="Send question"  
                 onSubmit={handleSubmitQuestion}
-                productExpertEmail={product.productExpert.email}            
+                userEmail={user!.email}  //?          
             />
           </div>
           
