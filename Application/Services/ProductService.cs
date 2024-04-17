@@ -310,14 +310,12 @@ namespace Application.Services
             {
                 return Result<object>.Failure("This product not exist.");
             }
-            
+
             var email = new MimeMessage
             {
-                //ustawiamy nadawce ?
-                Sender = MailboxAddress.Parse(_mailSettings.Mail)
+                Sender = MailboxAddress.Parse(_mailSettings.Mail),
+                Subject = "Product Question"
             };
-            
-            email.Subject = "Product Question";
 
             var builder = new BodyBuilder {HtmlBody = ""};
 
@@ -328,6 +326,7 @@ namespace Application.Services
             //dodanie tresci z zapytania; email ma nalezy do klienta
             builder.HtmlBody += $"<p>Question from: <strong>{question.Email}</strong></p>";
             builder.HtmlBody += $"<p>Question to: <strong>{product.ProductExpert.Email}</strong></p>";
+            builder.HtmlBody += $"<p>Question about: <strong>{product.Name}</strong></p>";
             builder.HtmlBody += $"<p>Message: {question.Message}</p>";
             email.Body = builder.ToMessageBody();
 
@@ -336,8 +335,8 @@ namespace Application.Services
             using var client = new SmtpClient();
             try
             {
-                client.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.SslOnConnect);
-                // client.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.StartTls);
+                //client.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.SslOnConnect);
+                client.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.StartTls);
                 client.Authenticate(_mailSettings.Mail, _mailSettings.Password);
                 await client.SendAsync(email);
 
@@ -352,9 +351,7 @@ namespace Application.Services
             {
                 client.Disconnect(true);
                 client.Dispose();
-            }
-            //throw new NotImplementedException();
-            
+            }           
         }
 
         public async Task<Result<IEnumerable<ProductDto>>> TopPurchasedProducts()

@@ -14,40 +14,37 @@ import { QuestionForm } from "../../forms/QuestionForm";
 import { Question } from "../../../../app/models/onlineshop/Question";
 
 export const ProductDetailsPage = observer(() => {
-  const {productStore, commonStore, cartStore, userStore: {isNetValue, user}} = useStore();
-  const {initialLoading} = commonStore;
-  const {addItemToCart} = cartStore;
-  const {loadProduct, selectedProduct: product, discountedProducts, askQuestion} = productStore;
-  const {id} = useParams();
+    const {productStore, commonStore, cartStore, userStore: {isNetValue, user}} = useStore();
+    const {initialLoading} = commonStore;
+    const {addItemToCart} = cartStore;
+    const {loadProduct, selectedProduct: product, discountedProducts, askQuestion} = productStore;
+    const {id} = useParams();
 
-  const [quantity, setQuantity] = useState<number | undefined>(undefined);
+    const [quantity, setQuantity] = useState<number | undefined>(undefined);
 
-  const handleAddToCart = () => {
-    addItemToCart(product!.id, quantity!);
-    setQuantity(undefined);
-  }
+    const handleAddToCart = () => {
+        addItemToCart(product!.id, quantity!);
+        setQuantity(undefined);
+    }
 
-  const handleSubmitQuestion = (question: Question) => {
-    // console.log('handler');    
-    // console.log(question);
-    //chiba będzie git z ! jak tak sądze
-    askQuestion(product!.id, question);
-};
+    const handleSubmitQuestion = (question: Question) => {
+        askQuestion(product!.id, question);
+    };
 
-  useEffect(() => {
-      if (id)
-        loadProduct(parseInt(id))
-            .then((product) => {
-                if (product?.status === ProductStatus.Hidden)
-                    router.navigate("not-found");
-            });
+    useEffect(() => {
+        if (id)
+            loadProduct(parseInt(id))
+                .then((product) => {
+                    if (product?.status === ProductStatus.Hidden)
+                        router.navigate("not-found");
+                });
 
-  }, [id, loadProduct]);
+    }, [id, loadProduct]);
 
 
-  if (initialLoading || !product) return <div className="text-center m-5"><Loading/></div>
+    if (initialLoading || !product) return <div className="text-center m-5"><Loading/></div>
 
-  const renderPrice = () => {
+    const renderPrice = () => {
         if (isNetValue)
             return renderNetPrice();
         else 
@@ -90,7 +87,7 @@ export const ProductDetailsPage = observer(() => {
         <Helmet>
             <title>{product.name} - OnlineShop</title>
         </Helmet>
-          <div className="row">
+        <div className="row">
 
             <div className="col">
                 <img 
@@ -111,7 +108,7 @@ export const ProductDetailsPage = observer(() => {
                 </div>
 
                 <div className="my-4">
-                  <h2>{product.name}</h2>
+                <h2>{product.name}</h2>
                 </div>
                 
                 
@@ -147,29 +144,34 @@ export const ProductDetailsPage = observer(() => {
                 </div>}
 
                 <div className="mt-4">
-                  <h5>Product details:</h5>
-                  <p>{product.description}</p>
+                <h5>Product details:</h5>
+                <p>{product.description}</p>
                 </div>
 
             </div>
 
-          </div>
+        </div>
 
-          <div className="border-top mt-5 p-3">
-              <ProductExpert product={product}/>
-          </div>
+        
 
-          <div className="border-top mt-3 p-3">
-            <QuestionForm 
-                buttonText="Send question"  
-                onSubmit={handleSubmitQuestion}
-                userEmail={user!.email}  //?          
-            />
-          </div>
-          
-          <div className="border-top mt-3 p-3">
+        <div className="border-top mt-5 row">
+            <div className="col-md-6 mt-4">
+                <ProductExpert product={product}/>
+            </div>
+            <div className="col-md-6 mt-4">
+            <h5 className="mb-3">Ask question about product</h5>
+                <QuestionForm 
+                    buttonText="Send question"  
+                    onSubmit={handleSubmitQuestion}
+                    userEmail={user?.email || ''}         
+                />
+            </div>
+        </div>
+
+        {discountedProducts.length > 0 &&
+        <div className="border-top pt-4 row">
             <ProductsSection products={discountedProducts.slice(0, 5)} label={"Discounted products"}/>
-          </div>
+        </div>}
 
       </div>
   )
